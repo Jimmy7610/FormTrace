@@ -12,20 +12,20 @@ function resolveLikelyIssue(
   score: ReturnType<typeof computeScore>,
   session: RecordingSession
 ): { likelyIssue: string; severity: Severity } {
-  if (score.disabledSubmit) {
-    return { likelyIssue: 'Submit button was disabled', severity: 'high' };
-  }
   if (score.hiddenRequiredField) {
     return { likelyIssue: 'Hidden required field blocked submission', severity: 'high' };
+  }
+  if (score.disabledSubmit) {
+    return { likelyIssue: 'Submit button was disabled', severity: 'high' };
   }
   if (score.networkFailure) {
     return { likelyIssue: 'Network request failed after submit', severity: 'high' };
   }
-  if (score.requiredEmpty) {
-    return { likelyIssue: 'Required fields are missing', severity: 'medium' };
-  }
   if (score.invalidField) {
     return { likelyIssue: 'Validation failed without visible feedback', severity: 'medium' };
+  }
+  if (score.requiredEmpty) {
+    return { likelyIssue: 'Required fields are missing', severity: 'medium' };
   }
   if (score.clickWithoutSubmit) {
     return { likelyIssue: 'Click did not trigger a form submit', severity: 'medium' };

@@ -7,7 +7,7 @@ import type { RecordingSession } from '../types/formtrace';
 export const SCORE_DISABLED_SUBMIT = 30;
 
 /** A hidden required field was found empty. */
-export const SCORE_HIDDEN_REQUIRED_FIELD = 35;
+export const SCORE_HIDDEN_REQUIRED_FIELD = 90;
 
 /** A visible required field was empty. */
 export const SCORE_REQUIRED_EMPTY = 20;
@@ -53,13 +53,11 @@ export function computeScore(session: RecordingSession): ScoreBreakdown {
 
   const hiddenRequiredField = events.some(
     (e) =>
-      e.type === 'page-snapshot' &&
       e.snapshot?.fields.some((f) => f.hidden && f.required && f.valueState === 'empty')
   );
 
   const requiredEmpty = events.some(
     (e) =>
-      e.type === 'page-snapshot' &&
       e.snapshot?.fields.some((f) => !f.hidden && f.required && f.valueState === 'empty')
   );
 

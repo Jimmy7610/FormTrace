@@ -12,7 +12,8 @@
     "zip:firefox": "wxt zip --browser firefox",
     "typecheck": "tsc --noEmit",
     "prepare": "wxt prepare || true",
-    "dom:check": "node tools/dom-check.mjs"
+    "dom:check": "node tools/dom-check.mjs",
+    "analyzer:check": "tsx tools/analyzer-check.ts"
   },
   "dependencies": {
     "react": "^18.3.1",
@@ -23,6 +24,7 @@
     "@types/react-dom": "^18.3.0",
     "@webext-core/fake-browser": "^1.4.0",
     "jsdom": "^29.1.1",
+    "tsx": "^4.22.3",
     "typescript": "^5.4.5",
     "vite-tsconfig-paths": "^6.1.1",
     "wxt": "^0.19.29"

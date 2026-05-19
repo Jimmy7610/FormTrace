@@ -79,7 +79,7 @@ function checkHiddenRequiredFieldHtml() {
   
   const submitBtn = doc.querySelector('button[type="submit"], input[type="submit"], button');
   assert(submitBtn, 'Contains a submit button', file);
-  
+  assert(doc.body.textContent.includes('Test instructions: Fill in Username and Email'), 'Contains clear test instructions to fill visible fields first', file);
   assert(doc.body.textContent.includes('Hidden required field blocked submission'), 'Mentions "Hidden required field blocked submission"', file);
 }
 
