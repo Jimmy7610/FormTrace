@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demo: Successful Form — FormTrace</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', system-ui, sans-serif; background: #0e0f14; color: #f1f5f9; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+    .card { background: #16181f; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 32px; width: 100%; max-width: 440px; }
+    .badge { font-size: 11px; font-weight: 600; color: #22c55e; background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.2); border-radius: 4px; padding: 3px 8px; display: inline-block; margin-bottom: 16px; }
+    h1 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+    .desc { font-size: 13px; color: #64748b; margin-bottom: 24px; line-height: 1.6; }
+    .field { margin-bottom: 16px; }
+    label { display: block; font-size: 12px; font-weight: 600; color: #94a3b8; margin-bottom: 6px; }
+    input[type="text"], input[type="email"] { width: 100%; background: #0e0f14; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px 12px; color: #f1f5f9; font-size: 13px; outline: none; transition: border-color 0.2s; }
+    input:focus { border-color: rgba(34,197,94,0.4); }
+    input:valid { border-color: rgba(34,197,94,0.2); }
+    button[type="submit"] { width: 100%; background: #16a34a; color: #fff; border: none; border-radius: 8px; padding: 11px; font-size: 13px; font-weight: 600; cursor: pointer; margin-top: 8px; transition: background 0.2s; }
+    button[type="submit"]:hover { background: #22c55e; color: #0e0f14; }
+    .success-msg { display: none; margin-top: 16px; background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.25); border-radius: 8px; padding: 12px; font-size: 13px; color: #22c55e; text-align: center; }
+    .why { margin-top: 20px; font-size: 11px; color: #475569; background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.06); border-radius: 8px; padding: 10px 12px; line-height: 1.6; }
+    a { color: #818cf8; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="badge">✅ Success Test</div>
+    <h1>Subscribe to Updates</h1>
+    <p class="desc">A normal, working form. Fill in all fields and submit. FormTrace should report no significant issues.</p>
+    <form id="test-form">
+      <div class="field">
+        <label for="name">Full name *</label>
+        <input type="text" id="name" name="name" placeholder="Your name" required minlength="2" />
+      </div>
+      <div class="field">
+        <label for="email">Email address *</label>
+        <input type="email" id="email" name="email" placeholder="you@example.com" required />
+      </div>
+      <button type="submit">Subscribe</button>
+    </form>
+    <div class="success-msg" id="success-msg">🎉 Successfully subscribed! (Demo only — no data sent)</div>
+    <script>
+      document.getElementById('test-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        document.getElementById('test-form').style.display = 'none';
+        document.getElementById('success-msg').style.display = 'block';
+      });
+    </script>
+    <div class="why">
+      <strong>What FormTrace should detect:</strong><br />
+      This form works correctly. Expected result: <em>"No clear failure detected"</em> with low severity and low confidence score.<br /><br />
+      <a href="index.html">← Back to all demos</a>
+    </div>
+  </div>
+</body>
+</html>

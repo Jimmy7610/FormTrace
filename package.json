@@ -1,0 +1,28 @@
+{
+  "name": "formtrace",
+  "version": "1.0.0",
+  "description": "FormTrace helps developers, QA testers and support teams understand why forms fail — directly in the browser.",
+  "private": true,
+  "scripts": {
+    "dev": "wxt",
+    "dev:firefox": "wxt --browser firefox",
+    "build": "wxt build",
+    "build:firefox": "wxt build --browser firefox",
+    "zip": "wxt zip",
+    "zip:firefox": "wxt zip --browser firefox",
+    "typecheck": "tsc --noEmit",
+    "prepare": "wxt prepare || true"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@webext-core/fake-browser": "^1.4.0",
+    "typescript": "^5.4.5",
+    "vite-tsconfig-paths": "^6.1.1",
+    "wxt": "^0.19.29"
+  }
+}
