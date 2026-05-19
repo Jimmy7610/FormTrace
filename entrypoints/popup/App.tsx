@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
-import type { AnalysisReport, Finding, Severity } from '../../src/types/formtrace';
+import type { RecordingSession, AnalysisReport, Finding, Severity } from '../../src/types/formtrace';
 import { buildMarkdownReport } from '../../src/analyzer/buildMarkdownReport';
+import { analyzeSession } from '../../src/analyzer/analyzeSession';
 
 // INSTÄLLNING - Hur ofta popup:en pollar status från content script (ms)
 const POLL_INTERVAL_MS = 1500;
@@ -184,12 +185,15 @@ export default function App() {
   async function handleStop() {
     setLoading(true);
     const res = await sendMessage('STOP_RECORDING') as {
-      session?: unknown;
+      session?: RecordingSession;
       report?: AnalysisReport;
       error?: string;
     } | null;
 
-    if (res?.report) {
+    if (res?.session) {
+      const freshReport = analyzeSession(res.session);
+      setStatus((prev) => ({ ...prev, isRecording: false, lastReport: freshReport }));
+    } else if (res?.report) {
       setStatus((prev) => ({ ...prev, isRecording: false, lastReport: res.report! }));
     } else {
       setStatus((prev) => ({ ...prev, isRecording: false }));

@@ -68,3 +68,5 @@ The automated script (`tools/dom-check.mjs`) verified the structural integrity o
 *(Update 2: Second manual test showed the UI still selected validation feedback over hidden required field. The final fix now scans all event snapshots used by the popup analysis path.)*
 
 *(Update 3: Real Chrome popup still showed generic required fields even while technical details showed company_id hidden required empty. Final fix added an absolute first-pass guard inside analyzeSession so hidden required empty fields override all other issues.)*
+
+*(Update 4: Production build verification added. The build output is now checked to ensure the hidden-required-first-pass runtime marker strings are included in .output/chrome-mv3.)*

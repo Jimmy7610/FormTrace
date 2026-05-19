@@ -13,7 +13,8 @@
     "typecheck": "tsc --noEmit",
     "prepare": "wxt prepare || true",
     "dom:check": "node tools/dom-check.mjs",
-    "analyzer:check": "tsx tools/analyzer-check.ts"
+    "analyzer:check": "tsx tools/analyzer-check.ts",
+    "build:check": "node tools/build-output-check.mjs"
   },
   "dependencies": {
     "react": "^18.3.1",
