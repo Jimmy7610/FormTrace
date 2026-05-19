@@ -12,14 +12,21 @@ function runAnalyzerCheck() {
     pageUrl: 'http://localhost/demo',
     pageTitle: 'Test',
     formCount: 1,
-    submitAttemptCount: 1,
-    clickWithoutSubmitCount: 0,
+    submitAttemptCount: 0, // as requested
+    clickWithoutSubmitCount: 1, // simulates no submit event triggered
     events: [
+      { type: 'page-snapshot', timestamp: Date.now() },
+      { type: 'input-change', timestamp: Date.now() + 100 },
+      { type: 'input-change', timestamp: Date.now() + 200 },
       {
         type: 'submit-click',
-        timestamp: Date.now(),
+        timestamp: Date.now() + 300,
         message: 'Submit clicked',
         snapshot: {
+          index: 0,
+          id: 'test-form',
+          action: '',
+          method: 'get',
           hasVisibleError: false,
           submitButtonDisabled: false,
           submitButtonExists: true,
@@ -30,6 +37,19 @@ function runAnalyzerCheck() {
               name: 'username',
               label: 'Username',
               type: 'text',
+              valueState: 'present',
+              required: true,
+              valid: true,
+              hidden: false,
+              disabled: false,
+              validationMessage: '',
+            },
+            {
+              tag: 'input',
+              id: 'visible-email',
+              name: 'email',
+              label: 'Email',
+              type: 'email',
               valueState: 'present',
               required: true,
               valid: true,
@@ -80,13 +100,22 @@ function runAnalyzerCheck() {
     console.log(`[PASS] Test 1: confidenceScore is high (${hiddenReport.confidenceScore})`);
   }
 
-  const hasHiddenFinding = hiddenReport.findings.some(f => f.code === 'HIDDEN_REQUIRED_FIELD');
-  if (!hasHiddenFinding) {
-    console.error(`[FAIL] Test 1: Expected findings to include HIDDEN_REQUIRED_FIELD`);
+  const hasHiddenDebug = hiddenReport.technicalDetails.some(d => d.includes('Hidden required empty fields found: 1'));
+  if (!hasHiddenDebug) {
+    console.error(`[FAIL] Test 1: Expected technicalDetails to include "Hidden required empty fields found: 1"`);
     passed = false;
   } else {
-    console.log('[PASS] Test 1: findings include HIDDEN_REQUIRED_FIELD');
+    console.log('[PASS] Test 1: technicalDetails includes "Hidden required empty fields found: 1"');
   }
+
+  const hasVersionDebug = hiddenReport.technicalDetails.some(d => d.includes('Analyzer runtime fix: hidden-required-first-pass'));
+  if (!hasVersionDebug) {
+    console.error(`[FAIL] Test 1: Expected technicalDetails to include "Analyzer runtime fix: hidden-required-first-pass"`);
+    passed = false;
+  } else {
+    console.log('[PASS] Test 1: technicalDetails includes "Analyzer runtime fix: hidden-required-first-pass"');
+  }
+
 
   // Test 2: Visible required field is empty (no hidden fields).
   const visibleEmptySession: RecordingSession = {
@@ -104,6 +133,10 @@ function runAnalyzerCheck() {
         timestamp: Date.now(),
         message: 'Submit clicked',
         snapshot: {
+          index: 0,
+          id: 'test-form',
+          action: '',
+          method: 'get',
           hasVisibleError: true,
           submitButtonDisabled: false,
           submitButtonExists: true,

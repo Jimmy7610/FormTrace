@@ -1,7 +1,7 @@
 import type { RecordingSession, AnalysisReport, Finding, Severity } from '../types/formtrace';
 import { computeScore } from './scoring';
 import { detectDisabledSubmit } from './detectDisabledSubmit';
-import { detectHiddenRequiredFields } from './detectHiddenRequiredFields';
+import { getHiddenRequiredEmptyFieldsFromSession } from './detectHiddenRequiredFields';
 import { detectInvalidFields, detectRequiredEmptyFields } from './detectInvalidFields';
 import { detectMissingVisibleErrors } from './detectMissingVisibleErrors';
 
@@ -60,7 +60,7 @@ function buildFindings(
     });
   }
 
-  const hiddenFields = detectHiddenRequiredFields(session);
+  const hiddenFields = getHiddenRequiredEmptyFieldsFromSession(session);
   if (hiddenFields.length > 0) {
     findings.push({
       code: 'HIDDEN_REQUIRED_FIELD',
@@ -214,8 +214,70 @@ function buildSuggestedFixes(score: ReturnType<typeof computeScore>): string[] {
   return fixes;
 }
 
-/** Main analysis function. Converts a RecordingSession into an AnalysisReport. */
 export function analyzeSession(session: RecordingSession): AnalysisReport {
+  // --- ABSOLUTE FIRST-PASS GUARD ---
+  const hiddenRequiredFields = getHiddenRequiredEmptyFieldsFromSession(session);
+  if (hiddenRequiredFields.length > 0) {
+    const findings: Finding[] = [
+      {
+        code: 'HIDDEN_REQUIRED_FIELD',
+        label: `${hiddenRequiredFields.length} hidden required field(s) detected`,
+        severity: 'high',
+        detail: hiddenRequiredFields
+          .map((f: any) => `${f.name || f.id || f.label || 'unnamed'} (${f.type})`)
+          .join(', '),
+      }
+    ];
+
+    const technicalDetails = [
+      `Forms detected: ${session.formCount}`,
+      `Submit attempts: ${session.submitAttemptCount}`,
+      `Events captured: ${session.events.length}`,
+      `Hidden required empty fields found: ${hiddenRequiredFields.length}`,
+      `Analyzer runtime fix: hidden-required-first-pass`
+    ];
+
+    // Optionally include other technical details if useful
+    const snapshots = session.events.filter((e) => e.snapshot);
+    if (snapshots.length > 0) {
+      const last = snapshots[snapshots.length - 1].snapshot!;
+      for (const field of last.fields) {
+        const parts = [
+          `Field: ${field.name || field.id || field.label || 'unnamed'}`,
+          `type: ${field.type}`,
+          `required: ${field.required}`,
+          `hidden: ${field.hidden}`,
+          `value: ${field.valueState}`,
+        ];
+        if (!field.valid && field.validationMessage) {
+          parts.push(`validation: "${field.validationMessage}"`);
+        }
+        technicalDetails.push(parts.join(', '));
+      }
+    }
+
+    return {
+      sessionId: session.id,
+      timestamp: new Date().toISOString(),
+      pageUrl: session.pageUrl,
+      pageTitle: session.pageTitle,
+      formCount: session.formCount,
+      submitAttemptCount: session.submitAttemptCount,
+      eventCount: session.events.length,
+      likelyIssue: 'Hidden required field blocked submission',
+      confidenceScore: 100,
+      severity: 'high',
+      summary: 'A required field appears to be hidden from the user and may be blocking form submission.',
+      findings,
+      technicalDetails,
+      suggestedFixes: [
+        'Make the required field visible, remove required, or provide the value programmatically.',
+        'Ensure all required fields have a value before the user tries to submit.'
+      ],
+    };
+  }
+  // --- END ABSOLUTE FIRST-PASS GUARD ---
+
   const score = computeScore(session);
   const { likelyIssue, severity } = resolveLikelyIssue(score, session);
   const findings = buildFindings(score, session);

@@ -1,5 +1,5 @@
 import type { RecordingSession } from '../types/formtrace';
-import { detectHiddenRequiredFields } from './detectHiddenRequiredFields';
+import { getHiddenRequiredEmptyFieldsFromSession } from './detectHiddenRequiredFields';
 
 // ─── Scoring weights ───────────────────────────────────────────────────────────
 // INSTÄLLNING - Justera poäng för varje fyndat problem (0–100 klampat)
@@ -52,7 +52,7 @@ export function computeScore(session: RecordingSession): ScoreBreakdown {
       e.snapshot?.submitButtonDisabled === true
   );
 
-  const hiddenFields = detectHiddenRequiredFields(session);
+  const hiddenFields = getHiddenRequiredEmptyFieldsFromSession(session);
   const hiddenRequiredField = hiddenFields.length > 0;
 
   const requiredEmpty = events.some(

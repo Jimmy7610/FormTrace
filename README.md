@@ -125,13 +125,15 @@ Open any of the files in the `demo-pages/` folder directly in Chrome:
 | `failed-api.html` | Failed fetch/network request |
 | `success-form.html` | Successful submission |
 
-**Test flow:**
-1. Open a demo page in Chrome
-2. Click the FormTrace extension icon
-3. Click **Start recording**
-4. Interact with the form
-5. Click **Stop & analyze**
-6. Read the analysis, copy the Markdown report
+**Important Test Flow & Cache Reset:**
+When testing a new build of the extension locally, you must follow these steps exactly to avoid stale cache issues:
+1. Run `npm run build`
+2. Go to `chrome://extensions` in your browser.
+3. Click **Reload** on the FormTrace extension card (or remove and load unpacked again).
+4. Refresh the demo page you are testing (e.g., `demo-pages/hidden-required-field.html`).
+5. Open the FormTrace popup and click **Reset** to clear any stale session data.
+6. Click **Start recording** and perform your test.
+7. Click **Stop & analyze**, then read the report.
 
 ---
 
