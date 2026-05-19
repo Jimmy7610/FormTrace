@@ -21,7 +21,7 @@ function resolveLikelyIssue(
   if (score.networkFailure) {
     return { likelyIssue: 'Network request failed after submit', severity: 'high' };
   }
-  if (score.invalidField) {
+  if (score.invalidField && score.noVisibleError) {
     return { likelyIssue: 'Validation failed without visible feedback', severity: 'medium' };
   }
   if (score.requiredEmpty) {

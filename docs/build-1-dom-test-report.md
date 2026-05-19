@@ -64,3 +64,5 @@ The automated script (`tools/dom-check.mjs`) verified the structural integrity o
 **FormTrace Build 1 is structurally ready for manual Chrome testing.**
 
 *(Update: Manual testing revealed an analyzer priority issue where hidden required fields were treated as generic missing required fields. This has been fixed. Hidden required fields now correctly take maximum priority when evaluating session failures, scoring a high confidence and properly directing the developer to the hidden field.)*
+
+*(Update 2: Second manual test showed the UI still selected validation feedback over hidden required field. The final fix now scans all event snapshots used by the popup analysis path.)*
