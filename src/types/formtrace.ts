@@ -108,7 +108,8 @@ export type MessageType =
   | 'STATUS_UPDATE'
   | 'SESSION_DATA'
   | 'RECORD_EVENT'
-  | 'PAGE_INFO';
+  | 'PAGE_INFO'
+  | 'GET_SESSION';
 
 export interface BaseMessage {
   type: MessageType;
@@ -155,6 +156,10 @@ export interface PageInfoMessage extends BaseMessage {
   formCount: number;
 }
 
+export interface GetSessionMessage extends BaseMessage {
+  type: 'GET_SESSION';
+}
+
 export type FormTraceMessage =
   | StartRecordingMessage
   | StopRecordingMessage
@@ -163,4 +168,5 @@ export type FormTraceMessage =
   | StatusUpdateMessage
   | SessionDataMessage
   | RecordEventMessage
-  | PageInfoMessage;
+  | PageInfoMessage
+  | GetSessionMessage;

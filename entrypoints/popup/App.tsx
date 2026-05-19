@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import type { RecordingSession, AnalysisReport, Finding, Severity } from '../../src/types/formtrace';
 import { buildMarkdownReport } from '../../src/analyzer/buildMarkdownReport';
 import { analyzeSession } from '../../src/analyzer/analyzeSession';
+import { normalizeReportForHiddenRequiredFields } from '../../src/analyzer/normalizeReport';
 
 // INSTÄLLNING - Hur ofta popup:en pollar status från content script (ms)
 const POLL_INTERVAL_MS = 1500;
@@ -150,12 +151,20 @@ export default function App() {
 
     if (!res) return;
 
+    // Load active session for normalization if available
+    const sessionRes = await sendMessage('GET_SESSION') as { session?: RecordingSession } | null;
+    const session = sessionRes?.session ?? null;
+
+    const normalizedReport = res.lastReport
+      ? normalizeReportForHiddenRequiredFields(res.lastReport, session)
+      : null;
+
     setStatus({
       isRecording: res.isRecording ?? false,
       formCount: res.formCount ?? 0,
       eventCount: res.eventCount ?? 0,
       submitAttemptCount: res.submitAttemptCount ?? 0,
-      lastReport: res.lastReport ?? null,
+      lastReport: normalizedReport,
     });
   }, []);
 
@@ -192,9 +201,11 @@ export default function App() {
 
     if (res?.session) {
       const freshReport = analyzeSession(res.session);
-      setStatus((prev) => ({ ...prev, isRecording: false, lastReport: freshReport }));
+      const normalized = normalizeReportForHiddenRequiredFields(freshReport, res.session);
+      setStatus((prev) => ({ ...prev, isRecording: false, lastReport: normalized }));
     } else if (res?.report) {
-      setStatus((prev) => ({ ...prev, isRecording: false, lastReport: res.report! }));
+      const normalized = normalizeReportForHiddenRequiredFields(res.report, null);
+      setStatus((prev) => ({ ...prev, isRecording: false, lastReport: normalized }));
     } else {
       setStatus((prev) => ({ ...prev, isRecording: false }));
     }

@@ -148,6 +148,7 @@ function buildTechnicalDetails(
     `Forms detected: ${session.formCount}`,
     `Submit attempts: ${session.submitAttemptCount}`,
     `Events captured: ${session.events.length}`,
+    'Analyzer bundle active: popup-local-normalized',
   ];
 
   // Add field details from the last snapshot
@@ -234,7 +235,9 @@ export function analyzeSession(session: RecordingSession): AnalysisReport {
       `Submit attempts: ${session.submitAttemptCount}`,
       `Events captured: ${session.events.length}`,
       `Hidden required empty fields found: ${hiddenRequiredFields.length}`,
-      `Analyzer runtime fix: hidden-required-first-pass`
+      `Analyzer runtime fix: hidden-required-first-pass`,
+      `Popup normalization fix: final-report-guard`,
+      `Analyzer bundle active: popup-local-normalized`
     ];
 
     // Optionally include other technical details if useful

@@ -70,3 +70,5 @@ The automated script (`tools/dom-check.mjs`) verified the structural integrity o
 *(Update 3: Real Chrome popup still showed generic required fields even while technical details showed company_id hidden required empty. Final fix added an absolute first-pass guard inside analyzeSession so hidden required empty fields override all other issues.)*
 
 *(Update 4: Production build verification added. The build output is now checked to ensure the hidden-required-first-pass runtime marker strings are included in .output/chrome-mv3.)*
+
+*(Update 5: Real popup still displayed a generic required-fields report even though technical details contained a hidden required empty field. Added final popup report normalization so the displayed report, cached report, copied report and local report all correct hidden required fields before rendering.)*

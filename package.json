@@ -14,6 +14,7 @@
     "prepare": "wxt prepare || true",
     "dom:check": "node tools/dom-check.mjs",
     "analyzer:check": "tsx tools/analyzer-check.ts",
+    "report:check": "tsx tools/report-normalization-check.ts",
     "build:check": "node tools/build-output-check.mjs"
   },
   "dependencies": {

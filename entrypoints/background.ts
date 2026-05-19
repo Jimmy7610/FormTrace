@@ -2,10 +2,12 @@ import type { FormTraceMessage, RecordingSession, AnalysisReport } from '../src/
 import {
   saveSession,
   saveReport,
+  loadSession,
   loadReport,
   clearStorage,
 } from '../src/recorder/sessionStore';
 import { analyzeSession } from '../src/analyzer/analyzeSession';
+import { normalizeReportForHiddenRequiredFields } from '../src/analyzer/normalizeReport';
 import { defineBackground } from 'wxt/sandbox';
 
 // INSTÄLLNING - Sätt true för att aktivera debug-loggar i bakgrundstjänsten
@@ -61,7 +63,8 @@ export default defineBackground(() => {
 
         if (result?.session) {
           const session = result.session;
-          lastReport = analyzeSession(session);
+          const rawReport = analyzeSession(session);
+          lastReport = normalizeReportForHiddenRequiredFields(rawReport, session);
           await saveSession(session);
           await saveReport(lastReport);
           sendResponse({ session, report: lastReport });
@@ -82,7 +85,11 @@ export default defineBackground(() => {
         } | null;
 
         if (!lastReport) {
-          lastReport = await loadReport();
+          const rawReport = await loadReport();
+          if (rawReport) {
+            const session = await loadSession();
+            lastReport = normalizeReportForHiddenRequiredFields(rawReport, session);
+          }
         }
 
         sendResponse({
@@ -93,6 +100,12 @@ export default defineBackground(() => {
           submitAttemptCount: statusResult?.submitAttemptCount ?? 0,
           lastReport,
         });
+        break;
+      }
+
+      case 'GET_SESSION': {
+        const session = await loadSession();
+        sendResponse({ session });
         break;
       }
 

@@ -1,4 +1,5 @@
 import type { FieldSnapshot } from '../types/formtrace';
+import { isElementHidden } from './visibility';
 
 // INSTÄLLNING - Typer av inputs vars värden aldrig sparas, oavsett inställning
 const ALWAYS_MASKED_TYPES = new Set([
@@ -63,14 +64,8 @@ export function serializeField(
   const valid = inp.validity ? inp.validity.valid : true;
   const validationMessage = inp.validationMessage ?? '';
 
-  // Check visual visibility
-  const style = window.getComputedStyle(inp);
-  const hidden =
-    style.display === 'none' ||
-    style.visibility === 'hidden' ||
-    style.opacity === '0' ||
-    inp.hidden ||
-    (inp as HTMLInputElement).type === 'hidden';
+  // Check visual visibility using robust DOM utility
+  const hidden = isElementHidden(inp);
 
   // INSTÄLLNING - Byt till true för att alltid sätta valueState till 'empty' för alla fält
   const valueState = safeValueState(inp);

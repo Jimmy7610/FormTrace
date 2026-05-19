@@ -5,7 +5,9 @@ const REQUIRED_STRINGS = [
   'Analyzer runtime fix',
   'hidden-required-first-pass',
   'Hidden required empty fields found',
-  'Hidden required field blocked submission'
+  'Hidden required field blocked submission',
+  'Popup normalization fix: final-report-guard',
+  'Analyzer bundle active: popup-local-normalized'
 ];
 
 function getFilesRecursive(dir) {
