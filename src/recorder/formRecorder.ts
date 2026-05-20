@@ -45,6 +45,26 @@ function takeSnapshot(formIndex?: number): RecordedEvent {
   };
 }
 
+function checkDomForNetworkErrors(formElement: HTMLFormElement | null): void {
+  const searchArea = formElement || document.body;
+  const text = searchArea.textContent || "";
+  const lowerText = text.toLowerCase();
+  
+  const hasErrorText = 
+    lowerText.includes("network error") ||
+    lowerText.includes("failed to fetch") ||
+    lowerText.includes("request failed");
+    
+  if (hasErrorText) {
+    emit({
+      type: 'network-failure-dom-signal',
+      timestamp: Date.now(),
+      message: 'Network failure detected from page DOM content',
+    });
+    if (DEBUG) console.debug('[FormTrace] network-failure-dom-signal captured');
+  }
+}
+
 // ─── Event handlers ────────────────────────────────────────────────────────────
 
 function handleSubmit(e: Event): void {
@@ -70,6 +90,15 @@ function handleSubmit(e: Event): void {
   setTimeout(() => {
     emit(takeSnapshot(formIndex >= 0 ? formIndex : undefined));
   }, POST_SUBMIT_SNAPSHOT_DELAY_MS);
+
+  // Check for DOM network failure signals after a submit attempt
+  [100, 300, 600, 1000].forEach((delay) => {
+    setTimeout(() => {
+      if (attached) {
+        checkDomForNetworkErrors(formIndex >= 0 ? forms[formIndex] : null);
+      }
+    }, delay);
+  });
 }
 
 function handleClick(e: MouseEvent): void {
@@ -104,6 +133,15 @@ function handleClick(e: MouseEvent): void {
       pendingClickTimestamp = null;
     }
   }, 500);
+
+  // Check for DOM network failure signals after submit click in case submit event is bypassed
+  [200, 500, 800, 1200].forEach((delay) => {
+    setTimeout(() => {
+      if (attached) {
+        checkDomForNetworkErrors(formIndex >= 0 ? forms[formIndex] : null);
+      }
+    }, delay);
+  });
 
   if (DEBUG) console.debug('[FormTrace] submit-click captured');
 }

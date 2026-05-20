@@ -62,6 +62,7 @@
         } catch (err) {
           msg.style.color = '#ef4444';
           msg.textContent = 'Network error: ' + err.message;
+          window.dispatchEvent(new CustomEvent("formtrace-demo-network-error", { detail: { message: err.message } }));
         } finally {
           btn.disabled = false;
           btn.textContent = 'Send feedback';

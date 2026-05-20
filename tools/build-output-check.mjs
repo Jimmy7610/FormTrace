@@ -14,7 +14,12 @@ const REQUIRED_STRINGS = [
   'FormTraceNetworkProbe',
   'network-failure',
   'Network failure detected',
-  'Network request failed after submit'
+  'Network request failed after submit',
+  'Network probe injected',
+  'Network probe active',
+  'Network probe message received',
+  'network-failure-dom-signal',
+  'Network DOM signal detected'
 ];
 
 function getFilesRecursive(dir) {

@@ -83,7 +83,7 @@ export function computeScore(session: RecordingSession): ScoreBreakdown {
     (e) => e.type === 'form-submit' || e.type === 'submit-click' || e.type === 'disabled-submit-attempt'
   );
   const networkFailure = hasSubmitAttempt && events.some(
-    (e, idx) => e.type === 'network-failure' && (firstSubmitIndex === -1 || idx >= firstSubmitIndex)
+    (e, idx) => (e.type === 'network-failure' || e.type === 'network-failure-dom-signal') && (firstSubmitIndex === -1 || idx >= firstSubmitIndex)
   );
 
   const consoleError = events.some((e) => e.type === 'console-error');

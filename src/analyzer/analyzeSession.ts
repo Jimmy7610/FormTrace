@@ -114,13 +114,13 @@ function buildFindings(
     });
   }
 
-  const networkEvents = session.events.filter((e) => e.type === 'network-failure');
+  const networkEvents = session.events.filter((e) => e.type === 'network-failure' || e.type === 'network-failure-dom-signal');
   if (networkEvents.length > 0) {
     findings.push({
       code: 'NETWORK_FAILURE',
       label: 'Network request failed after submit',
       severity: 'high',
-      detail: networkEvents.map((e) => `${e.url ?? 'unknown URL'} (${e.status ?? 'no status'})`).join('; '),
+      detail: networkEvents.map((e) => `${e.url ?? 'DOM signal'} (${e.status ?? 'no status'})`).join('; '),
     });
   }
 
@@ -158,9 +158,24 @@ function buildTechnicalDetails(
     details.push(`Disabled submit attempt detected: ${totalDisabled}`);
   }
 
-  const networkFailures = session.events.filter((e) => e.type === 'network-failure').length;
-  if (networkFailures > 0) {
-    details.push(`Network failure detected: ${networkFailures}`);
+  const netProbeInjected = session.events.some((e) => e.type === 'network-probe-status' && e.message === 'Network probe injected');
+  if (netProbeInjected) {
+    details.push('Network probe injected');
+  }
+
+  const netProbeActive = session.events.some((e) => e.type === 'network-probe-status' && e.message === 'Network probe active');
+  if (netProbeActive) {
+    details.push('Network probe active');
+  }
+
+  const netDomSignalCount = session.events.filter((e) => e.type === 'network-failure-dom-signal').length;
+  if (netDomSignalCount > 0) {
+    details.push('Network DOM signal detected');
+  }
+
+  const totalNetworkFailures = session.events.filter((e) => e.type === 'network-failure' || e.type === 'network-failure-dom-signal').length;
+  if (totalNetworkFailures > 0) {
+    details.push(`Network failure detected: ${totalNetworkFailures}`);
   }
 
   // Add field details from the last snapshot

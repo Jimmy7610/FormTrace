@@ -76,3 +76,5 @@ The automated script (`tools/dom-check.mjs`) verified the structural integrity o
 *(Update 6: Manual testing showed disabled submit buttons did not trigger a normal click event, so FormTrace now records pointer/mouse attempted interactions with disabled submit controls and reports Submit button was disabled.)*
 
 *(Update 7: Manual testing showed failed fetch requests on failed-api.html were visible on the page but not detected by FormTrace because content scripts run in an isolated world. Added a page-context network probe that forwards fetch/XMLHttpRequest failures safely to the content script.)*
+
+*(Update 8: Manual testing showed the page displayed Failed to fetch but the popup still missed network-failure at runtime. Added runtime network probe markers, async stop delay, and a DOM signal fallback for visible network error messages.)*

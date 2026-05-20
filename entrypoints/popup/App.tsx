@@ -193,6 +193,9 @@ export default function App() {
 
   async function handleStop() {
     setLoading(true);
+    // INSTÄLLNING - Wait briefly so async network-failure events can arrive before analysis.
+    await new Promise((resolve) => setTimeout(resolve, 350));
+
     const res = await sendMessage('STOP_RECORDING') as {
       session?: RecordingSession;
       report?: AnalysisReport;

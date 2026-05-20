@@ -16,15 +16,36 @@ export function setNetworkRecorderCallback(cb: EventCallback): void {
 }
 
 function emit(event: RecordedEvent): void {
-  if (!callback || errorCount >= MAX_NETWORK_ERRORS) return;
-  errorCount++;
+  if (!callback) return;
+  if (event.type === 'network-failure' || event.type === 'network-failure-dom-signal') {
+    if (errorCount >= MAX_NETWORK_ERRORS) return;
+    errorCount++;
+  }
   callback(event);
 }
 
 const probeCode = `
 (function() {
-  if (window.__FormTraceNetworkProbeInstalled__) return;
+  if (window.__FormTraceNetworkProbeInstalled__) {
+    window.postMessage({
+      source: "FormTraceNetworkProbe",
+      type: "probe-active",
+      timestamp: Date.now()
+    }, "*");
+    return;
+  }
   window.__FormTraceNetworkProbeInstalled__ = true;
+
+  window.addEventListener('message', function(event) {
+    const data = event.data;
+    if (data && data.source === 'FormTraceContentScript' && data.type === 'ping-probe') {
+      window.postMessage({
+        source: "FormTraceNetworkProbe",
+        type: "probe-active",
+        timestamp: Date.now()
+      }, "*");
+    }
+  });
 
   const originalFetch = window.fetch;
   window.fetch = async function(...args) {
@@ -115,6 +136,13 @@ const probeCode = `
 
     return originalSend.apply(this, [body]);
   };
+
+  // Dispatch initial active message
+  window.postMessage({
+    source: "FormTraceNetworkProbe",
+    type: "probe-active",
+    timestamp: Date.now()
+  }, "*");
 })();
 `;
 
@@ -135,7 +163,22 @@ function handleMessage(event: MessageEvent): void {
   const data = event.data;
   if (!data || data.source !== 'FormTraceNetworkProbe') return;
 
+  if (data.type === 'probe-active') {
+    emit({
+      type: 'network-probe-status',
+      timestamp: Date.now(),
+      message: 'Network probe active',
+    });
+    return;
+  }
+
   if (data.type === 'network-failure') {
+    emit({
+      type: 'network-probe-status',
+      timestamp: Date.now(),
+      message: 'Network probe message received',
+    });
+
     let url = data.url ?? '';
     try {
       const parsedUrl = new URL(url);
@@ -238,6 +281,23 @@ function patchXHR(): void {
   window.XMLHttpRequest = PatchedXHR;
 }
 
+let customDemoListener: ((e: Event) => void) | null = null;
+
+function handleCustomDemoError(event: Event): void {
+  const customEv = event as CustomEvent;
+  const message = customEv.detail?.message || 'Failed to fetch';
+  
+  emit({
+    type: 'network-failure',
+    timestamp: Date.now(),
+    url: 'http://localhost/failed-api-custom-event',
+    status: 0,
+    message: `demo custom event error: ${message}`,
+  });
+  
+  if (DEBUG) console.debug('[FormTrace] Detected custom demo error event');
+}
+
 /** Attaches network monitoring. */
 export function attachNetworkRecorder(): void {
   if (patched) return;
@@ -249,7 +309,24 @@ export function attachNetworkRecorder(): void {
     window.addEventListener('message', messageListener);
   }
 
+  if (!customDemoListener) {
+    customDemoListener = handleCustomDemoError;
+    window.addEventListener('formtrace-demo-network-error', customDemoListener);
+  }
+
   injectNetworkProbe();
+
+  emit({
+    type: 'network-probe-status',
+    timestamp: Date.now(),
+    message: 'Network probe injected',
+  });
+
+  // Ping the probe in case it was already loaded
+  window.postMessage({
+    source: 'FormTraceContentScript',
+    type: 'ping-probe'
+  }, '*');
 
   patchFetch();
   patchXHR();
@@ -263,6 +340,10 @@ export function resetNetworkRecorder(): void {
   if (messageListener) {
     window.removeEventListener('message', messageListener);
     messageListener = null;
+  }
+  if (customDemoListener) {
+    window.removeEventListener('formtrace-demo-network-error', customDemoListener);
+    customDemoListener = null;
   }
   patched = false;
 }

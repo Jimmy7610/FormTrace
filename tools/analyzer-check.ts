@@ -295,6 +295,77 @@ function runAnalyzerCheck() {
     console.log('[PASS] Test 4: findings includes NETWORK_FAILURE with "Network request failed after submit"');
   }
 
+  // Test 5: Network failure DOM signal fallback.
+  const domSignalMockSession: RecordingSession = {
+    id: 'test-session-5',
+    startedAt: Date.now(),
+    stoppedAt: Date.now() + 5000,
+    pageUrl: 'http://localhost/failed-api',
+    pageTitle: 'Failed API Test (DOM signal)',
+    formCount: 1,
+    submitAttemptCount: 1,
+    clickWithoutSubmitCount: 0,
+    events: [
+      {
+        type: 'submit-click',
+        timestamp: Date.now(),
+        message: 'Submit clicked',
+      },
+      {
+        type: 'network-failure-dom-signal',
+        timestamp: Date.now() + 200,
+        message: 'Network failure detected from page DOM content',
+      }
+    ]
+  };
+
+  const domSignalReport = analyzeSession(domSignalMockSession);
+
+  if (domSignalReport.likelyIssue !== 'Network request failed after submit') {
+    console.error(`[FAIL] Test 5: Expected "Network request failed after submit", got: "${domSignalReport.likelyIssue}"`);
+    passed = false;
+  } else {
+    console.log('[PASS] Test 5: likelyIssue is correctly prioritized as "Network request failed after submit"');
+  }
+
+  if (domSignalReport.severity !== 'high' && domSignalReport.severity !== 'medium') {
+    console.error(`[FAIL] Test 5: Expected severity "high" or "medium", got: "${domSignalReport.severity}"`);
+    passed = false;
+  } else {
+    console.log(`[PASS] Test 5: severity is "${domSignalReport.severity}"`);
+  }
+
+  if (domSignalReport.confidenceScore < 80) {
+    console.error(`[FAIL] Test 5: Expected confidenceScore >= 80, got: ${domSignalReport.confidenceScore}`);
+    passed = false;
+  } else {
+    console.log(`[PASS] Test 5: confidenceScore is high (${domSignalReport.confidenceScore})`);
+  }
+
+  const hasDomSignalDebug = domSignalReport.technicalDetails.some(d => d.includes('Network DOM signal detected'));
+  if (!hasDomSignalDebug) {
+    console.error(`[FAIL] Test 5: Expected technicalDetails to include "Network DOM signal detected"`);
+    passed = false;
+  } else {
+    console.log('[PASS] Test 5: technicalDetails includes "Network DOM signal detected"');
+  }
+
+  const hasDomSignalFailureDebug = domSignalReport.technicalDetails.some(d => d.includes('Network failure detected: 1'));
+  if (!hasDomSignalFailureDebug) {
+    console.error(`[FAIL] Test 5: Expected technicalDetails to include "Network failure detected: 1"`);
+    passed = false;
+  } else {
+    console.log('[PASS] Test 5: technicalDetails includes "Network failure detected: 1"');
+  }
+
+  const hasDomSignalFinding = domSignalReport.findings.some(f => f.code === 'NETWORK_FAILURE' && f.label === 'Network request failed after submit');
+  if (!hasDomSignalFinding) {
+    console.error(`[FAIL] Test 5: Expected findings to include NETWORK_FAILURE with "Network request failed after submit"`);
+    passed = false;
+  } else {
+    console.log('[PASS] Test 5: findings includes NETWORK_FAILURE with "Network request failed after submit"');
+  }
+
   if (!passed) {
     console.error('\nAnalyzer Verification FAILED!');
     process.exit(1);

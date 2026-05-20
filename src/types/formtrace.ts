@@ -43,7 +43,9 @@ export type RecordedEventType =
   | 'console-error'
   | 'mutation'
   | 'page-snapshot'
-  | 'disabled-submit-attempt';
+  | 'disabled-submit-attempt'
+  | 'network-probe-status'
+  | 'network-failure-dom-signal';
 
 export interface RecordedEvent {
   type: RecordedEventType;
