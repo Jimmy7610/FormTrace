@@ -79,10 +79,23 @@ Verify the following new capabilities:
 
 ### Test 2.3: GitHub and Jira Format Copies
 - **Steps**:
-  1. Record a failed form submission.
-  2. Open the popup and click **Copy as GitHub Issue**. Verify that the clipboard text begins with standard issue headers (`### Bug Description`).
-  3. Click **Copy as Jira Bug**. Verify that the clipboard text contains Jira Rich Text formatting syntax (e.g. `{panel}`, `||Header||`, `{code:markdown}`).
-- **Expected Result**: Formatted text is copied to clipboard and pastes cleanly.
+  1. Run `npm run demo` and open `http://127.0.0.1:4173/hidden-required-field.html`.
+  2. Trigger hidden required field report (click Register with username and email filled, but company_id empty).
+  3. Click **Copy GitHub issue**.
+  4. Paste into a text editor and confirm it contains:
+     - `# FormTrace: Hidden required field blocked submission`
+     - `## Summary`
+     - `## Page`
+     - `## Severity`
+     - `## Findings`
+     - `## Technical Details`
+     - `## Suggested Fixes`
+     - `## Privacy`
+     - `## Reproduction Notes`
+  5. Confirm debug marker lines (e.g. `Analyzer runtime fix: hidden-required-first-pass`) are hidden when Show debug markers is off.
+  6. Turn on Show debug markers, click **Copy GitHub issue** again, and confirm debug marker lines are included.
+  7. Confirm Copy as Jira Bug operates similarly (to be fully tested once Issue 4 is completed).
+- **Expected Result**: Formatted text is copied to clipboard and respects the debug marker setting correctly.
 
 ### Test 2.4: Session History List
 - **Steps**:

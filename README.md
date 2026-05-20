@@ -153,9 +153,9 @@ Run the localhost demo server with `npm run demo` and open **`http://127.0.0.1:4
 | Build | Status | Focus |
 |---|---|---|
 | **Build 1** | **Completed & Verified** | Core recorder, DOM signal checks, static network probe, report normalization, copyable Markdown. |
-| **Build 2** | **In Progress** | SPA route change support, enhanced framework testing, custom debug marker configurations, local session history. |
+| **Build 2** | **In Progress** | Settings toggle, validation confidence scoring, GitHub Issue export format, local session history, and framework-mimic testing. |
 | **Build 3** | Planned | Visual CSS Blame overlay to highlight broken elements directly in the page DOM. |
-| **Build 4** | Planned | Export formats (Jira, GitHub Issues, PDF). |
+| **Build 4** | Planned | Jira-style export format, PDF export, and additional route/SPA support. |
 | **Build 5** | Planned | Optional sync/team workspace integrations. |
 
 ---
@@ -164,6 +164,6 @@ Run the localhost demo server with `npm run demo` and open **`http://127.0.0.1:4
 
 Detailed planning and implementation notes for the next development cycle can be found in the following resources:
 - [docs/build-2-plan.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-plan.md) — Scope, goals, risks, and acceptance criteria.
-- [docs/build-2-issues.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-issues.md) — Modular task breakdowns (Issues 1 & 2 Completed).
+- [docs/build-2-issues.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-issues.md) — Modular task breakdowns (Issues 1, 2 & 3 Completed).
 - [docs/build-2-test-plan.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-test-plan.md) — QA verification steps and mimic scenarios.
-- [docs/build-2-progress.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-progress.md) — Current implementation status, including the completed **Debug Marker Visibility Toggle** and **Validation Confidence Scoring Improvements** (both operate entirely locally on device).
+- [docs/build-2-progress.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-progress.md) — Current implementation status, including the completed **Debug Marker Visibility Toggle**, **Validation Confidence Scoring Improvements**, and the **GitHub Issue Export Format** (all operating entirely locally on device).

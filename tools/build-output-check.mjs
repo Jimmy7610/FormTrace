@@ -22,7 +22,11 @@ const REQUIRED_STRINGS = [
   'Network DOM signal detected',
   'Show debug markers',
   'filterTechnicalDetailsForDebugMarkers',
-  'Validation confidence combo bonus'
+  'Validation confidence combo bonus',
+  'Copy GitHub issue',
+  'buildGitHubIssueReport',
+  'FormTrace:',
+  'GitHub issue export active'
 ];
 
 function getFilesRecursive(dir) {

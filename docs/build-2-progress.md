@@ -20,6 +20,15 @@
   - Added Test 6 and Test 7 cases to `tools/analyzer-check.ts` to programmatically assert validation confidence thresholds (>= 75%) and successful submissions respectively.
   - Updated `tools/build-output-check.mjs` to ensure the combo bonus check compiles correctly in minified production bundles.
 
+### Issue 3: GitHub Issue Export Format
+- **Completed On**: 2026-05-20
+- **What Changed**:
+  - Implemented [buildGitHubIssueReport.ts](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/src/analyzer/buildGitHubIssueReport.ts) to format analysis reports as clean GitHub bug reports.
+  - Added a **Copy GitHub issue** button to [App.tsx](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/entrypoints/popup/App.tsx).
+  - Configured the Reset button to occupy a full row (`btn-full`) to keep the button grid balanced.
+  - Created [github-issue-report-check.ts](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/tools/github-issue-report-check.ts) to verify format rendering and respect for the showDebugMarkers toggle.
+  - Added `github:check` script and integrated it into the verification pipeline and production build verification script.
+
 ---
 
 ## How to Test
@@ -57,4 +66,4 @@ This runs typechecks, building, DOM verification, rule analysis, normalization c
 ---
 
 ## Next Recommended Task
-- **Issue 3: Add GitHub Issue export format** ([docs/build-2-issues.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-issues.md#L32)).
+- **Issue 4: Add Jira-style export format** ([docs/build-2-issues.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-issues.md#L49)).

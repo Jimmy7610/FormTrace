@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import type { RecordingSession, AnalysisReport, Finding, Severity } from '../../src/types/formtrace';
 import { buildMarkdownReport } from '../../src/analyzer/buildMarkdownReport';
+import { buildGitHubIssueReport } from '../../src/analyzer/buildGitHubIssueReport';
 import { analyzeSession } from '../../src/analyzer/analyzeSession';
 import { normalizeReportForHiddenRequiredFields } from '../../src/analyzer/normalizeReport';
 import { filterTechnicalDetailsForDebugMarkers } from '../../src/analyzer/filterDebugMarkers';
@@ -267,6 +268,26 @@ export default function App() {
     }
   }
 
+  async function handleCopyGitHubIssue() {
+    const report = status.lastReport;
+    if (!report) return;
+
+    const markdown = buildGitHubIssueReport(report, { showDebugMarkers: debugMarkersVisible });
+    try {
+      await navigator.clipboard.writeText(markdown);
+      toast('GitHub issue copied!');
+    } catch {
+      // Fallback for clipboard permission issues
+      const el = document.createElement('textarea');
+      el.value = markdown;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+      toast('GitHub issue copied!');
+    }
+  }
+
   // ─── Render ─────────────────────────────────────────────────────────────────
 
   const { isRecording, formCount, eventCount, submitAttemptCount, lastReport } = status;
@@ -331,7 +352,7 @@ export default function App() {
 
         <button
           id="btn-reset"
-          className="btn btn-ghost"
+          className="btn btn-ghost btn-full"
           onClick={handleReset}
           disabled={loading}
           type="button"
@@ -347,6 +368,16 @@ export default function App() {
           type="button"
         >
           ⎘ Copy report
+        </button>
+
+        <button
+          id="btn-copy-github"
+          className="btn btn-success"
+          onClick={handleCopyGitHubIssue}
+          disabled={!lastReport || loading}
+          type="button"
+        >
+          ⎘ Copy GitHub issue
         </button>
       </div>
 

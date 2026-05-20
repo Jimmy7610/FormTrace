@@ -34,9 +34,10 @@
 ### Completed
 - **Settings Toggle (UX)**: Toggle visibility of internal debug markers in the report (Issue 1).
 - **Scoring Improvements**: Refined confidence scores for validation issues (Issue 2).
+- **GitHub Issue Export**: Formatted Markdown bug report generation (Issue 3).
 
 ### Planned (In Progress)
-- **Export Formats**: Copy as GitHub Issue template and Jira rich markup syntax.
+- **Jira Export Format**: Copy as Jira rich markup syntax (Issue 4).
 - **Local Session History**: Queue and browse the last 5 sessions.
 - **Framework Mimic Pages (Testing)**: Build demo pages to verify performance against React Hook Form, Formik, Shopify, Webflow, and WordPress form structures.
 - **UI Readability**: Improve report aesthetics, cards, and dynamic severity highlighting.

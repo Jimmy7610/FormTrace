@@ -30,17 +30,23 @@ This document breaks Build 2 down into small, isolated, and implementable tasks.
 
 ---
 
-## Issue 3: GitHub Issue Export Format
-- **Goal**: Generate a copyable report formatted as a clean GitHub Issue bug report.
-- **Files Likely Affected**:
-  - `src/popup/App.tsx` (Add "Copy as GitHub Issue" button)
-  - `src/utils/reportGenerator.ts` (Implement GitHub template formatting)
+## Issue 3: GitHub Issue Export Format [COMPLETED]
+- **Goal**: Generate a copyable report formatted as a clean GitHub-friendly bug report.
+- **Files Affected**:
+  - [App.tsx](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/entrypoints/popup/App.tsx) (Add "Copy GitHub issue" button and handler)
+  - [buildGitHubIssueReport.ts](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/src/analyzer/buildGitHubIssueReport.ts) (Implement template formatting)
+  - [github-issue-report-check.ts](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/tools/github-issue-report-check.ts) (Unit tests)
 - **Acceptance Criteria**:
   1. Copying as a GitHub Issue produces Markdown containing structured blocks:
-     - `### Bug Description`
-     - `### Steps to Reproduce`
-     - `### Technical Analysis` (confidence score, severity, findings table)
-     - `### Environment` (user agent, page title, URL)
+     - Header (`# FormTrace: [Likely Issue]`)
+     - `## Summary`
+     - `## Page` (title, URL, timestamp)
+     - `## Severity` (severity label and confidence)
+     - `## Findings`
+     - `## Technical Details` (respects debug marker settings)
+     - `## Suggested Fixes`
+     - `## Privacy`
+     - `## Reproduction Notes`
   2. The output uses clean GitHub-flavored Markdown.
 - **Risk Level**: **Low**
 
