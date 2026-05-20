@@ -75,6 +75,7 @@ html.persistent-html, body.persistent-mode, body.sidepanel-mode {
   min-height: 500px;
   max-height: 600px;
   overflow-y: auto;
+  overscroll-behavior-y: contain;
   padding: 14px;
   gap: 10px;
 }
@@ -334,6 +335,8 @@ body.persistent-mode .popup, body.sidepanel-mode .popup {
   font-weight: 600;
   color: var(--text-primary);
   line-height: 1.35;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .severity-badge {
@@ -571,6 +574,7 @@ body.persistent-mode .popup, body.sidepanel-mode .popup {
   height: 1px;
   background: var(--border);
   border-radius: 1px;
+  margin: 4px 0;
 }
 
 /* ─── Settings Area ────────────────────────────────────────────────────────── */
@@ -616,7 +620,7 @@ body.persistent-mode .popup, body.sidepanel-mode .popup {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  margin-top: 4px;
+  margin-top: 8px;
 }
 
 .history-header {
@@ -701,6 +705,11 @@ body.persistent-mode .popup, body.sidepanel-mode .popup {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+body.persistent-mode .history-meta-title,
+body.sidepanel-mode .history-meta-title {
+  max-width: 220px;
 }
 
 .history-actions {

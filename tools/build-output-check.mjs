@@ -38,7 +38,10 @@ const REQUIRED_STRINGS = [
   'Open side panel',
   'Side panel',
   'FormTrace side panel active',
-  'Use the side panel to keep FormTrace visible beside the page.'
+  'Use the side panel to keep FormTrace visible beside the page.',
+  'Side panel mode keeps FormTrace visible while you work on the page.',
+  'Recording active',
+  'Clears the current session, not saved history.'
 ];
 
 function getFilesRecursive(dir) {

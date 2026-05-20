@@ -92,6 +92,15 @@ Verify the following new capabilities:
 - **Expected Result**:
   - Both scripts execute in Node, mocking Chrome Extension APIs, and print their respective `PASSED!` messages, exiting with status code 0.
 
+### Test 3.5: Side Panel UX Assertions
+- **Steps**:
+  1. Run the UX verification script:
+     ```bash
+     npm run sidepanel:ux-check
+     ```
+- **Expected Result**:
+  - The script executes in Node, asserts that all stable layout helper strings exist in `FormTracePanel.tsx`, and exits with status code 0.
+
 ---
 
 ## 4. Manual QA Verification (Issue 1 Side Panel Retest)

@@ -412,6 +412,12 @@ export default function FormTracePanel({
         )}
       </div>
 
+      {isSidePanel && (
+        <div className="mode-helper-text" style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 2 }}>
+          Side panel mode keeps FormTrace visible while you work on the page.
+        </div>
+      )}
+
       {/* Side Panel and Persistent Window Control Area */}
       {!isPersistent && !isSidePanel && (
         <div className="persistent-control-panel" style={{ padding: '0 12px 10px', marginTop: '-4px' }}>
@@ -459,8 +465,13 @@ export default function FormTracePanel({
       <div className="status-pill">
         <span className={`status-dot ${isRecording ? 'recording' : ''}`} />
         <span className={`status-label ${isRecording ? 'recording' : ''}`}>
-          {isRecording ? 'Recording…' : 'Idle'}
+          {isRecording ? 'Recording active' : 'Idle'}
         </span>
+        {isRecording && (
+          <span className="recording-helper" style={{ marginLeft: 'auto', fontSize: 10, color: 'var(--text-muted)' }}>
+            Interact with the form, then stop and analyze.
+          </span>
+        )}
       </div>
 
       {/* Stats */}
@@ -507,6 +518,7 @@ export default function FormTracePanel({
           onClick={handleReset}
           disabled={loading}
           type="button"
+          title="Clears the current session, not saved history."
         >
           ↺ Reset
         </button>

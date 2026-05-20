@@ -28,7 +28,23 @@ This document breaks Build 3 down into small, isolated, and implementable tasks.
 
 ---
 
-## Issue 2: CSS Blame Overlay [PLANNED]
+## Issue 2: Side Panel UX Polish [COMPLETED]
+- **Goal**: Refine the visual UX and helper texts of the side panel to make it clearer for end-users, without disrupting the standard action popup layout.
+- **Files Affected**:
+  - `src/ui/FormTracePanel.tsx` (Component text & tooltips)
+  - `entrypoints/popup/style.css` (Typography wrapping & scroll stability)
+  - `tools/sidepanel-ux-check.ts` (New automated string check)
+  - `package.json` (Verification pipeline registry)
+- **Acceptance Criteria**:
+  1. Helper text for side panel mode is added and strictly visible only inside the side panel layout.
+  2. "Recording active" displays instead of "Recording..." with additional instructional text.
+  3. Reset button tooltip explains it clears the session, not history.
+  4. Automated `npm run sidepanel:ux-check` verifies production UI strings.
+- **Risk Level**: **Low**
+
+---
+
+## Issue 3: CSS Blame Overlay [PLANNED]
 - **Goal**: Inject visual highlighting overlays directly into the active tab to call out fields causing validation failures, empty required inputs, or disabled buttons.
 - **Acceptance Criteria**:
   1. A toggle setting "Enable Blame Overlay" exists.
@@ -37,7 +53,7 @@ This document breaks Build 3 down into small, isolated, and implementable tasks.
 
 ---
 
-## Issue 3: Framework Mimic Demo Pages [PLANNED]
+## Issue 4: Framework Mimic Demo Pages [PLANNED]
 - **Goal**: Create production-style SPA and form framework simulation pages (React Hook Form, Formik, Shopify checkout flow, WordPress AJAX forms).
 - **Acceptance Criteria**:
   1. Validate FormTrace recording and analysis engine rules against all complex framework form layouts.

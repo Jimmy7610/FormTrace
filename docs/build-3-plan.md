@@ -21,9 +21,10 @@ While Build 2 added rich export formatting and report history, developers and QA
 - **Shared UI Panel Component**: The main layout is powered by the polymorphic `<FormTracePanel>` component, which adapts seamlessly between standard Action Popup, Side Panel, and Separate Window modes.
 - **Single-Instance & Stale Tracking**: Employs robust storage-backed state tracing to ensure only single instances of the persistent window are active, and utilizes separated try-catch handlers to gracefully fall back from window querying to tab querying during side panel launches.
 
-### 2. CSS Blame Overlay (Issue 2 - Planned)
-- **Overlay Injection**: Inject styling rules and indicators directly into the tab's DOM to flag validation failures or hidden inputs.
-- **Toggle Control**: Toggle element highlighting from the FormTrace UI.
+### 2. Side Panel UX Polish (Issue 2)
+- **Visual Hierarchy**: Improved text wrapping for layout edge-cases in the side panel mode.
+- **UX Text Helpers**: Introduced contextual helper text that clarifies the behavior of recording states and session resets.
+- **Automated String Verification**: Added `sidepanel-ux-check.ts` to ensure layout strings remain stable through minification.
 
 ### 3. Framework Mimic Demo Pages (Issue 3 - Planned)
 - Create test pages representing React Hook Form, Formik, Shopify Checkout, Webflow, and WordPress structures.
@@ -38,5 +39,6 @@ While Build 2 added rich export formatting and report history, developers and QA
 
 ## Implementation Order
 1. **Issue 1**: Native Side Panel mode & Legacy Persistent Window (Completed).
-2. **Issue 2**: CSS Blame Overlay (Planned).
-3. **Issue 3**: Framework Mimic Demo Pages (Planned).
+2. **Issue 2**: Side Panel UX Polish (Completed).
+3. **Issue 3**: CSS Blame Overlay (Planned).
+4. **Issue 4**: Framework Mimic Demo Pages (Planned).

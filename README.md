@@ -160,7 +160,7 @@ Run the localhost demo server with `npm run demo` and open **`http://127.0.0.1:4
 |---|---|---|
 | **Build 1** | **Completed & Verified** | Core recorder, DOM signal checks, static network probe, report normalization, copyable Markdown. |
 | **Build 2** | **Completed & Verified** | Settings toggle, validation confidence scoring, GitHub Issue & Jira report export formats, local session history, and release prep. |
-| **Build 3** | **In Progress** | Side Panel mode, legacy persistent window, and Visual CSS Blame overlay to highlight broken elements directly in the page DOM. |
+| **Build 3** | **In Progress** | Side Panel mode, Side Panel UX Polish, legacy persistent window, and Visual CSS Blame overlay to highlight broken elements directly in the page DOM. |
 | **Build 4** | Planned | PDF export, and additional route/SPA support. |
 | **Build 5** | Planned | Optional sync/team workspace integrations. |
  

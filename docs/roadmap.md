@@ -45,6 +45,7 @@
 
 ### Delivered
 - **Native Side Panel Mode**: Add a modern Chrome side panel layout that remains visible alongside the active webpage, with responsive styles, gesture-activated launch helper, and badge-styled status controls.
+- **Side Panel UX Polish**: Improved mode helper text, responsive history wrapping, clearer reset tooltip, and compact "Recording active" status indicator.
 - **Legacy Persistent Window**: Keep the standalone pop-out window as a secondary option for cases where a side panel layout is not desired.
 
 ### Planned
