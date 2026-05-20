@@ -15,9 +15,9 @@ FormTrace is a privacy-first Chrome extension that records form interactions, de
 
 ---
 
-## Current Status: Build 3 Development (In Progress)
- 
-FormTrace Build 3 is in progress. Native Side Panel mode has been completed, verified via automated integration tests, and is ready for manual QA verification. Legacy persistent window mode is also supported as a secondary fallback option.
+## Current Status: Build 3 Complete (v1.2.0-build3)
+
+FormTrace Build 3 is now complete. Native Chrome Side Panel mode is the recommended debugging interface, allowing FormTrace to stay visible beside the webpage. Legacy persistent window mode remains supported as a secondary fallback.
  
 ### What FormTrace Can Detect:
 1. **Hidden Required Fields**: Detects fields styled with `display: none` or `visibility: hidden` (or inside hidden containers) that are marked `required` but remain empty.

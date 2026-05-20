@@ -37,20 +37,19 @@
 
 ---
 
-## Build 3 — CSS Blame Overlay & Framework Demos
+## Build 3 — CSS Blame & Framework Demos
 
-**Status:** In Progress
+**Status:** Completed & Verified
 
 **Focus:** Side Panel mode, legacy persistent window fallback, visual overlay to identify layout-related form issues, and SPAs.
 
 ### Delivered
-- **Native Side Panel Mode**: Add a modern Chrome side panel layout that remains visible alongside the active webpage, with responsive styles, gesture-activated launch helper, and badge-styled status controls.
-- **Side Panel UX Polish**: Improved mode helper text, responsive history wrapping, clearer reset tooltip, and compact "Recording active" status indicator.
-- **Legacy Persistent Window**: Keep the standalone pop-out window as a secondary option for cases where a side panel layout is not desired.
-
-### Planned
-- Visual CSS Blame overlay to highlight broken elements directly in the page DOM.
-- framework-mimic-pages: Build demo pages to verify performance against React Hook Form, Formik, Shopify, Webflow, WordPress, etc.
+- **Native Side Panel Mode**: Add a modern Chrome side panel layout that remains visible alongside the active webpage.
+- **Side Panel UX Polish**: Improved mode helper text, responsive history wrapping, clearer reset tooltip, and compact "Recording active" status indicator. Improved scrollbar UX.
+- **Legacy Persistent Window**: Secondary fallback for cases where a side panel layout is not desired.
+- **Session State Clarity**: Better timestamps, active tab labeling, and saved vs current session context markers.
+- **CSS Blame Inspector**: Accurate error attribution for hidden elements identifying exact CSS rules causing issues.
+- **Framework Demos**: Built and verified against React, Vue, Angular, and custom validation form simulations.
 
 ---
 
