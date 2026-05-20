@@ -67,6 +67,11 @@ html.persistent-html, body.persistent-mode, body.sidepanel-mode {
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
 
+/* INSTÄLLNING - Side Panel scrollbar width for easier manual scrolling. */
+body.sidepanel-mode ::-webkit-scrollbar { width: 14px; }
+body.sidepanel-mode ::-webkit-scrollbar-thumb { border-radius: 8px; border: 3px solid var(--bg-base); }
+body.sidepanel-mode { scrollbar-gutter: stable; }
+
 /* ─── Layout ───────────────────────────────────────────────────────────────── */
 
 .popup {
@@ -83,6 +88,8 @@ html.persistent-html, body.persistent-mode, body.sidepanel-mode {
 body.persistent-mode .popup, body.sidepanel-mode .popup {
   min-height: 100vh;
   max-height: none;
+  /* INSTÄLLNING - Extra bottom padding so the last panel section is easy to reach. */
+  padding-bottom: 28px;
 }
 
 /* ─── Header ───────────────────────────────────────────────────────────────── */
@@ -717,6 +724,12 @@ body.persistent-mode .popup, body.sidepanel-mode .popup {
   gap: 6px;
   max-height: 240px;
   overflow-y: auto;
+}
+
+body.persistent-mode .history-list,
+body.sidepanel-mode .history-list {
+  max-height: none;
+  overflow-y: visible;
 }
 
 .history-item {

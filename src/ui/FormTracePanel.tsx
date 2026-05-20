@@ -428,7 +428,7 @@ export default function FormTracePanel({
   const displaySubmitAttemptCount = activeReport ? activeReport.submitAttemptCount : submitAttemptCount;
 
   return (
-    <div className="popup">
+    <div className="popup" data-scroll-ux="FormTrace side panel scroll UX active">
       {/* Header */}
       <div className="header">
         <div className="header-left">

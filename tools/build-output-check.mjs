@@ -48,7 +48,8 @@ const REQUIRED_STRINGS = [
   'Saved report',
   'Exports use the currently opened report.',
   'Make sure the page you want to test is the active tab before starting a new recording.',
-  'CSS cause:'
+  'CSS cause:',
+  'FormTrace side panel scroll UX active'
 ];
 
 function getFilesRecursive(dir) {

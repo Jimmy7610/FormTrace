@@ -131,6 +131,15 @@ Verify the following new capabilities:
   - Validates that all new framework demo pages (`react`, `vue`, `angular`, `async`, `custom-validation`) exist and contain correct simulation code without introducing external dependencies.
   - Ensures the demo index page properly links to all of them.
 
+### Test 3.9: Side Panel Scroll UX Usability Assertions
+- **Steps**:
+  1. Run the scroll UX verification script:
+     ```bash
+     npm run scroll:ux-check
+     ```
+- **Expected Result**:
+  - The script executes in Node, asserting that all stable scroll styling markers (e.g. `Side Panel scrollbar width for easier manual scrolling`) and data attributes exist in the CSS and source code, and exits with status code 0.
+
 ---
 
 ## 4. Manual QA Verification (Issue 1 Side Panel Retest)

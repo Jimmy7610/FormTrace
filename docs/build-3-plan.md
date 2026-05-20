@@ -21,8 +21,10 @@ While Build 2 added rich export formatting and report history, developers and QA
 - **Shared UI Panel Component**: The main layout is powered by the polymorphic `<FormTracePanel>` component, which adapts seamlessly between standard Action Popup, Side Panel, and Separate Window modes.
 - **Single-Instance & Stale Tracking**: Employs robust storage-backed state tracing to ensure only single instances of the persistent window are active, and utilizes separated try-catch handlers to gracefully fall back from window querying to tab querying during side panel launches.
 
-### 2. Side Panel UX Polish (Issue 2)
-- **Visual Hierarchy**: Improved text wrapping for layout edge-cases in the side panel mode.
+### 2. Side Panel UX Polish (Issue 2 - Completed)
+- Adds a visual "Recording active" pulse to avoid forgotten background recordings.
+- Expands history lists to utilize the larger vertical height gracefully without cramped nested scrolls.
+- Introduces comfortable Side Panel scrolling by increasing the scrollbar grab area width and adding bottom padding to avoid cramped footers.
 - **UX Text Helpers**: Introduced contextual helper text that clarifies the behavior of recording states and session resets.
 - **Automated String Verification**: Added `sidepanel-ux-check.ts` to ensure layout strings remain stable through minification.
 

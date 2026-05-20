@@ -25,9 +25,10 @@
     "session:check": "tsx tools/session-state-check.ts",
     "css:blame-check": "tsx tools/css-blame-check.ts",
     "framework:check": "tsx tools/framework-demo-check.ts",
+    "scroll:ux-check": "tsx tools/scroll-ux-check.ts",
     "build:check": "node tools/build-output-check.mjs",
     "demo": "http-server demo-pages -p 4173 -c-1",
-    "verify": "npm run typecheck && npm run build && npm run analyzer:check && npm run report:check && npm run history:check && npm run persistent:check && npm run sidepanel:check && npm run sidepanel:ux-check && npm run session:check && npm run css:blame-check && npm run framework:check && npm run build:check",
+    "verify": "npm run typecheck && npm run build && npm run analyzer:check && npm run report:check && npm run history:check && npm run persistent:check && npm run sidepanel:check && npm run sidepanel:ux-check && npm run scroll:ux-check && npm run session:check && npm run css:blame-check && npm run framework:check && npm run build:check",
     "release:check": "npm run verify"
   },
   "dependencies": {

@@ -29,7 +29,12 @@ This document breaks Build 3 down into small, isolated, and implementable tasks.
 ---
 
 ## Issue 2: Side Panel UX Polish [COMPLETED]
-- **Goal**: Refine the visual UX and helper texts of the side panel to make it clearer for end-users, without disrupting the standard action popup layout.
+- **Goal**: Refine the visual experience when FormTrace runs in a wider, taller panel context.
+- **Improvements**:
+  - Automatically expand technical details / root cause when a high-severity issue is detected.
+  - Show a persistent "Recording active" pulse indicator so users don't forget it's running.
+  - Expand the "Recent reports" history view to take advantage of the vertical space.
+  - **Scroll Usability (Follow-up):** Increased scrollbar width, removed nested scrolling friction in history lists, and added bottom padding to ensure the UI feels native and comfortable to scroll when pinned to the side.
 - **Files Affected**:
   - `src/ui/FormTracePanel.tsx` (Component text & tooltips)
   - `entrypoints/popup/style.css` (Typography wrapping & scroll stability)
