@@ -54,9 +54,9 @@ function buildFindings(
   if (score.disabledSubmit) {
     findings.push({
       code: 'DISABLED_SUBMIT',
-      label: 'Submit button was disabled at click time',
+      label: 'Submit button was disabled at interaction time',
       severity: 'high',
-      detail: 'The submit button had the disabled attribute when it was clicked.',
+      detail: 'The submit button was disabled when the user attempted to submit the form.',
     });
   }
 
@@ -151,6 +151,13 @@ function buildTechnicalDetails(
     'Analyzer bundle active: popup-local-normalized',
   ];
 
+  const disabledAttempts = session.events.filter((e) => e.type === 'disabled-submit-attempt').length;
+  const legacyDisabled = session.events.some((e) => e.type === 'submit-click' && e.snapshot?.submitButtonDisabled === true);
+  const totalDisabled = disabledAttempts + (legacyDisabled ? 1 : 0);
+  if (totalDisabled > 0) {
+    details.push(`Disabled submit attempt detected: ${totalDisabled}`);
+  }
+
   // Add field details from the last snapshot
   const snapshots = session.events.filter((e) => e.snapshot);
   if (snapshots.length > 0) {
@@ -177,8 +184,9 @@ function buildSuggestedFixes(score: ReturnType<typeof computeScore>): string[] {
   const fixes: string[] = [];
 
   if (score.disabledSubmit) {
-    fixes.push('Ensure the submit button is enabled, or show a clear explanation of why it is disabled.');
-    fixes.push('Verify no JavaScript is incorrectly disabling the button on load.');
+    fixes.push('Check why the submit button remains disabled.');
+    fixes.push('Ensure the button becomes enabled when the form is valid.');
+    fixes.push('Show visible guidance explaining what the user must do before submitting.');
   }
   if (score.hiddenRequiredField) {
     fixes.push('Make all required fields visible to the user, or remove the required attribute from hidden fields.');

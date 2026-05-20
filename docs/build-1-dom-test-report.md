@@ -72,3 +72,5 @@ The automated script (`tools/dom-check.mjs`) verified the structural integrity o
 *(Update 4: Production build verification added. The build output is now checked to ensure the hidden-required-first-pass runtime marker strings are included in .output/chrome-mv3.)*
 
 *(Update 5: Real popup still displayed a generic required-fields report even though technical details contained a hidden required empty field. Added final popup report normalization so the displayed report, cached report, copied report and local report all correct hidden required fields before rendering.)*
+
+*(Update 6: Manual testing showed disabled submit buttons did not trigger a normal click event, so FormTrace now records pointer/mouse attempted interactions with disabled submit controls and reports Submit button was disabled.)*

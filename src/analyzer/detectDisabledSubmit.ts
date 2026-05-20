@@ -7,7 +7,7 @@ import type { RecordingSession } from '../types/formtrace';
 export function detectDisabledSubmit(session: RecordingSession): boolean {
   return session.events.some(
     (e) =>
-      e.type === 'submit-click' &&
-      e.snapshot?.submitButtonDisabled === true
+      (e.type === 'submit-click' && e.snapshot?.submitButtonDisabled === true) ||
+      e.type === 'disabled-submit-attempt'
   );
 }

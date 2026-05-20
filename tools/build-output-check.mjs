@@ -7,7 +7,10 @@ const REQUIRED_STRINGS = [
   'Hidden required empty fields found',
   'Hidden required field blocked submission',
   'Popup normalization fix: final-report-guard',
-  'Analyzer bundle active: popup-local-normalized'
+  'Analyzer bundle active: popup-local-normalized',
+  'disabled-submit-attempt',
+  'Disabled submit attempt detected',
+  'Submit button was disabled at interaction time'
 ];
 
 function getFilesRecursive(dir) {

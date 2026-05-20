@@ -42,7 +42,8 @@ export type RecordedEventType =
   | 'network-failure'
   | 'console-error'
   | 'mutation'
-  | 'page-snapshot';
+  | 'page-snapshot'
+  | 'disabled-submit-attempt';
 
 export interface RecordedEvent {
   type: RecordedEventType;
@@ -55,6 +56,11 @@ export interface RecordedEvent {
   status?: number;        // HTTP status for network failures
   url?: string;           // for network events
   snapshot?: FormSnapshot;
+  tagName?: string;
+  buttonText?: string;
+  disabled?: boolean;
+  formId?: string;
+  formName?: string;
 }
 
 // ─── Recording session ────────────────────────────────────────────────────────

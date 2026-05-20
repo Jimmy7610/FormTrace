@@ -169,6 +169,67 @@ function runAnalyzerCheck() {
     console.log('[PASS] Test 2: likelyIssue is correctly prioritized as "Required fields are missing"');
   }
 
+  // Test 3: Disabled submit button interaction attempt.
+  const disabledMockSession: RecordingSession = {
+    id: 'test-session-3',
+    startedAt: Date.now(),
+    stoppedAt: Date.now() + 5000,
+    pageUrl: 'http://localhost/demo3',
+    pageTitle: 'Test 3',
+    formCount: 1,
+    submitAttemptCount: 0,
+    clickWithoutSubmitCount: 0,
+    events: [
+      {
+        type: 'disabled-submit-attempt',
+        timestamp: Date.now(),
+        tagName: 'button',
+        fieldType: 'submit',
+        buttonText: 'Submit (disabled)',
+        disabled: true,
+      }
+    ]
+  };
+
+  const disabledReport = analyzeSession(disabledMockSession);
+
+  if (disabledReport.likelyIssue !== 'Submit button was disabled') {
+    console.error(`[FAIL] Test 3: Expected "Submit button was disabled", got: "${disabledReport.likelyIssue}"`);
+    passed = false;
+  } else {
+    console.log('[PASS] Test 3: likelyIssue is correctly prioritized as "Submit button was disabled"');
+  }
+
+  if (disabledReport.severity !== 'high') {
+    console.error(`[FAIL] Test 3: Expected severity "high", got: "${disabledReport.severity}"`);
+    passed = false;
+  } else {
+    console.log('[PASS] Test 3: severity is "high"');
+  }
+
+  if (disabledReport.confidenceScore < 90) {
+    console.error(`[FAIL] Test 3: Expected confidenceScore >= 90, got: ${disabledReport.confidenceScore}`);
+    passed = false;
+  } else {
+    console.log(`[PASS] Test 3: confidenceScore is high (${disabledReport.confidenceScore})`);
+  }
+
+  const hasDisabledDebug = disabledReport.technicalDetails.some(d => d.includes('Disabled submit attempt detected: 1'));
+  if (!hasDisabledDebug) {
+    console.error(`[FAIL] Test 3: Expected technicalDetails to include "Disabled submit attempt detected: 1"`);
+    passed = false;
+  } else {
+    console.log('[PASS] Test 3: technicalDetails includes "Disabled submit attempt detected: 1"');
+  }
+
+  const hasDisabledFinding = disabledReport.findings.some(f => f.code === 'DISABLED_SUBMIT' && f.label === 'Submit button was disabled at interaction time');
+  if (!hasDisabledFinding) {
+    console.error(`[FAIL] Test 3: Expected findings to include DISABLED_SUBMIT with "Submit button was disabled at interaction time"`);
+    passed = false;
+  } else {
+    console.log('[PASS] Test 3: findings includes DISABLED_SUBMIT with "Submit button was disabled at interaction time"');
+  }
+
   if (!passed) {
     console.error('\nAnalyzer Verification FAILED!');
     process.exit(1);

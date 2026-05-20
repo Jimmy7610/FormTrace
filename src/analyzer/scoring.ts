@@ -5,7 +5,7 @@ import { getHiddenRequiredEmptyFieldsFromSession } from './detectHiddenRequiredF
 // INSTÄLLNING - Justera poäng för varje fyndat problem (0–100 klampat)
 
 /** Submit button was disabled when clicked. */
-export const SCORE_DISABLED_SUBMIT = 30;
+export const SCORE_DISABLED_SUBMIT = 95;
 
 /** A hidden required field was found empty. */
 export const SCORE_HIDDEN_REQUIRED_FIELD = 90;
@@ -48,8 +48,8 @@ export function computeScore(session: RecordingSession): ScoreBreakdown {
 
   const disabledSubmit = events.some(
     (e) =>
-      e.type === 'submit-click' &&
-      e.snapshot?.submitButtonDisabled === true
+      (e.type === 'submit-click' && e.snapshot?.submitButtonDisabled === true) ||
+      e.type === 'disabled-submit-attempt'
   );
 
   const hiddenFields = getHiddenRequiredEmptyFieldsFromSession(session);

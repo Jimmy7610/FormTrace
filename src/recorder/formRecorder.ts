@@ -137,6 +137,129 @@ function handleChange(e: Event): void {
   });
 }
 
+// ─── Disabled Submit Button Attempt Detection ───
+
+function findSubmitDisabledButton(target: HTMLElement | null, x?: number, y?: number): HTMLElement | null {
+  if (target) {
+    const btn = target.closest('button, input[type="submit"]');
+    if (btn && (btn.hasAttribute('disabled') || btn.getAttribute('aria-disabled') === 'true')) {
+      if (btn.tagName.toLowerCase() === 'button') {
+        const type = btn.getAttribute('type');
+        if (!type || type === 'submit') {
+          return btn as HTMLElement;
+        }
+      } else if (btn.tagName.toLowerCase() === 'input') {
+        if ((btn as HTMLInputElement).type === 'submit') {
+          return btn as HTMLElement;
+        }
+      }
+    }
+
+    // Support elements with aria-disabled="true" and submit-like role/text
+    const ariaDisabledEl = target.closest('[aria-disabled="true"]');
+    if (ariaDisabledEl) {
+      const role = ariaDisabledEl.getAttribute('role');
+      if (role === 'button' || role === 'link' || ariaDisabledEl.tagName.toLowerCase() === 'button') {
+        const text = ariaDisabledEl.textContent?.toLowerCase() ?? '';
+        const isSubmitLike =
+          text.includes('submit') ||
+          text.includes('skicka') ||
+          text.includes('send') ||
+          text.includes('save') ||
+          text.includes('create') ||
+          text.includes('registrera') ||
+          text.includes('logga in') ||
+          text.includes('sign in');
+        if (isSubmitLike) {
+          return ariaDisabledEl as HTMLElement;
+        }
+      }
+    }
+  }
+
+  // Fallback using elementFromPoint
+  if (x !== undefined && y !== undefined) {
+    try {
+      const el = document.elementFromPoint(x, y) as HTMLElement | null;
+      if (el && el !== target) {
+        const btn = el.closest('button, input[type="submit"]');
+        if (btn && (btn.hasAttribute('disabled') || btn.getAttribute('aria-disabled') === 'true')) {
+          if (btn.tagName.toLowerCase() === 'button') {
+            const type = btn.getAttribute('type');
+            if (!type || type === 'submit') {
+              return btn as HTMLElement;
+            }
+          } else if (btn.tagName.toLowerCase() === 'input') {
+            if ((btn as HTMLInputElement).type === 'submit') {
+              return btn as HTMLElement;
+            }
+          }
+        }
+      }
+    } catch (err) {
+      // Ignore errors
+    }
+  }
+
+  return null;
+}
+
+let lastDisabledSubmitAttemptTime = 0;
+
+function emitDisabledSubmitAttempt(btn: HTMLElement): void {
+  const now = Date.now();
+  if (now - lastDisabledSubmitAttemptTime < 100) return;
+  lastDisabledSubmitAttemptTime = now;
+
+  const form = btn.closest('form');
+  const forms = getAllForms();
+  const formIndex = form ? forms.indexOf(form) : -1;
+  const snapshot = form ? snapshotForm(form, formIndex) : undefined;
+
+  const buttonText = btn.textContent?.trim().slice(0, 50) ?? '';
+
+  emit({
+    type: 'disabled-submit-attempt',
+    timestamp: now,
+    formIndex: formIndex >= 0 ? formIndex : undefined,
+    snapshot,
+    tagName: btn.tagName.toLowerCase(),
+    fieldType: btn.getAttribute('type') || undefined,
+    buttonText,
+    disabled: true,
+    formId: form?.id || undefined,
+    formName: form?.getAttribute('name') || undefined,
+  });
+
+  if (DEBUG) console.debug('[FormTrace] disabled-submit-attempt captured');
+}
+
+function handlePointerDown(e: PointerEvent): void {
+  const target = e.target as HTMLElement | null;
+  const btn = findSubmitDisabledButton(target, e.clientX, e.clientY);
+  if (btn) {
+    emitDisabledSubmitAttempt(btn);
+  }
+}
+
+function handleMouseDown(e: MouseEvent): void {
+  if (window.PointerEvent) return; // Skip if PointerEvent is supported
+  const target = e.target as HTMLElement | null;
+  const btn = findSubmitDisabledButton(target, e.clientX, e.clientY);
+  if (btn) {
+    emitDisabledSubmitAttempt(btn);
+  }
+}
+
+function handleKeyDown(e: KeyboardEvent): void {
+  if (e.key !== 'Enter' && e.key !== ' ') return;
+  const target = document.activeElement as HTMLElement | null;
+  const btn = findSubmitDisabledButton(target);
+  if (btn) {
+    emitDisabledSubmitAttempt(btn);
+  }
+}
+
 // ─── Attach / detach ──────────────────────────────────────────────────────────
 
 let attached = false;
@@ -147,11 +270,15 @@ export function attachFormRecorder(): void {
   attached = true;
   eventCount = 0;
   pendingClickTimestamp = null;
+  lastDisabledSubmitAttemptTime = 0;
 
   document.addEventListener('submit', handleSubmit, true);
   document.addEventListener('click', handleClick, true);
   document.addEventListener('invalid', handleInvalid, true);
   document.addEventListener('change', handleChange, true);
+  document.addEventListener('pointerdown', handlePointerDown, true);
+  document.addEventListener('mousedown', handleMouseDown, true);
+  document.addEventListener('keydown', handleKeyDown, true);
 
   // Initial snapshot
   emit(takeSnapshot(0));
@@ -168,6 +295,9 @@ export function detachFormRecorder(): void {
   document.removeEventListener('click', handleClick, true);
   document.removeEventListener('invalid', handleInvalid, true);
   document.removeEventListener('change', handleChange, true);
+  document.removeEventListener('pointerdown', handlePointerDown, true);
+  document.removeEventListener('mousedown', handleMouseDown, true);
+  document.removeEventListener('keydown', handleKeyDown, true);
 
   if (DEBUG) console.debug('[FormTrace] Form recorder detached');
 }
