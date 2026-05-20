@@ -11,7 +11,7 @@ export default defineConfig({
     short_name: 'FormTrace',
     description:
       'FormTrace helps developers, QA testers and support teams understand why forms fail — directly in the browser.',
-    version: '1.0.0',
+    version: '1.1.0',
 
     // INSTÄLLNING - Lägg till fler permissions om nätverksinspelning kräver det
     permissions: ['activeTab', 'storage', 'scripting'],

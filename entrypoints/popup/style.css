@@ -671,6 +671,13 @@ html, body {
   color: var(--text-muted);
 }
 
+.history-meta-title {
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .history-actions {
   display: flex;
   align-items: center;

@@ -21,33 +21,25 @@
 
 ---
 
-## Build 2 — Network Tracing & Framework Support
+## Build 2 — Network Tracing & Export Support
 
-**Status:** In Progress (Issues 1-5 Completed)
+**Status:** Completed & Verified
 
-**Focus:** Reporting formats, framework-mimic testing, UX settings, and local export formats.
+**Focus:** Reporting formats, UX settings, local session history, and release readiness.
 
-**Core Rules:**
-- **No Backend**: Remains 100% client-side in the extension sandbox.
-- **No AI**: Purely rule-based heuristic logic.
-
-### Completed
+### Delivered
 - **Settings Toggle (UX)**: Toggle visibility of internal debug markers in the report (Issue 1).
-- **Scoring Improvements**: Refined confidence scores for validation issues (Issue 2).
-- **GitHub Issue Export**: Formatted Markdown bug report generation (Issue 3).
+- **Scoring Improvements**: Refined confidence scores for validation issues to 80% (Issue 2).
+- **GitHub Issue Export**: Formatted GFM Markdown bug report generation (Issue 3).
 - **Jira Export Format**: Copy as Jira rich markup syntax (Issue 4).
-- **Local Session History**: Queue and browse the last 10 sessions (Issue 5).
-
-### Planned (In Progress)
-- **Framework Mimic Pages (Testing)**: Build demo pages to verify performance against React Hook Form, Formik, Shopify, Webflow, and WordPress form structures.
-- **UI Readability**: Improve report aesthetics, cards, and dynamic severity highlighting.
-- **Arch Planning**: Optional DevTools panel scoping and client-side SPA routing support.
+- **Local Session History**: Queue and browse the last 10 sessions with open/delete actions (Issue 5).
+- **Polish & Release Prep**: Refined CSS padding/alignment and verified metadata version v1.1.0 (Issue 6).
 
 ---
 
-## Build 3 — CSS Blame Overlay
+## Build 3 — CSS Blame Overlay & Framework Demos
 
-**Focus:** Visual overlay to identify layout-related form issues.
+**Focus:** Visual overlay to identify layout-related form issues and SPAs.
 
 ### Planned
 - In-page overlay mode (non-invasive, opt-in)
@@ -56,17 +48,18 @@
 - Show field validation state visually on the page
 - Toggle overlay on/off from the popup
 - Color-coded severity indicators on form elements
+- Framework Mimic Pages: Build demo pages to verify performance against React Hook Form, Formik, Shopify, Webflow, and WordPress form structures.
 
 ---
 
-## Build 4 — Export Formats & Issue Templates
+## Build 4 — PDF Export & Advanced Route Tracking
 
-**Focus:** Turn FormTrace reports into actionable developer tickets.
+**Focus:** Exporting and routing options.
 
 ### Planned
 - Export as PDF
+- Single Page App (SPA) routing support
 - Custom report templates
-- Shareable report link (local file or encoded URL)
 - Session replay as JSON export
 
 ---

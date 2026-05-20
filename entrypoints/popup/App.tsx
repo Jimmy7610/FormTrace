@@ -512,7 +512,7 @@ export default function App() {
                   <SeverityBadge severity={item.severity as any} />
                 </div>
                 <div className="history-meta">
-                  <span>{item.pageTitle}</span>
+                  <span className="history-meta-title" title={item.pageTitle}>{item.pageTitle}</span>
                   <span>•</span>
                   <span>{new Date(item.savedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                   <span>•</span>
@@ -540,7 +540,7 @@ export default function App() {
         )}
 
         <div className="history-note">
-          History is stored locally in this browser only.
+          History is stored locally in this browser only. Form inputs and sensitive network payloads are never recorded.
         </div>
       </div>
 

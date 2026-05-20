@@ -90,43 +90,20 @@ This document breaks Build 2 down into small, isolated, and implementable tasks.
 
 ---
 
-## Issue 6: Framework Mimic Demo Pages
-- **Goal**: Add realistic demo forms to `demo-pages/` to test FormTrace against standard single-page app patterns and builders.
-- **Files Likely Affected**:
-  - Create new files under `demo-pages/`:
-    - `demo-pages/framework-react-hook-form.html`
-    - `demo-pages/framework-formik.html`
-    - `demo-pages/framework-shopify.html`
-    - `demo-pages/framework-webflow.html`
-    - `demo-pages/framework-wordpress.html`
-  - Update `demo-pages/index.html` (add links)
-  - Update `tools/dom-check.mjs` (include new assets in DOM validation checks)
+## Issue 6: Polish and Release Prep [COMPLETED]
+- **Goal**: Review the popup UI for layout bugs, update project metadata/versions to `1.1.0`, add a `release:check` script, verify build compliance, and prepare for stable release tagging (`v1.1.0-build2`).
+- **Files Affected**:
+  - [App.tsx](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/entrypoints/popup/App.tsx) (UI text, metadata checks)
+  - [style.css](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/entrypoints/popup/style.css) (CSS layout fixes)
+  - [package.json](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/package.json) (Version updates, `release:check` script)
+  - [wxt.config.ts](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/wxt.config.ts) (Manifest version update)
+  - [build-2-release-notes.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-release-notes.md) (Release notes)
 - **Acceptance Criteria**:
-  1. All new pages are served on the localhost server.
-  2. React Hook Form & Formik demos simulate validation rules that block submissions.
-  3. `tools/dom-check.mjs` verifies the presence of these pages.
+  1. No text layout overflows or button alignment bugs occur in the popup.
+  2. Version is set consistently to `1.1.0` in package configurations.
+  3. `npm run release:check` successfully runs the entire test verification suite.
+  4. Release tagging is verified.
 - **Risk Level**: **Low**
 
----
-
-## Issue 7: Report UI Visual Polish
-- **Goal**: Redesign the report visual card in the popup for premium readability, clean spacing, and modern typography.
-- **Files Likely Affected**:
-  - `src/popup/App.tsx`
-  - `src/popup/style.css` (or equivalent CSS files)
-- **Acceptance Criteria**:
-  1. Uses sleek, high-contrast, modern UI cards with curved borders.
-  2. Color-codes severity tags dynamically (`high` = vibrant red/amber background, `medium` = orange/yellow, `low` = subtle gray/green).
-- **Risk Level**: **Low**
-
----
-
-## Issue 8: Build 2 Regression Checks
-- **Goal**: Establish the testing script to run after implementing any Build 2 features.
-- **Files Likely Affected**:
-  - `tools/build-output-check.mjs`
-  - `package.json`
-- **Acceptance Criteria**:
-  1. Automated checks verify that the debug toggle correctly strips/includes markers.
-  2. Running `npm run verify` runs all tests and successfully returns exit code `0`.
-- **Risk Level**: **Low**
+> [!NOTE]
+> Framework Mimic Demos and CSS Overlay features have been rescheduled to future builds (Build 3) to keep this release cycle tightly focused and stable.

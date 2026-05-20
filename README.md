@@ -15,17 +15,23 @@ FormTrace is a privacy-first Chrome extension that records form interactions, de
 
 ---
 
-## Current Status: Build 1 MVP (Complete & Manually Verified)
-
-FormTrace Build 1 has been completed and verified across all manual test configurations via a localhost development server. 
-
-### What Build 1 Can Detect:
+## Current Status: Build 2 Stable Release (Complete & Verified)
+ 
+FormTrace Build 2 has been completed and verified across all manual test configurations and automated test suites.
+ 
+### What FormTrace Can Detect:
 1. **Hidden Required Fields**: Detects fields styled with `display: none` or `visibility: hidden` (or inside hidden containers) that are marked `required` but remain empty.
 2. **Disabled Submit Buttons**: Detects pointer/keyboard attempts to submit a form when the submit button is set to `disabled` or has `aria-disabled="true"`.
-3. **Validation Without Visible Feedback**: Detects when form validation fails (triggering an `invalid` state) but no visible error message appears in the DOM.
+3. **Validation Without Visible Feedback**: Detects when form validation fails (triggering an `invalid` state) but no visible error message appears in the DOM. Confidence score is optimized to **80%**.
 4. **Failed Network Requests After Submit**: Captures failed asynchronous API calls (`fetch` / `XMLHttpRequest` returning `>= 400` or `0` status codes) triggered during or immediately after a submit attempt.
 5. **Successful/No-Clear-Failure Forms**: Captures normal submissions and marks them as successful with no clear failure detected.
-
+ 
+### Build 2 Enhancements:
+- **Debug Marker Toggle**: Toggle visibility of internal debug diagnostics in reports.
+- **Multiple Export Formats**: Copy reports as GFM GitHub Issues or Jira Rich Text descriptions.
+- **Saved Local History**: Automatically saves the last 10 reports in local storage for viewing, copying, or deletion.
+- **Privacy Disclaimers**: Explicitly highlights privacy-safe boundaries.
+ 
 ---
 
 ## Privacy Promise (100% Local & Secure)
@@ -153,17 +159,18 @@ Run the localhost demo server with `npm run demo` and open **`http://127.0.0.1:4
 | Build | Status | Focus |
 |---|---|---|
 | **Build 1** | **Completed & Verified** | Core recorder, DOM signal checks, static network probe, report normalization, copyable Markdown. |
-| **Build 2** | **In Progress** | Settings toggle, validation confidence scoring, GitHub Issue & Jira report export formats, local session history, and framework-mimic testing. |
+| **Build 2** | **Completed & Verified** | Settings toggle, validation confidence scoring, GitHub Issue & Jira report export formats, local session history, and release prep. |
 | **Build 3** | Planned | Visual CSS Blame overlay to highlight broken elements directly in the page DOM. |
 | **Build 4** | Planned | PDF export, and additional route/SPA support. |
 | **Build 5** | Planned | Optional sync/team workspace integrations. |
-
+ 
 ---
-
-## Next: Build 2
-
-Detailed planning and implementation notes for the next development cycle can be found in the following resources:
+ 
+## Next: Build 3
+ 
+Detailed planning and implementation notes for the completed Build 2 development cycle can be found in the following resources:
 - [docs/build-2-plan.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-plan.md) — Scope, goals, risks, and acceptance criteria.
-- [docs/build-2-issues.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-issues.md) — Modular task breakdowns (Issues 1, 2, 3, 4 & 5 Completed).
-- [docs/build-2-test-plan.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-test-plan.md) — QA verification steps and mimic scenarios.
-- [docs/build-2-progress.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-progress.md) — Current implementation status, including the completed **Debug Marker Visibility Toggle**, **Validation Confidence Scoring Improvements**, **GitHub Issue Export Format**, **Jira-Style Export Format**, and **Local Session History/History Storage** (all operating entirely locally on device).
+- [docs/build-2-issues.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-issues.md) — Modular task breakdowns (Issues 1–6 Completed).
+- [docs/build-2-test-plan.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-test-plan.md) — QA verification steps and release checks.
+- [docs/build-2-progress.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-progress.md) — Completed implementation status details.
+- [docs/build-2-release-notes.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-release-notes.md) — Release notes and full QA checklist.

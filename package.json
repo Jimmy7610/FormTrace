@@ -1,6 +1,6 @@
 {
   "name": "formtrace",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "FormTrace helps developers, QA testers and support teams understand why forms fail — directly in the browser.",
   "private": true,
   "scripts": {
@@ -21,7 +21,8 @@
     "history:check": "tsx tools/history-storage-check.ts",
     "build:check": "node tools/build-output-check.mjs",
     "demo": "http-server demo-pages -p 4173 -c-1",
-    "verify": "npm run typecheck && npm run build && npm run dom:check && npm run analyzer:check && npm run report:check && npm run debug:check && npm run github:check && npm run jira:check && npm run history:check && npm run build:check"
+    "verify": "npm run typecheck && npm run build && npm run dom:check && npm run analyzer:check && npm run report:check && npm run debug:check && npm run github:check && npm run jira:check && npm run history:check && npm run build:check",
+    "release:check": "npm run verify"
   },
   "dependencies": {
     "react": "^18.3.1",

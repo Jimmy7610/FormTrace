@@ -47,6 +47,15 @@
   - Created [history-storage-check.ts](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/tools/history-storage-check.ts) for unit tests of storage limits, ordering, deletion, and clear operations.
   - Integrated `history:check` command in `package.json` and production verification checks.
 
+### Issue 6: Polish and Release Prep
+- **Completed On**: 2026-05-20
+- **What Changed**:
+  - Reviewed and refined popup layout rules in [style.css](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/entrypoints/popup/style.css) (added `.history-meta-title` text truncation class to prevent page title overflow).
+  - Clarified user-facing local storage privacy notes in [App.tsx](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/entrypoints/popup/App.tsx).
+  - Incremented version metadata in [package.json](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/package.json) and manifest configurations in [wxt.config.ts](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/wxt.config.ts) to `1.1.0`.
+  - Added the `"release:check": "npm run verify"` shortcut to `package.json`.
+  - Compiled release notes in [build-2-release-notes.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-release-notes.md).
+
 ---
 
 ## How to Test
@@ -105,4 +114,4 @@ This runs typechecks, building, DOM verification, rule analysis, normalization c
 ---
 
 ## Next Recommended Task
-- **Issue 6: Framework Mimic Demo Pages** ([docs/build-2-issues.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-issues.md#L91)).
+- **Build 3 — CSS Blame Overlay**: Focuses on in-page highlighting and direct visual feedback overlay.

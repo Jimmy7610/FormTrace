@@ -120,13 +120,14 @@ Verify the following new capabilities:
   6. **Clear History**: Click **Clear history** and verify that all entries are removed and the UI displays "No saved reports yet."
 - **Expected Result**: History saves state locally, supports up to 10 entries with pruning, and reloads/manages cleanly.
 
-### Test 2.5: Framework-Mimic Verification
+### Test 2.5: Polish and Release Verification
 - **Steps**:
-  1. Run the local server and navigate to each new mimic page:
-     - `http://127.0.0.1:4173/framework-react-hook-form.html`
-     - `http://127.0.0.1:4173/framework-formik.html`
-     - `http://127.0.0.1:4173/framework-shopify.html`
-     - `http://127.0.0.1:4173/framework-webflow.html`
-     - `http://127.0.0.1:4173/framework-wordpress.html`
-  2. Perform recording runs and submit attempts on each form.
-- **Expected Result**: Captures standard validation triggers and submit blockages under state-driven environments.
+  1. Inspect version settings. Confirm that version is consistently set to `1.1.0` in both [package.json](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/package.json) and [wxt.config.ts](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/wxt.config.ts).
+  2. Run the release check command:
+     ```bash
+     npm run release:check
+     ```
+     Verify that the test suite compiles and runs successfully, returning exit status 0.
+  3. Verify that the privacy disclaimer text under history list displays: `"History is stored locally in this browser only. Form inputs and sensitive network payloads are never recorded."`
+  4. Verify that very long page titles in history items are gracefully truncated with an ellipsis and do not break layout spacing.
+- **Expected Result**: Versions are aligned, test suite returns exit code 0, and UI labels are refined and prevent overflows.
