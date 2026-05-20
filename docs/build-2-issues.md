@@ -4,7 +4,7 @@ This document breaks Build 2 down into small, isolated, and implementable tasks.
 
 ---
 
-## Issue 1: Debug Marker Visibility Toggle
+## Issue 1: Debug Marker Visibility Toggle [COMPLETED]
 - **Goal**: Allow users to hide technical diagnostics (e.g. `Network probe active`) from reports via a settings toggle in the popup.
 - **Files Likely Affected**:
   - `src/popup/App.tsx` (UI checkbox/toggle)

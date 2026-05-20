@@ -23,7 +23,7 @@
 
 ## Build 2 — Network Tracing & Framework Support
 
-**Status:** Planned (Not Started)
+**Status:** In Progress (Issue 1 Completed)
 
 **Focus:** Reporting formats, framework-mimic testing, UX settings, and local export formats.
 
@@ -31,8 +31,10 @@
 - **No Backend**: Remains 100% client-side in the extension sandbox.
 - **No AI**: Purely rule-based heuristic logic.
 
-### Planned (Not Started)
-- **Settings Toggle (UX)**: Toggle visibility of internal debug markers in the report.
+### Completed
+- **Settings Toggle (UX)**: Toggle visibility of internal debug markers in the report (Issue 1).
+
+### Planned (In Progress)
 - **Scoring Improvements**: Refined confidence scores for validation issues.
 - **Export Formats**: Copy as GitHub Issue template and Jira rich markup syntax.
 - **Local Session History**: Queue and browse the last 5 sessions.

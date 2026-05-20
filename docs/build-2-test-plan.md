@@ -49,11 +49,18 @@ Verify the following new capabilities:
 
 ### Test 2.1: Debug Marker Toggle
 - **Steps**:
-  1. Open the FormTrace popup after recording a session on `/failed-api.html`.
-  2. Locate the "Show technical debug markers" checkbox.
-  3. **Check state**: Copy report as Markdown. Check that the report contains strings like `Network DOM signal detected` or `Network probe active`.
-  4. **Uncheck state**: Copy report as Markdown again. Verify that the copied report does **not** contain any debug marker strings.
-- **Expected Result**: Reports are dynamically cleaned based on the toggle state.
+  1. Open the FormTrace popup after recording a session on `http://127.0.0.1:4173/hidden-required-field.html`.
+  2. Fill the visible fields and click submit to trigger a "Hidden required field blocked submission" report.
+  3. Expand **Technical details**. Confirm that by default, it does **NOT** show the following internal debug lines:
+     - `Analyzer runtime fix: hidden-required-first-pass`
+     - `Popup normalization fix: final-report-guard`
+     - `Analyzer bundle active: popup-local-normalized`
+  4. Locate the "Show debug markers" settings checkbox at the bottom of the popup.
+  5. Check "Show debug markers" and verify that the internal debug lines instantly appear under **Technical details**.
+  6. Click **Copy report** with the toggle checked. Paste into a text editor and confirm the debug lines are included.
+  7. Uncheck "Show debug markers" and verify that the debug lines are immediately hidden again in the UI.
+  8. Click **Copy report** with the toggle unchecked. Paste and confirm the debug lines are excluded.
+- **Expected Result**: Reports and copied Markdown are dynamically cleaned based on the toggle state, defaulting to hidden.
 
 ### Test 2.2: Confidence Optimization
 - **Steps**:

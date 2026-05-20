@@ -15,9 +15,10 @@
     "dom:check": "node tools/dom-check.mjs",
     "analyzer:check": "tsx tools/analyzer-check.ts",
     "report:check": "tsx tools/report-normalization-check.ts",
+    "debug:check": "tsx tools/debug-marker-check.ts",
     "build:check": "node tools/build-output-check.mjs",
     "demo": "http-server demo-pages -p 4173 -c-1",
-    "verify": "npm run typecheck && npm run build && npm run dom:check && npm run analyzer:check && npm run report:check && npm run build:check"
+    "verify": "npm run typecheck && npm run build && npm run dom:check && npm run analyzer:check && npm run report:check && npm run debug:check && npm run build:check"
   },
   "dependencies": {
     "react": "^18.3.1",

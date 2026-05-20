@@ -19,7 +19,9 @@ const REQUIRED_STRINGS = [
   'Network probe active',
   'Network probe message received',
   'network-failure-dom-signal',
-  'Network DOM signal detected'
+  'Network DOM signal detected',
+  'Show debug markers',
+  'filterTechnicalDetailsForDebugMarkers'
 ];
 
 function getFilesRecursive(dir) {

@@ -3,6 +3,7 @@ import type { RecordingSession, AnalysisReport, Finding, Severity } from '../../
 import { buildMarkdownReport } from '../../src/analyzer/buildMarkdownReport';
 import { analyzeSession } from '../../src/analyzer/analyzeSession';
 import { normalizeReportForHiddenRequiredFields } from '../../src/analyzer/normalizeReport';
+import { filterTechnicalDetailsForDebugMarkers } from '../../src/analyzer/filterDebugMarkers';
 
 // INSTÄLLNING - Hur ofta popup:en pollar status från content script (ms)
 const POLL_INTERVAL_MS = 1500;
@@ -88,7 +89,7 @@ function TechnicalDetails({ lines }: { lines: string[] }) {
   );
 }
 
-function AnalysisCard({ report }: { report: AnalysisReport }) {
+function AnalysisCard({ report, showDebugMarkers }: { report: AnalysisReport; showDebugMarkers: boolean }) {
   return (
     <div className="analysis-card">
       {/* Header */}
@@ -119,7 +120,7 @@ function AnalysisCard({ report }: { report: AnalysisReport }) {
       )}
 
       {/* Technical details */}
-      <TechnicalDetails lines={report.technicalDetails} />
+      <TechnicalDetails lines={filterTechnicalDetailsForDebugMarkers(report.technicalDetails, showDebugMarkers)} />
     </div>
   );
 }
@@ -137,6 +138,22 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [toastText, setToastText] = useState('Copied!');
+  const [debugMarkersVisible, setDebugMarkersVisible] = useState(false);
+
+  // Load setting on mount
+  useEffect(() => {
+    chrome.storage.local.get(['debugMarkersVisible'], (result) => {
+      if (result.debugMarkersVisible !== undefined) {
+        setDebugMarkersVisible(result.debugMarkersVisible);
+      }
+    });
+  }, []);
+
+  const handleToggleDebug = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const nextVal = e.target.checked;
+    setDebugMarkersVisible(nextVal);
+    chrome.storage.local.set({ debugMarkersVisible: nextVal });
+  };
 
   // ─── Poll status ────────────────────────────────────────────────────────────
 
@@ -234,7 +251,7 @@ export default function App() {
     const report = status.lastReport;
     if (!report) return;
 
-    const markdown = buildMarkdownReport(report);
+    const markdown = buildMarkdownReport(report, { showDebugMarkers: debugMarkersVisible });
     try {
       await navigator.clipboard.writeText(markdown);
       toast('Report copied!');
@@ -337,7 +354,7 @@ export default function App() {
 
       {/* Analysis result */}
       {lastReport ? (
-        <AnalysisCard report={lastReport} />
+        <AnalysisCard report={lastReport} showDebugMarkers={debugMarkersVisible} />
       ) : (
         <div className="empty-state">
           <div className="empty-icon">🔍</div>
@@ -347,6 +364,21 @@ export default function App() {
           </p>
         </div>
       )}
+
+      {/* Settings Panel */}
+      <div className="settings-area">
+        <div className="settings-label-container">
+          <span className="settings-title">Show debug markers</span>
+          <span className="settings-helper">Shows internal Build diagnostic lines in technical details.</span>
+        </div>
+        <input
+          type="checkbox"
+          id="chk-show-debug"
+          className="settings-checkbox"
+          checked={debugMarkersVisible}
+          onChange={handleToggleDebug}
+        />
+      </div>
 
       {/* Privacy note */}
       <div className="privacy-note">

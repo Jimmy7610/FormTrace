@@ -1,7 +1,12 @@
 import type { AnalysisReport } from '../types/formtrace';
+import { filterTechnicalDetailsForDebugMarkers } from './filterDebugMarkers';
 
 /** Converts an AnalysisReport into a Markdown string for copying. */
-export function buildMarkdownReport(report: AnalysisReport): string {
+export function buildMarkdownReport(
+  report: AnalysisReport,
+  options?: { showDebugMarkers?: boolean }
+): string {
+  const showDebugMarkers = options?.showDebugMarkers ?? false;
   const severityLabel =
     report.severity.charAt(0).toUpperCase() + report.severity.slice(1);
 
@@ -9,7 +14,11 @@ export function buildMarkdownReport(report: AnalysisReport): string {
     .map((f) => `- ${f.label}${f.detail ? `: ${f.detail}` : ''}`)
     .join('\n');
 
-  const technicalMarkdown = report.technicalDetails.map((d) => `- ${d}`).join('\n');
+  const filteredDetails = filterTechnicalDetailsForDebugMarkers(
+    report.technicalDetails,
+    showDebugMarkers
+  );
+  const technicalMarkdown = filteredDetails.map((d) => `- ${d}`).join('\n');
 
   const fixesMarkdown = report.suggestedFixes.map((f) => `- ${f}`).join('\n');
 
