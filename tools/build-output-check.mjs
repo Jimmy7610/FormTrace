@@ -10,7 +10,11 @@ const REQUIRED_STRINGS = [
   'Analyzer bundle active: popup-local-normalized',
   'disabled-submit-attempt',
   'Disabled submit attempt detected',
-  'Submit button was disabled at interaction time'
+  'Submit button was disabled at interaction time',
+  'FormTraceNetworkProbe',
+  'network-failure',
+  'Network failure detected',
+  'Network request failed after submit'
 ];
 
 function getFilesRecursive(dir) {

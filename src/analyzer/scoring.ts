@@ -23,7 +23,7 @@ export const SCORE_NO_VISIBLE_ERROR = 15;
 export const SCORE_CLICK_WITHOUT_SUBMIT = 20;
 
 /** A network request failed after submit. */
-export const SCORE_NETWORK_FAILURE = 25;
+export const SCORE_NETWORK_FAILURE = 85;
 
 /** A console error occurred during the recording session. */
 export const SCORE_CONSOLE_ERROR = 15;
@@ -76,7 +76,15 @@ export function computeScore(session: RecordingSession): ScoreBreakdown {
 
   const clickWithoutSubmit = session.clickWithoutSubmitCount > 0;
 
-  const networkFailure = events.some((e) => e.type === 'network-failure');
+  const hasSubmitAttempt = session.submitAttemptCount > 0 || events.some(
+    (e) => e.type === 'form-submit' || e.type === 'submit-click' || e.type === 'disabled-submit-attempt'
+  );
+  const firstSubmitIndex = events.findIndex(
+    (e) => e.type === 'form-submit' || e.type === 'submit-click' || e.type === 'disabled-submit-attempt'
+  );
+  const networkFailure = hasSubmitAttempt && events.some(
+    (e, idx) => e.type === 'network-failure' && (firstSubmitIndex === -1 || idx >= firstSubmitIndex)
+  );
 
   const consoleError = events.some((e) => e.type === 'console-error');
 

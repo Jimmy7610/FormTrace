@@ -118,7 +118,7 @@ function buildFindings(
   if (networkEvents.length > 0) {
     findings.push({
       code: 'NETWORK_FAILURE',
-      label: `${networkEvents.length} network failure(s) detected`,
+      label: 'Network request failed after submit',
       severity: 'high',
       detail: networkEvents.map((e) => `${e.url ?? 'unknown URL'} (${e.status ?? 'no status'})`).join('; '),
     });
@@ -156,6 +156,11 @@ function buildTechnicalDetails(
   const totalDisabled = disabledAttempts + (legacyDisabled ? 1 : 0);
   if (totalDisabled > 0) {
     details.push(`Disabled submit attempt detected: ${totalDisabled}`);
+  }
+
+  const networkFailures = session.events.filter((e) => e.type === 'network-failure').length;
+  if (networkFailures > 0) {
+    details.push(`Network failure detected: ${networkFailures}`);
   }
 
   // Add field details from the last snapshot
@@ -209,8 +214,9 @@ function buildSuggestedFixes(score: ReturnType<typeof computeScore>): string[] {
     fixes.push('Verify no JavaScript is calling event.preventDefault() without a reason.');
   }
   if (score.networkFailure) {
-    fixes.push('Check the network request URL, headers, and CORS configuration.');
-    fixes.push('Ensure the API endpoint is reachable and returns the expected response code.');
+    fixes.push('Check the request URL and server availability.');
+    fixes.push('Inspect the failed request in DevTools Network tab.');
+    fixes.push('Handle the failed request with a visible error message for the user.');
   }
   if (score.consoleError) {
     fixes.push('Investigate JavaScript errors in DevTools > Console during the form interaction.');

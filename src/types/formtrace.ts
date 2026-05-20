@@ -61,6 +61,8 @@ export interface RecordedEvent {
   disabled?: boolean;
   formId?: string;
   formName?: string;
+  method?: string;
+  statusText?: string;
 }
 
 // ─── Recording session ────────────────────────────────────────────────────────

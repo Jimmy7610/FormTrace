@@ -230,6 +230,71 @@ function runAnalyzerCheck() {
     console.log('[PASS] Test 3: findings includes DISABLED_SUBMIT with "Submit button was disabled at interaction time"');
   }
 
+  // Test 4: Network failure after submit.
+  const networkMockSession: RecordingSession = {
+    id: 'test-session-4',
+    startedAt: Date.now(),
+    stoppedAt: Date.now() + 5000,
+    pageUrl: 'http://localhost/failed-api',
+    pageTitle: 'Failed API Test',
+    formCount: 1,
+    submitAttemptCount: 1,
+    clickWithoutSubmitCount: 0,
+    events: [
+      {
+        type: 'submit-click',
+        timestamp: Date.now(),
+        message: 'Submit clicked',
+      },
+      {
+        type: 'network-failure',
+        timestamp: Date.now() + 200,
+        url: 'http://localhost/api/submit',
+        status: 500,
+        message: 'Internal Server Error',
+      }
+    ]
+  };
+
+  const networkReport = analyzeSession(networkMockSession);
+
+  if (networkReport.likelyIssue !== 'Network request failed after submit') {
+    console.error(`[FAIL] Test 4: Expected "Network request failed after submit", got: "${networkReport.likelyIssue}"`);
+    passed = false;
+  } else {
+    console.log('[PASS] Test 4: likelyIssue is correctly prioritized as "Network request failed after submit"');
+  }
+
+  if (networkReport.severity !== 'high' && networkReport.severity !== 'medium') {
+    console.error(`[FAIL] Test 4: Expected severity "high" or "medium", got: "${networkReport.severity}"`);
+    passed = false;
+  } else {
+    console.log(`[PASS] Test 4: severity is "${networkReport.severity}"`);
+  }
+
+  if (networkReport.confidenceScore < 80) {
+    console.error(`[FAIL] Test 4: Expected confidenceScore >= 80, got: ${networkReport.confidenceScore}`);
+    passed = false;
+  } else {
+    console.log(`[PASS] Test 4: confidenceScore is high (${networkReport.confidenceScore})`);
+  }
+
+  const hasNetworkDebug = networkReport.technicalDetails.some(d => d.includes('Network failure detected: 1'));
+  if (!hasNetworkDebug) {
+    console.error(`[FAIL] Test 4: Expected technicalDetails to include "Network failure detected: 1"`);
+    passed = false;
+  } else {
+    console.log('[PASS] Test 4: technicalDetails includes "Network failure detected: 1"');
+  }
+
+  const hasNetworkFinding = networkReport.findings.some(f => f.code === 'NETWORK_FAILURE' && f.label === 'Network request failed after submit');
+  if (!hasNetworkFinding) {
+    console.error(`[FAIL] Test 4: Expected findings to include NETWORK_FAILURE with "Network request failed after submit"`);
+    passed = false;
+  } else {
+    console.log('[PASS] Test 4: findings includes NETWORK_FAILURE with "Network request failed after submit"');
+  }
+
   if (!passed) {
     console.error('\nAnalyzer Verification FAILED!');
     process.exit(1);

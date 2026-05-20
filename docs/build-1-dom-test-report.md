@@ -74,3 +74,5 @@ The automated script (`tools/dom-check.mjs`) verified the structural integrity o
 *(Update 5: Real popup still displayed a generic required-fields report even though technical details contained a hidden required empty field. Added final popup report normalization so the displayed report, cached report, copied report and local report all correct hidden required fields before rendering.)*
 
 *(Update 6: Manual testing showed disabled submit buttons did not trigger a normal click event, so FormTrace now records pointer/mouse attempted interactions with disabled submit controls and reports Submit button was disabled.)*
+
+*(Update 7: Manual testing showed failed fetch requests on failed-api.html were visible on the page but not detected by FormTrace because content scripts run in an isolated world. Added a page-context network probe that forwards fetch/XMLHttpRequest failures safely to the content script.)*
