@@ -80,3 +80,10 @@ The automated script (`tools/dom-check.mjs`) verified the structural integrity o
 *(Update 8: Manual testing showed the page displayed Failed to fetch but the popup still missed network-failure at runtime. Added runtime network probe markers, async stop delay, and a DOM signal fallback for visible network error messages.)*
 
 *(Update 9: Manual testing confirmed network failure detection worked, but Chrome reported a CSP warning because the page network probe was injected as inline script. The probe was moved to a static web-accessible extension asset and injected by src to comply with Chrome extension CSP.)*
+
+## Build 1 Final Manual Verification
+FormTrace Build 1 has successfully undergone final manual validation and verification:
+- **Verified via Localhost**: All manual scenario test cases passed successfully when tested via the local HTTP server `http://127.0.0.1:4173/`.
+- **Testing Recommendation**: Manual testing via `file://` URLs is explicitly not recommended due to Chrome security permissions resetting whenever the extension reloads.
+- **CSP Compliant**: The network probe script injection CSP issue was fully resolved by moving the interceptor logic out of inline scripting and placing it in a static `page-network-probe.js` asset file mapped in WXT as a `web_accessible_resource`.
+- **Status**: Build 1 MVP is fully verified, stable, and ready for release.

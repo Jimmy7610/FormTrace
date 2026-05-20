@@ -2,13 +2,14 @@
 
 ## Build 1 — MVP (Current)
 
-**Status:** Complete
+**Status:** Completed & Manually Verified
 
 ### Delivered
 - Chrome extension (Manifest V3, WXT + React + TypeScript)
 - Popup UI with dark mode, recording controls, stats, analysis card
 - Content script recording: form events, field states, submit detection
-- Network failure detection (fetch + XHR)
+- Network failure detection (fetch + XHR) using CSP-compliant static probe (`page-network-probe.js`)
+- DOM signal fallback scan for network error text on submit
 - Console error capture
 - Rule-based analysis engine with 8 detection rules
 - Confidence scoring (0–100) and severity classification
@@ -16,21 +17,23 @@
 - `chrome.storage.local` persistence
 - Privacy-safe field serialization
 - 5 demo pages for manual testing
-- Full documentation
+- Full QA checklist and documentation
 
 ---
 
-## Build 2 — Network Tracing & SPA Support
+## Build 2 — Network Tracing & Framework Support
 
-**Focus:** Deeper network insight and better handling of single-page applications.
+**Focus:** Deeper network insight, better confidence scoring, optional panels, and modern web form frameworks.
 
-### Planned
-- Improved network timeline — correlate network failures with specific submit attempts
-- SPA route change detection — detect form submission that causes a client-side navigation
-- Request/response body inspection (with privacy filtering)
-- Detection of 401/403/429 responses as likely auth or rate-limit failures
-- Better handling of React/Vue/Angular form event patterns
-- Popup: network timeline panel
+**Planned Features:**
+- **Enhanced Framework Testing**: Broaden compatibility and add specific test suites for React Hook Form, Formik, Shopify, Webflow, and WordPress forms.
+- **Saved Local Sessions**: Save, list, and reload previous local recording sessions.
+- **Optional DevTools Panel**: Provide a dedicated tab in Chrome Developer Tools for a full-pane debugger workspace.
+- **Better SPA Support**: Add route change detection to trace forms that perform client-side history navigation or virtual submissions.
+- **Export Formats**: Support exporting reports directly in GitHub Issue and Jira markdown formats.
+- **Debug Settings Panel**: Add a toggle in the UI to hide or show technical debug markers (e.g. `Network probe active`) in the final report.
+- **Better confidence scoring for validation-without-visible-feedback**.
+- CORs / detailed status mapping for failed fetch requests.
 
 ---
 

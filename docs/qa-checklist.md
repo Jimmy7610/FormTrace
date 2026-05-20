@@ -1,125 +1,126 @@
-# FormTrace — QA Checklist
+# FormTrace — QA Checklist (Build 1 Release Readiness)
 
-Use this checklist when testing FormTrace manually before any release.
-
----
-
-## Extension Loading Checklist
-
-- [ ] Run `npm run build` — build completes with no errors
-- [ ] Run `npm run typecheck` — TypeScript reports no errors
-- [ ] Open `chrome://extensions`
-- [ ] Enable Developer mode
-- [ ] Click **Load unpacked** and select `.output/chrome-mv3/`
-- [ ] FormTrace icon appears in the Chrome toolbar
-- [ ] Clicking the icon opens the popup
-- [ ] Popup shows "FormTrace", "Diagnose broken forms", "Build 1"
-- [ ] Popup shows 3 stat cards: Forms, Events, Submits
-- [ ] Popup shows the privacy note at the bottom
+Use this checklist to perform final manual quality assurance testing for FormTrace Build 1.
 
 ---
 
-## Demo Page: Disabled Submit Button (`disabled-button.html`)
+## 1. Preparation & Setup
 
-**Setup:** Open the page. Load extension. Click extension icon.
+Ensure the testing environment is clean and running the latest production build:
 
-| Step | Action | Expected result |
-|---|---|---|
-| 1 | Click **Start recording** | Status changes to "Recording…" with red pulse |
-| 2 | Click the disabled Submit button | Nothing happens on the page |
-| 3 | Click **Stop & analyze** | Analysis card appears |
-| 4 | Read likely issue | "Submit button was disabled" |
-| 5 | Check severity | High |
-| 6 | Check confidence | ≥ 30% |
-| 7 | Click **Copy report** | Toast shows "Report copied!" |
-| 8 | Paste into text editor | Valid Markdown report with findings |
-
----
-
-## Demo Page: Hidden Required Field (`hidden-required-field.html`)
-
-**Setup:** Open the page. Start recording. Click Create account without filling in anything.
-
-| Step | Action | Expected result |
-|---|---|---|
-| 1 | Start recording | Status: Recording |
-| 2 | Click **Create account** (submit) | Form blocks silently |
-| 3 | Stop & analyze | Analysis card appears |
-| 4 | Likely issue | "Hidden required field blocked submission" |
-| 5 | Severity | High |
-| 6 | Confidence | ≥ 35% |
-| 7 | Technical details | Shows `company_id` field as hidden, required, empty |
+- [ ] Clear any old content script errors in Chrome by opening `chrome://extensions` and reloading/removing the extension.
+- [ ] Install latest dependencies:
+  ```bash
+  npm install
+  ```
+- [ ] Run the type check and build pipeline:
+  ```bash
+  npm run build
+  npm run build:check
+  ```
+- [ ] Start the local development server:
+  ```bash
+  npm run demo
+  ```
+- [ ] Load the unpacked extension from `.output/chrome-mv3` in `chrome://extensions`.
+- [ ] Navigate to the localhost portal in Chrome: **`http://127.0.0.1:4173/`**
+- [ ] **Recommendation**: Avoid testing via `file://` protocols since Chrome file-URL permission mappings can silently reset during extension reloading.
 
 ---
 
-## Demo Page: Invisible Error (`invisible-error.html`)
+## 2. Scenario Testing Checklist
 
-**Setup:** Open the page. Start recording. Enter an invalid email (e.g. `notanemail`). Click Subscribe.
+Perform the following manual scenarios in order. For each test, click **Reset** in the FormTrace popup before starting to ensure a fresh session.
 
-| Step | Action | Expected result |
-|---|---|---|
-| 1 | Start recording | Status: Recording |
-| 2 | Type invalid email | No visible feedback |
-| 3 | Click Subscribe | Form does not submit, no error visible |
-| 4 | Stop & analyze | Analysis card appears |
-| 5 | Likely issue | "Validation failed without visible feedback" or "Required fields are missing" |
-| 6 | Severity | Medium |
-| 7 | Findings | Shows invalid field or no visible error |
+### Scenario A: Hidden Required Fields
+- **URL**: `http://127.0.0.1:4173/hidden-required-field.html`
+- **Steps**:
+  1. Click the FormTrace extension icon in the toolbar.
+  2. Click **Reset** to clear any previous data, then click **Start recording**.
+  3. Fill in the visible text fields: **Username** and **Email**.
+  4. Click the **Register** button (nothing happens visually, page does not submit).
+  5. Wait 1 second.
+  6. Open the FormTrace popup and click **Stop & analyze**.
+- **Checklist**:
+  - [ ] Likely issue is: `"Hidden required field blocked submission"`
+  - [ ] Severity is: `HIGH`
+  - [ ] Confidence Score is: `100%`
+  - [ ] Technical details include:
+    - `"Hidden required empty fields found: 1"`
+    - `"Analyzer runtime fix: hidden-required-first-pass"`
+
+### Scenario B: Disabled Submit Button
+- **URL**: `http://127.0.0.1:4173/disabled-button.html`
+- **Steps**:
+  1. Open the popup, click **Reset**, then click **Start recording**.
+  2. Fill in all visible text fields ("Username" and "Email").
+  3. Attempt to click or press enter on the disabled **Submit** button.
+  4. Wait 1 second.
+  5. Open the popup and click **Stop & analyze**.
+- **Checklist**:
+  - [ ] Likely issue is: `"Submit button was disabled"`
+  - [ ] Severity is: `HIGH`
+  - [ ] Confidence Score is: `95%` or higher
+  - [ ] Technical details include:
+    - `"Disabled submit attempt detected: 1"`
+
+### Scenario C: Invisible Validation Error
+- **URL**: `http://127.0.0.1:4173/invisible-error.html`
+- **Steps**:
+  1. Open the popup, click **Reset**, then click **Start recording**.
+  2. Leave the "Username" field blank.
+  3. Click the **Submit** button (nothing visibly changes on the screen).
+  4. Wait 1 second.
+  5. Open the popup and click **Stop & analyze**.
+- **Checklist**:
+  - [ ] Likely issue is: `"Validation failed without visible feedback"`
+  - [ ] Severity is: `MEDIUM`
+  - [ ] Confidence Score is: `35%` or higher
+  - [ ] Technical details include:
+    - `"Forms detected: 1"`
+    - `"Submit attempts: 1"`
+
+### Scenario D: Failed API/Network Error
+- **URL**: `http://127.0.0.1:4173/failed-api.html`
+- **Steps**:
+  1. Open the popup, click **Reset**, then click **Start recording**.
+  2. Type any text in the feedback box.
+  3. Click **Send feedback**.
+  4. Wait until the red `"Network error: Failed to fetch"` message is visible in the page container.
+  5. Wait 1 second.
+  6. Open the popup and click **Stop & analyze**.
+- **Checklist**:
+  - [ ] Likely issue is: `"Network request failed after submit"`
+  - [ ] Severity is: `HIGH`
+  - [ ] Confidence Score is: `85%` or higher
+  - [ ] Technical details include:
+    - `"Network failure detected: 1"`
+    - `"Network probe active"`
+    - `"Network probe injected"`
+    - `"Network DOM signal detected"` (fallback triggered)
+
+### Scenario E: Successful Form Submission
+- **URL**: `http://127.0.0.1:4173/success-form.html`
+- **Steps**:
+  1. Open the popup, click **Reset**, then click **Start recording**.
+  2. Fill in all fields with valid data.
+  3. Click **Subscribe**.
+  4. Observe success message: `"Successfully subscribed!"`.
+  5. Wait 1 second.
+  6. Open the popup and click **Stop & analyze**.
+- **Checklist**:
+  - [ ] Likely issue is: `"No clear failure detected"`
+  - [ ] Severity is: `LOW`
+  - [ ] Confidence Score is: `15%` or lower
 
 ---
 
-## Demo Page: Failed API (`failed-api.html`)
+## 3. General Interface & Regression Checks
 
-**Setup:** Open the page. Start recording. Fill in name and feedback. Click Send feedback.
+Verify the extension UI complies with MVP requirements:
 
-| Step | Action | Expected result |
-|---|---|---|
-| 1 | Start recording | Status: Recording |
-| 2 | Fill in name + feedback | Fields show as filled |
-| 3 | Click Send feedback | Page shows "Network error: …" |
-| 4 | Stop & analyze | Analysis card appears |
-| 5 | Likely issue | "Network request failed after submit" |
-| 6 | Severity | High |
-| 7 | Technical details | Shows failed URL |
-
----
-
-## Demo Page: Successful Form (`success-form.html`)
-
-**Setup:** Open the page. Start recording. Fill in valid name and email. Click Subscribe.
-
-| Step | Action | Expected result |
-|---|---|---|
-| 1 | Start recording | Status: Recording |
-| 2 | Fill valid name + email | — |
-| 3 | Click Subscribe | "Successfully subscribed!" shown |
-| 4 | Stop & analyze | Analysis card appears |
-| 5 | Likely issue | "No clear failure detected" |
-| 6 | Severity | Low |
-| 7 | Confidence | Low (< 30%) |
-
----
-
-## Reset Checklist
-
-- [ ] Click **Reset** — stats reset to 0
-- [ ] Analysis card disappears (replaced by empty state)
-- [ ] Toast shows "Session reset"
-- [ ] **Copy report** button becomes disabled
-
----
-
-## Regression Checklist
-
-Run after any code change:
-
-- [ ] `npm run typecheck` passes
-- [ ] `npm run build` passes with no errors
-- [ ] All 5 demo page scenarios produce expected likely issues
-- [ ] Copy report produces valid Markdown
-- [ ] Reset clears all state
-- [ ] Popup loads correctly on first open (no crashes)
-- [ ] Extension does not break normal page functionality
-- [ ] No form submits are blocked or altered by the extension
-- [ ] Privacy note is visible in the popup
-- [ ] Build badge shows "Build 1"
+- [ ] **Badge**: The Build badge clearly displays `"Build 1"`.
+- [ ] **Reset**: Clicking **Reset** resets all event/form/submit counters to zero and disables the **Copy report** button.
+- [ ] **Copy to Clipboard**: Clicking **Copy report** copies the full Markdown report without errors.
+- [ ] **Diagnostics**: Runtime debug markers (e.g. `Network probe active`) appear in technical details, but no raw form values are exposed.
+- [ ] **Code Quality**: Running `npm run verify` returns zero lint, compilation, or verification errors.

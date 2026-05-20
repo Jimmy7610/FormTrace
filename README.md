@@ -2,157 +2,158 @@
 
 > **FormTrace helps developers, QA testers and support teams understand why forms fail — directly in the browser.**
 
-FormTrace is a privacy-first Chrome extension that records a form interaction session, analyzes the most likely reason a form did not submit, and generates a clear report you can copy as Markdown.
+FormTrace is a privacy-first Chrome extension that records form interactions, detects failure points (such as hidden fields, disabled buttons, lack of visible validation messages, and failed API requests), and generates a copyable Markdown bug report.
 
 ---
 
 ## Who is it for?
 
-- Frontend developers debugging form submissions
-- QA testers writing test cases for web forms
-- Support teams helping users who "can't submit the form"
-- SaaS teams, web agencies, WordPress / Shopify / Webflow developers
+- **Frontend Developers**: Quickly debug validation and submission bugs.
+- **QA Testers**: Capture precise steps and technical details for reproducible issues.
+- **Support Teams**: Guide customers and record diagnostics when a submission fails.
+- **SaaS & Web Agencies**: Ensure custom forms (React Hook Form, Formik, Shopify, WordPress) work perfectly.
 
 ---
 
-## What does FormTrace do in Build 1?
+## Current Status: Build 1 MVP (Complete & Manually Verified)
 
-- Detects forms on the current page (including dynamically added forms)
-- Records submit button clicks, form submit events, field changes, invalid events
-- Detects disabled submit buttons at click time
-- Detects hidden required fields that silently block submission
-- Detects required empty fields
-- Detects invalid fields via HTML5 Constraint Validation API
-- Detects missing visible error feedback after failed submit attempts
-- Detects click-without-submit (button clicked but no submit event fired)
-- Detects basic fetch/XHR failures after submission
-- Detects console errors during the recording session
-- Generates a confidence-scored, severity-rated analysis report
-- Produces a copyable Markdown report
-- Stores sessions and reports locally in `chrome.storage.local`
+FormTrace Build 1 has been completed and verified across all manual test configurations via a localhost development server. 
+
+### What Build 1 Can Detect:
+1. **Hidden Required Fields**: Detects fields styled with `display: none` or `visibility: hidden` (or inside hidden containers) that are marked `required` but remain empty.
+2. **Disabled Submit Buttons**: Detects pointer/keyboard attempts to submit a form when the submit button is set to `disabled` or has `aria-disabled="true"`.
+3. **Validation Without Visible Feedback**: Detects when form validation fails (triggering an `invalid` state) but no visible error message appears in the DOM.
+4. **Failed Network Requests After Submit**: Captures failed asynchronous API calls (`fetch` / `XMLHttpRequest` returning `>= 400` or `0` status codes) triggered during or immediately after a submit attempt.
+5. **Successful/No-Clear-Failure Forms**: Captures normal submissions and marks them as successful with no clear failure detected.
 
 ---
 
-## What FormTrace does NOT do yet
+## Privacy Promise (100% Local & Secure)
 
-- No AI or external API calls
-- No cloud storage or data upload of any kind
-- No CSS blame overlay (planned for Build 3)
-- No multi-tab recording
-- No export to GitHub Issues or Jira (planned for Build 4)
-- No team / collaboration features (planned for Build 5)
-- No SPA-aware route change detection (planned for Build 2)
-
----
-
-## Privacy Promise
-
-FormTrace **never uploads any data**. Everything runs locally in your browser.
-
-- Form field **values are never stored** — only metadata (`empty` or `present`)
-- Password fields are never recorded
-- Credit card fields are never recorded
-- All data stays in `chrome.storage.local` on your own machine
-- Clearing extension data removes everything
+FormTrace is designed from the ground up for strict security and compliance:
+- **No Backend, No AI, No Cloud Services**: All computations, recording, and report compiling happen locally in the browser extension.
+- **No Form Values Recorded**: Only field metadata (`empty` or `present`) is recorded. The actual inputs, text, passwords, or values are **never stored**.
+- **No Sensitive Network Payload Stored**: Network probe logs URLs and HTTP statuses but **never stores request/response bodies, cookies, or headers**.
 
 ---
 
 ## Install & Run
 
-### Prerequisites
+### 1. Prerequisites
+- **Node.js**: Version 18 or higher
+- **npm**: Version 9 or higher
+- **Google Chrome**
 
-- Node.js 18+
-- npm 9+
-- Google Chrome
-
-### Install dependencies
-
+### 2. Install Dependencies
 ```bash
 npm install
 ```
 
-### Run in dev mode (Chrome)
-
-```bash
-npm run dev
-```
-
-This starts WXT in watch mode. Load the unpacked extension from `.output/chrome-mv3/`.
-
-### Typecheck
-
-```bash
-npm run typecheck
-```
-
-### Build for production
-
+### 3. Build the Extension
 ```bash
 npm run build
 ```
+The compiled files will be output to the `.output/chrome-mv3` folder.
 
-Output will be in `.output/chrome-mv3/`.
-
-### Create a ZIP for distribution
-
+### 4. Run Automated Verification Suite
+Verify type correctness, DOM layouts, analyzer rules, report normalization, and production build compliance:
 ```bash
-npm run zip
+npm run verify
 ```
 
----
-
-## Loading in Chrome
-
-1. Run `npm run build`
-2. Open `chrome://extensions` in Chrome
-3. Enable **Developer mode** (toggle in the top-right)
-4. Click **Load unpacked**
-5. Select the `.output/chrome-mv3/` folder
-6. The FormTrace icon will appear in your toolbar
+### 5. Start Localhost Demo Server
+> [!IMPORTANT]
+> **Prefer localhost testing over file:// URL testing.**
+> Loading demo pages using `file://` is discouraged because Chrome extension permissions for local files may reset whenever the extension is reloaded or updated. Always run the localhost demo server instead:
+```bash
+npm run demo
+```
+This serves the demo pages at: **`http://127.0.0.1:4173/`**
 
 ---
 
-## Testing with Demo Pages
+## Loading the Extension in Google Chrome
 
-Open any of the files in the `demo-pages/` folder directly in Chrome:
+1. Build the production files: `npm run build`
+2. Open Chrome and go to `chrome://extensions`.
+3. Toggle the **Developer mode** switch in the top-right corner.
+4. Click **Load unpacked** in the top-left.
+5. Choose the `.output/chrome-mv3` directory inside the project repository.
+6. The FormTrace extension badge will now be active in your toolbar.
 
-| File | Tests |
-|---|---|
-| `index.html` | Overview / links |
-| `disabled-button.html` | Disabled submit button |
-| `hidden-required-field.html` | Hidden required field |
-| `invisible-error.html` | Validation without visible error |
-| `failed-api.html` | Failed fetch/network request |
-| `success-form.html` | Successful submission |
+---
 
-**Important Test Flow & Cache Reset:**
-When testing a new build of the extension locally, you must follow these steps exactly to avoid stale cache issues:
-1. Run `npm run build`
-2. Go to `chrome://extensions` in your browser.
-3. Click **Reload** on the FormTrace extension card (or remove and load unpacked again).
-4. Refresh the demo page you are testing (e.g., `demo-pages/hidden-required-field.html`).
-5. Open the FormTrace popup and click **Reset** to clear any stale session data.
-6. Click **Start recording** and perform your test.
-7. Click **Stop & analyze**, then read the report.
+## Exact Manual Test Checklist
+
+Run the localhost demo server with `npm run demo` and open **`http://127.0.0.1:4173/`** in Chrome. Follow these verification steps:
+
+### 1. Hidden Required Field Test
+- **URL**: `http://127.0.0.1:4173/hidden-required-field.html`
+- **Steps**:
+  1. Open the FormTrace popup, click **Reset**, then click **Start recording**.
+  2. Fill in all visible fields ("Username" and "Email").
+  3. Click the **Register** button (nothing visibly happens).
+  4. Wait 1 second, then open the popup and click **Stop & analyze**.
+- **Expected Result**: 
+  - Likely issue: `Hidden required field blocked submission` (Severity: `high`, Confidence: `100%`)
+  - Technical Details include: `Hidden required empty fields found: 1` and `Analyzer runtime fix: hidden-required-first-pass`
+
+### 2. Disabled Submit Button Test
+- **URL**: `http://127.0.0.1:4173/disabled-button.html`
+- **Steps**:
+  1. Reset and click **Start recording** in the popup.
+  2. Click the disabled **Submit** button on the page.
+  3. Wait 1 second, then click **Stop & analyze** in the popup.
+- **Expected Result**:
+  - Likely issue: `Submit button was disabled` (Severity: `high`, Confidence: `95%` or higher)
+  - Technical Details include: `Disabled submit attempt detected: 1`
+
+### 3. Validation Without Visible Error Test
+- **URL**: `http://127.0.0.1:4173/invisible-error.html`
+- **Steps**:
+  1. Reset and click **Start recording** in the popup.
+  2. Leave the "Username" field blank and click **Submit**.
+  3. Wait 1 second, then click **Stop & analyze** in the popup.
+- **Expected Result**:
+  - Likely issue: `Validation failed without visible feedback` (Severity: `medium`, Confidence: `35%` or higher)
+  - Technical Details include: `Forms detected: 1`, `Submit attempts: 1`
+
+### 4. Failed Network Request Test
+- **URL**: `http://127.0.0.1:4173/failed-api.html`
+- **Steps**:
+  1. Reset and click **Start recording** in the popup.
+  2. Enter any input in the text box and click **Send feedback**.
+  3. Wait for the red "Network error" text to appear on the page.
+  4. Wait 1 second, then click **Stop & analyze** in the popup.
+- **Expected Result**:
+  - Likely issue: `Network request failed after submit` (Severity: `high`, Confidence: `80%` or higher)
+  - Technical Details include: `Network failure detected: 1`, `Network DOM signal detected` (if using DOM signal fallback), and `Network probe active`
+
+### 5. Successful Form Test
+- **URL**: `http://127.0.0.1:4173/success-form.html`
+- **Steps**:
+  1. Reset and click **Start recording** in the popup.
+  2. Fill in all valid fields and click **Submit**.
+  3. Wait 1 second, then click **Stop & analyze** in the popup.
+- **Expected Result**:
+  - Likely issue: `No clear failure detected` (Severity: `low`)
 
 ---
 
 ## Known Limitations
 
-- The content script is injected on `<all_urls>` — some CSP-strict pages may block it
-- Network recording patches `window.fetch` and `XMLHttpRequest` — cannot detect requests made before the content script loads
-- Console recorder patches `console.error` — cannot capture errors from before recording starts
-- Popup polling interval is 1.5s — live event counts may lag slightly
-- MV3 service workers are ephemeral — state is persisted to `chrome.storage.local` to survive restarts
+- **Network Interception Limit**: Patches `window.fetch` and `XMLHttpRequest`. Requests sent *prior* to recording initialization or extension startup won't be captured.
+- **Ephemerality**: As a Manifest V3 extension, the background page is a Service Worker that sleeps/wakes. To handle this, session states are securely cached to `chrome.storage.local`.
+- **Diagnostic Markers**: Build 1 includes runtime diagnostic markers (e.g., `Network probe active`) in technical details. These can be customized or hidden in future builds.
 
 ---
 
 ## Roadmap
 
-| Build | Focus |
-|---|---|
-| Build 1 | MVP — recording, analysis, Markdown report |
-| Build 2 | Improved network tracing, SPA route change detection |
-| Build 3 | CSS Blame Overlay module |
-| Build 4 | Export formats: GitHub Issues, Jira, PDF |
-| Build 5 | Optional team/pro features |
+| Build | Status | Focus |
+|---|---|---|
+| **Build 1** | **Completed & Verified** | Core recorder, DOM signal checks, static network probe, report normalization, copyable Markdown. |
+| **Build 2** | Planned | SPA route change support, enhanced framework testing (React, Vue, Shopify, WordPress), custom debug marker configurations. |
+| **Build 3** | Planned | Visual CSS Blame overlay to highlight broken elements directly in the page DOM. |
+| **Build 4** | Planned | Export formats (Jira, GitHub Issues, PDF). |
+| **Build 5** | Planned | Optional sync/team workspace integrations. |

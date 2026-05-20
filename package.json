@@ -15,7 +15,9 @@
     "dom:check": "node tools/dom-check.mjs",
     "analyzer:check": "tsx tools/analyzer-check.ts",
     "report:check": "tsx tools/report-normalization-check.ts",
-    "build:check": "node tools/build-output-check.mjs"
+    "build:check": "node tools/build-output-check.mjs",
+    "demo": "http-server demo-pages -p 4173 -c-1",
+    "verify": "npm run typecheck && npm run build && npm run dom:check && npm run analyzer:check && npm run report:check && npm run build:check"
   },
   "dependencies": {
     "react": "^18.3.1",
@@ -25,6 +27,7 @@
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@webext-core/fake-browser": "^1.4.0",
+    "http-server": "^14.1.1",
     "jsdom": "^29.1.1",
     "tsx": "^4.22.3",
     "typescript": "^5.4.5",
