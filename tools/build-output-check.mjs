@@ -26,7 +26,10 @@ const REQUIRED_STRINGS = [
   'Copy GitHub issue',
   'buildGitHubIssueReport',
   'FormTrace:',
-  'GitHub issue export active'
+  'GitHub issue export active',
+  'Copy Jira report',
+  'buildJiraReport',
+  'Jira report export active'
 ];
 
 function getFilesRecursive(dir) {

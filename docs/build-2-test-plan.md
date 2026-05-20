@@ -94,7 +94,20 @@ Verify the following new capabilities:
      - `## Reproduction Notes`
   5. Confirm debug marker lines (e.g. `Analyzer runtime fix: hidden-required-first-pass`) are hidden when Show debug markers is off.
   6. Turn on Show debug markers, click **Copy GitHub issue** again, and confirm debug marker lines are included.
-  7. Confirm Copy as Jira Bug operates similarly (to be fully tested once Issue 4 is completed).
+  7. Click **Copy Jira report**.
+  8. Paste into a text editor and confirm it contains:
+     - `h2. Summary`
+     - `h2. Environment`
+     - `h2. Issue`
+     - `h2. Steps to Reproduce`
+     - `h2. Actual Result`
+     - `h2. Expected Result`
+     - `h2. Findings`
+     - `h2. Technical Details`
+     - `h2. Suggested Fixes`
+     - `h2. Privacy Notes`
+  9. Confirm debug marker lines (e.g. `Analyzer runtime fix: hidden-required-first-pass`) are hidden when Show debug markers is off.
+  10. Turn on Show debug markers, click **Copy Jira report** again, and confirm debug marker lines are included.
 - **Expected Result**: Formatted text is copied to clipboard and respects the debug marker setting correctly.
 
 ### Test 2.4: Session History List

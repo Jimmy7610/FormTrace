@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import type { RecordingSession, AnalysisReport, Finding, Severity } from '../../src/types/formtrace';
 import { buildMarkdownReport } from '../../src/analyzer/buildMarkdownReport';
 import { buildGitHubIssueReport } from '../../src/analyzer/buildGitHubIssueReport';
+import { buildJiraReport } from '../../src/analyzer/buildJiraReport';
 import { analyzeSession } from '../../src/analyzer/analyzeSession';
 import { normalizeReportForHiddenRequiredFields } from '../../src/analyzer/normalizeReport';
 import { filterTechnicalDetailsForDebugMarkers } from '../../src/analyzer/filterDebugMarkers';
@@ -288,6 +289,26 @@ export default function App() {
     }
   }
 
+  async function handleCopyJiraReport() {
+    const report = status.lastReport;
+    if (!report) return;
+
+    const jiraReport = buildJiraReport(report, { showDebugMarkers: debugMarkersVisible });
+    try {
+      await navigator.clipboard.writeText(jiraReport);
+      toast('Jira report copied!');
+    } catch {
+      // Fallback for clipboard permission issues
+      const el = document.createElement('textarea');
+      el.value = jiraReport;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+      toast('Jira report copied!');
+    }
+  }
+
   // ─── Render ─────────────────────────────────────────────────────────────────
 
   const { isRecording, formCount, eventCount, submitAttemptCount, lastReport } = status;
@@ -378,6 +399,16 @@ export default function App() {
           type="button"
         >
           ⎘ Copy GitHub issue
+        </button>
+
+        <button
+          id="btn-copy-jira"
+          className="btn btn-success btn-full"
+          onClick={handleCopyJiraReport}
+          disabled={!lastReport || loading}
+          type="button"
+        >
+          ⎘ Copy Jira report
         </button>
       </div>
 

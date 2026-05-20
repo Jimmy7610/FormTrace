@@ -29,6 +29,14 @@
   - Created [github-issue-report-check.ts](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/tools/github-issue-report-check.ts) to verify format rendering and respect for the showDebugMarkers toggle.
   - Added `github:check` script and integrated it into the verification pipeline and production build verification script.
 
+### Issue 4: Jira-Style Export Format
+- **Completed On**: 2026-05-20
+- **What Changed**:
+  - Implemented [buildJiraReport.ts](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/src/analyzer/buildJiraReport.ts) to format analysis reports as clean Jira-style bug reports using Jira Rich Text Markup.
+  - Added a **Copy Jira report** button to [App.tsx](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/entrypoints/popup/App.tsx).
+  - Created [jira-report-check.ts](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/tools/jira-report-check.ts) to verify format rendering (headers, environmental stats, steps, findings, details, suggested fixes, privacy, etc.) and respect for the showDebugMarkers toggle.
+  - Added `jira:check` script and integrated it into the verification pipeline and production build verification script.
+
 ---
 
 ## How to Test
@@ -63,7 +71,20 @@ This runs typechecks, building, DOM verification, rule analysis, normalization c
 6. Click **Stop & analyze** in the popup.
 7. Observe that the likely issue is `"Validation failed without visible feedback"` and the confidence score displays exactly **80%** (an improvement from 35%).
 
+#### GitHub Issue Export Format (Issue 3)
+1. Open `http://127.0.0.1:4173/hidden-required-field.html`.
+2. Complete Username and Email, leave the hidden field blank, and click Register.
+3. Open the extension popup, stop recording, and click **Copy GitHub issue**.
+4. Paste into a text editor and verify it generates clean GitHub Markdown syntax with a `# FormTrace: ...` header.
+
+#### Jira-Style Export Format (Issue 4)
+1. Open `http://127.0.0.1:4173/hidden-required-field.html`.
+2. Complete Username and Email, leave the hidden field blank, and click Register.
+3. Open the extension popup, stop recording, and click **Copy Jira report**.
+4. Paste into a text editor and verify it generates clean Jira markup syntax starting with `h2. Summary`.
+5. Verify that debug markers are hidden/shown depending on the settings checkbox.
+
 ---
 
 ## Next Recommended Task
-- **Issue 4: Add Jira-style export format** ([docs/build-2-issues.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-issues.md#L49)).
+- **Issue 5: Saved Local Sessions & History** ([docs/build-2-issues.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-issues.md#L67)).

@@ -52,14 +52,25 @@ This document breaks Build 2 down into small, isolated, and implementable tasks.
 
 ---
 
-## Issue 4: Jira-Style Export Format
+## Issue 4: Jira-Style Export Format [COMPLETED]
 - **Goal**: Generate a copyable report formatted using Jira markup syntax.
-- **Files Likely Affected**:
-  - `src/popup/App.tsx` (Add "Copy as Jira Bug" button)
-  - `src/utils/reportGenerator.ts` (Implement Jira format parser)
+- **Files Affected**:
+  - [App.tsx](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/entrypoints/popup/App.tsx) (Add "Copy Jira report" button and handler)
+  - [buildJiraReport.ts](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/src/analyzer/buildJiraReport.ts) (Implement template formatting)
+  - [jira-report-check.ts](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/tools/jira-report-check.ts) (Unit tests)
 - **Acceptance Criteria**:
-  1. Copying as Jira produces valid Jira Rich Text Markup (e.g., `*bold*`, `{code:markdown}`, `{panel:title=Analysis}`).
-  2. Tables use Jira format (e.g., `||Heading 1||Heading 2||` and `|Value 1|Value 2|`).
+  1. Copying as Jira produces clean Jira Rich Text Markup containing:
+     - `h2. Summary`
+     - `h2. Environment` (title, URL, timestamp, Tool)
+     - `h2. Issue` (likely issue, severity, confidence)
+     - `h2. Steps to Reproduce`
+     - `h2. Actual Result`
+     - `h2. Expected Result`
+     - `h2. Findings`
+     - `h2. Technical Details` (respects debug marker settings)
+     - `h2. Suggested Fixes`
+     - `h2. Privacy Notes`
+  2. Uses Jira-native styles (e.g. list prefix `*` for findings/details, `#` for numbered reproduction steps, headers `h2.`).
 - **Risk Level**: **Low**
 
 ---
