@@ -31,10 +31,14 @@ const REQUIRED_STRINGS = [
   'buildJiraReport',
   'Jira report export active',
   'Report history storage active',
-  'Open persistent window',
+  'Open separate window',
   'Persistent window',
   'FormTrace persistent window active',
-  'Chrome closes normal popups automatically'
+  'Separate windows can fall behind Chrome',
+  'Open side panel',
+  'Side panel',
+  'FormTrace side panel active',
+  'Use the side panel to keep FormTrace visible beside the page.'
 ];
 
 function getFilesRecursive(dir) {
@@ -87,6 +91,14 @@ function runBuildCheck() {
       allPassed = false;
     }
   });
+
+  const sidepanelHtml = files.find(f => path.basename(f) === 'sidepanel.html');
+  if (!sidepanelHtml) {
+    console.error('[FAIL] sidepanel.html is missing from the build output!');
+    allPassed = false;
+  } else {
+    console.log('[PASS] sidepanel.html exists in the build output.');
+  }
 
   const probeFile = files.find(f => path.basename(f) === 'page-network-probe.js');
   if (!probeFile) {

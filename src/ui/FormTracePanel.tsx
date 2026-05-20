@@ -14,6 +14,7 @@ import {
   type SavedReport
 } from '../storage/reportHistory';
 import { openPersistentWindow } from '../windows/persistentWindow';
+import { openFormTraceSidePanel } from '../panels/sidePanel';
 
 // INSTÄLLNING - Hur ofta panelen pollar status från content script (ms)
 const POLL_INTERVAL_MS = 1500;
@@ -137,7 +138,13 @@ function AnalysisCard({ report, showDebugMarkers }: { report: AnalysisReport; sh
 
 // ─── Main Panel Component ─────────────────────────────────────────────────────
 
-export default function FormTracePanel({ isPersistent = false }: { isPersistent?: boolean }) {
+export default function FormTracePanel({
+  isPersistent = false,
+  isSidePanel = false
+}: {
+  isPersistent?: boolean;
+  isSidePanel?: boolean;
+}) {
   const [status, setStatus] = useState<StatusState>({
     isRecording: false,
     formCount: 0,
@@ -167,14 +174,14 @@ export default function FormTracePanel({ isPersistent = false }: { isPersistent?
       if (result.formtracePersistentWindowMode !== undefined) {
         const modeActive = result.formtracePersistentWindowMode;
         setPersistentWindowMode(modeActive);
-        // Automatically open the persistent window if preference is true and we're not inside it already
-        if (modeActive && !isPersistent) {
+        // Automatically open the persistent window if preference is true and we're not inside it or side panel already
+        if (modeActive && !isPersistent && !isSidePanel) {
           openPersistentWindow();
         }
       }
     });
     loadHistory();
-  }, [loadHistory, isPersistent]);
+  }, [loadHistory, isPersistent, isSidePanel]);
 
   const saveHistoryHelper = async (report: AnalysisReport) => {
     const updated = await saveReportHistory(report);
@@ -191,7 +198,7 @@ export default function FormTracePanel({ isPersistent = false }: { isPersistent?
     const nextVal = e.target.checked;
     setPersistentWindowMode(nextVal);
     chrome.storage.local.set({ formtracePersistentWindowMode: nextVal });
-    if (nextVal && !isPersistent) {
+    if (nextVal && !isPersistent && !isSidePanel) {
       openPersistentWindow();
     }
   };
@@ -396,24 +403,43 @@ export default function FormTracePanel({ isPersistent = false }: { isPersistent?
           <div className="logo">FormTrace</div>
           <div className="subtitle">Diagnose broken forms</div>
         </div>
-        {isPersistent ? (
+        {isSidePanel ? (
+          <span className="build-badge sidepanel-badge" id="build-badge">Side panel</span>
+        ) : isPersistent ? (
           <span className="build-badge persistent-badge" id="build-badge">Persistent window</span>
         ) : (
           <span className="build-badge" id="build-badge">Build 1</span>
         )}
       </div>
 
-      {/* Persistent Status and Control Area */}
-      {!isPersistent && (
+      {/* Side Panel and Persistent Window Control Area */}
+      {!isPersistent && !isSidePanel && (
         <div className="persistent-control-panel" style={{ padding: '0 12px 10px', marginTop: '-4px' }}>
+          {/* Side Panel Area */}
+          <div className="persistent-helper-text" style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 6, lineHeight: 1.4 }}>
+            Use the side panel to keep FormTrace visible beside the page.
+          </div>
+          <button
+            id="btn-open-sidepanel"
+            className="btn btn-primary btn-full"
+            onClick={async () => {
+              await openFormTraceSidePanel();
+            }}
+            type="button"
+            style={{ width: '100%', marginBottom: 12 }}
+          >
+            Open side panel
+          </button>
+
+          {/* Legacy Persistent Window Area */}
           {persistentWindowMode && (
             <div className="persistent-status-banner" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: '#818cf8', marginBottom: 8, padding: '4px 8px', background: 'rgba(99, 102, 241, 0.08)', borderRadius: 'var(--radius-sm)' }}>
               <span className="status-dot recording" style={{ background: '#6366f1', width: 6, height: 6 }} />
               <span>FormTrace persistent window active</span>
             </div>
           )}
-          <div className="persistent-helper-text" style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 8, lineHeight: 1.4 }}>
-            Chrome closes normal popups automatically. Use this separate window to keep FormTrace visible.
+          <div className="persistent-helper-text" style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 6, lineHeight: 1.4 }}>
+            Separate windows can fall behind Chrome. Use side panel if you want FormTrace to stay visible beside the page.
           </div>
           <button
             id="btn-open-persistent"
@@ -424,7 +450,7 @@ export default function FormTracePanel({ isPersistent = false }: { isPersistent?
             type="button"
             style={{ width: '100%' }}
           >
-            Open persistent window
+            Open separate window
           </button>
         </div>
       )}
@@ -607,7 +633,7 @@ export default function FormTracePanel({ isPersistent = false }: { isPersistent?
         />
       </div>
 
-      {!isPersistent && (
+      {!isPersistent && !isSidePanel && (
         <div className="settings-area">
           <div className="settings-label-container">
             <span className="settings-title">Use persistent window mode</span>

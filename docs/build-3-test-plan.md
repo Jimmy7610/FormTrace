@@ -48,53 +48,55 @@ Run through these checks to ensure existing functionality remains unbroken:
 
 Verify the following new capabilities:
 
-### Test 3.1: Persistent Window Launch
+### Test 3.1: Side Panel Mode Launch
 - **Steps**:
-  1. Open the FormTrace extension popup.
-  2. Locate the "Open persistent window" action link in the footer.
-  3. Click "Open persistent window".
+  1. Open the FormTrace extension action popup.
+  2. Locate the "Open side panel" button in the footer.
+  3. Click **"Open side panel"**.
+- **Expected Result**:
+  - Chrome Side Panel opens on the right side of the active tab.
+  - The side panel loads `sidepanel.html` and renders the FormTrace UI with full height.
+  - The header displays a green badge stating "Side panel".
+  - The console logs: `[FormTrace] FormTrace side panel active via windowId: ...` or `via tabId: ...`.
+
+### Test 3.2: Legacy Separate Window Launch
+- **Steps**:
+  1. Open the FormTrace extension action popup.
+  2. Locate the "Open separate window" action link below the side panel button.
+  3. Click **"Open separate window"**.
 - **Expected Result**:
   - A separate browser popup window opens loading `persistent.html`.
   - The window's outer dimensions match `420` width and `720` height.
   - The persistent window header displays a green/indigo badge stating "Persistent window".
-  - The layout stretches responsively to the full width and height of the window without rigid width margins.
 
-### Test 3.2: Single-Instance Focus & Duplicate Prevention
+### Test 3.3: Separate Window Single-Instance & Stale Re-creation
 - **Steps**:
-  1. With the persistent window open, click on the browser or page to blur/hide the window behind other elements.
-  2. Click the FormTrace extension icon in the toolbar again to open the popup.
-  3. Click "Open persistent window".
+  1. With the separate window open, click on the browser or page to blur/hide it behind other windows.
+  2. Click the FormTrace extension popup again and click **"Open separate window"**.
 - **Expected Result**:
   - No new window is spawned.
-  - The existing persistent window is immediately focused and brought to the front of the screen.
-
-### Test 3.3: Recreate Stale Window
-- **Steps**:
-  1. Close the persistent window by clicking its close button.
-  2. Click the FormTrace popup icon in the toolbar.
-  3. Click "Open persistent window".
-- **Expected Result**:
-  - Since the previous window ID is now stale, FormTrace successfully creates, opens, and focuses a new window.
+  - The existing separate window is focused and brought to the front.
+- **Steps 2**:
+  1. Close the separate window manually.
+  2. Click the FormTrace extension popup again and click **"Open separate window"**.
+- **Expected Result 2**:
+  - FormTrace successfully detects the stale ID and spawns a new separate window instance.
 
 ### Test 3.4: Automated Test Verification
 - **Steps**:
-  1. Run the test verification script:
+  1. Run the test verification scripts:
      ```bash
+     npm run sidepanel:check
      npm run persistent:check
      ```
 - **Expected Result**:
-  - The script executes in Node, mocking Chrome Extension APIs, and prints:
-    `Persistent Window Verification PASSED!`
-    exiting with status code 0.
+  - Both scripts execute in Node, mocking Chrome Extension APIs, and print their respective `PASSED!` messages, exiting with status code 0.
 
 ---
 
-## 4. Manual QA Verification (Issue 1 Bugfix Retest)
+## 4. Manual QA Verification (Issue 1 Side Panel Retest)
 
-> [!NOTE]
-> The initial implementation of the persistent window mode failed manual testing because the window did not stay visible when focus shifted. The fix implements a true `chrome.windows.create` standalone window with `type: 'popup'` and explicit focus settings to ensure it stays visible.
-
-### Test 4.1: Manual Verification Steps
+### Test 4.1: Side Panel & Recording Manual Steps
 1. Run:
    ```bash
    npm run build
@@ -105,19 +107,10 @@ Verify the following new capabilities:
    npm run demo
    ```
 4. Open the demo page: **`http://127.0.0.1:4173/hidden-required-field.html`**
-5. Open the normal FormTrace extension popup.
-6. Click **"Open persistent window"**.
-7. Confirm a separate Chrome window opens.
-8. Confirm the window contains the **"Persistent window"** badge in the header.
-9. Click on the webpage outside FormTrace.
-10. Confirm the persistent FormTrace window **stays open** (does not auto-close like the normal action popup).
-11. Start recording from the persistent window.
-12. Trigger the hidden required form issue (fill fields, click submit).
-13. Stop and analyze.
-14. Confirm the report appears inside the persistent window.
-15. Confirm **Copy report** works.
-16. Confirm **Copy GitHub issue** works.
-17. Confirm **Copy Jira report** works.
-18. Confirm **Recent reports** history works.
-19. Click **"Open persistent window"** again from the normal popup.
-20. Confirm it focuses the existing persistent window instead of opening duplicate windows.
+5. Click the FormTrace toolbar icon to open the action popup.
+6. Click **"Open side panel"**.
+7. Confirm that the side panel stays visible beside the page even when clicking/interacting with the page itself.
+8. Click **Start recording** in the side panel.
+9. Interact with the form (fill visible fields, click Register).
+10. Click **Stop & analyze** in the side panel.
+11. Verify that the FormTrace analysis report renders fully, and you can copy to clipboard in all formats (Default, GitHub, Jira), show/hide debug markers, and view recent report history.

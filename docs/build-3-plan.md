@@ -15,12 +15,11 @@ While Build 2 added rich export formatting and report history, developers and QA
 
 ## Scope: What is Included
 
-### 1. Optional Persistent Window Mode (Issue 1)
-- **Shared UI Core**: Refactored the popup layout into a shared `<FormTracePanel>` component so that both the extension action popup and the persistent window share the exact same logic.
-- **Window Controller**: Standard helper `persistentWindow.ts` managing window lifecycle, window dimensions (420x720), and focusing/opening.
-  - *Note on Bugfix*: Initial implementation failed manual testing because the window did not stay visible. Fixed by adding `"windows"` permission in `wxt.config.ts` and configuring `chrome.windows.create` with `type: "popup"`, `focused: true` to guarantee separate window lifecycle.
-- **Single-Instance Restriction**: Checks `chrome.storage.local` to prevent opening duplicate windows, updating focus on the existing instance if clicked again.
-- **Responsive Layout**: Replaced rigid width boundaries with responsive rules when rendered in persistent window mode.
+### 1. Native Side Panel Mode & Legacy Persistent Window (Issue 1)
+- **Native Side Panel**: Integrated Chrome Side Panel API permissions and registered `sidepanel.html` entrypoint in WXT config. Side Panel layout provides an elegant, non-obtrusive, always-visible side pane beside the active browser tab.
+- **Legacy Persistent Window**: Maintained the standalone pop-out window (`persistent.html`) as a secondary option for environments or users that prefer separate window tracking.
+- **Shared UI Panel Component**: The main layout is powered by the polymorphic `<FormTracePanel>` component, which adapts seamlessly between standard Action Popup, Side Panel, and Separate Window modes.
+- **Single-Instance & Stale Tracking**: Employs robust storage-backed state tracing to ensure only single instances of the persistent window are active, and utilizes separated try-catch handlers to gracefully fall back from window querying to tab querying during side panel launches.
 
 ### 2. CSS Blame Overlay (Issue 2 - Planned)
 - **Overlay Injection**: Inject styling rules and indicators directly into the tab's DOM to flag validation failures or hidden inputs.
@@ -38,6 +37,6 @@ While Build 2 added rich export formatting and report history, developers and QA
 ---
 
 ## Implementation Order
-1. **Issue 1**: Optional persistent FormTrace window (Completed).
+1. **Issue 1**: Native Side Panel mode & Legacy Persistent Window (Completed).
 2. **Issue 2**: CSS Blame Overlay (Planned).
 3. **Issue 3**: Framework Mimic Demo Pages (Planned).

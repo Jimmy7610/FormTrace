@@ -47,12 +47,12 @@ html, body {
   -webkit-font-smoothing: antialiased;
 }
 
-html:not(.persistent-html), body:not(.persistent-mode) {
+html:not(.persistent-html), body:not(.persistent-mode):not(.sidepanel-mode) {
   width: var(--popup-width);
   min-width: var(--popup-width);
 }
 
-html.persistent-html, body.persistent-mode {
+html.persistent-html, body.persistent-mode, body.sidepanel-mode {
   width: 100%;
   min-width: 100%;
 }
@@ -79,7 +79,7 @@ html.persistent-html, body.persistent-mode {
   gap: 10px;
 }
 
-body.persistent-mode .popup {
+body.persistent-mode .popup, body.sidepanel-mode .popup {
   min-height: 100vh;
   max-height: none;
 }
@@ -129,6 +129,12 @@ body.persistent-mode .popup {
   color: var(--accent-hover);
   background: rgba(129, 140, 248, 0.15);
   border: 1px solid rgba(129, 140, 248, 0.3);
+}
+
+.sidepanel-badge {
+  color: var(--success);
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.25);
 }
 
 /* ─── Status pill ──────────────────────────────────────────────────────────── */

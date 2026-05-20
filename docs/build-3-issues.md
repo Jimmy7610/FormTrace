@@ -4,35 +4,27 @@ This document breaks Build 3 down into small, isolated, and implementable tasks.
 
 ---
 
-## Issue 1: Optional Persistent FormTrace Window [COMPLETED]
-- **Goal**: Allow users to open FormTrace in a separate pop-out window that stays open when focus shifts, preventing automatic popup closure.
+## Issue 1: Native Side Panel Mode & Legacy Persistent Window [COMPLETED]
+- **Goal**: Allow users to keep FormTrace open beside the page using Chrome Side Panel layout, or in a separate standalone window if preferred, preventing automatic popup closure when clicking away.
 - **Files Affected**:
   - [FormTracePanel.tsx](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/src/ui/FormTracePanel.tsx) (UI layout core)
+  - [sidePanel.ts](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/src/panels/sidePanel.ts) (Side panel manager)
   - [persistentWindow.ts](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/src/windows/persistentWindow.ts) (Window manager)
-  - [App.tsx (Popup)](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/entrypoints/popup/App.tsx) (Mount core panel)
-  - [App.tsx (Persistent)](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/entrypoints/persistent/App.tsx) (Persistent window entry component)
-  - [index.html](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/entrypoints/persistent/index.html) (Persistent window entry HTML)
-  - [main.tsx](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/entrypoints/persistent/main.tsx) (Persistent bootstrap script)
+  - [App.tsx (Side Panel)](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/entrypoints/sidepanel/App.tsx) (Side panel entry component)
   - [style.css](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/entrypoints/popup/style.css) (Flexible sizing styles)
-  - [persistent-window-check.ts](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/tools/persistent-window-check.ts) (Tests)
+  - [sidepanel-check.ts](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/tools/sidepanel-check.ts) (Automated test)
+  - [persistent-window-check.ts](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/tools/persistent-window-check.ts) (Automated test)
   - [build-output-check.mjs](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/tools/build-output-check.mjs) (Production string check)
   - [package.json](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/package.json) (Test scripts registry)
 - **Acceptance Criteria**:
-  1. A "Open persistent window" action link exists in the normal popup panel footer.
-  2. Clicking "Open persistent window" opens a new browser window referencing `persistent.html` at default dimensions of `420` width and `720` height.
-  3. Single-instance restriction: If the window is already open, clicking the action link will focus the existing window instead of launching a duplicate.
-  4. The persistent window layout matches the popup theme but adapts responsively to fluid width/height resizing.
-  5. Close/stale window tracking: If the window is closed manually, clicking the link again correctly creates a new window.
-  6. Automatic unit tests verify:
-     - Storage key existence (`formtracePersistentWindowId`)
-     - Default width (420) and height (720) constants
-     - Presence of stable string markers (`Open persistent window`, etc.)
-     - Mocked lifecycle behavior (create, focus existing, recreate stale)
-- **Manual QA Retest Required**:
-  - The first implementation failed manual testing because the persistent window behaved like the normal action popup and did not stay visible when the user clicked outside.
-  - The fix resolved this by declaring `"windows"` permission and ensuring `chrome.windows.create` uses `type: "popup"`, `focused: true`, and correct URL retrieval.
-  - Retest manually using the exact test instructions in the test plan before accepting this issue.
-- **Risk Level**: **Low**
+  1. A primary "Open side panel" button exists in the normal popup panel footer with helper text explaining its usage.
+  2. Clicking "Open side panel" invokes `chrome.sidePanel.open` with fallback handling from current window ID to active tab ID context.
+  3. The side panel loads `sidepanel.html` and renders the shared panel UI in a full-height scrollable container.
+  4. A secondary "Open separate window" link exists in the normal popup panel footer as a legacy fallback.
+  5. The separate window layout is responsive, enforces single-instance restriction, and targets `persistent.html` at default dimensions of `420` width and `720` height.
+  6. The side panel helper logs `FormTrace side panel active` upon successful initialization.
+  7. Automatic tests verify side panel manifest registration, permission configuration, action button text, and context queries.
+- **Risk Level**: **Medium**
 
 ---
 

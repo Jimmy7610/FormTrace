@@ -41,10 +41,11 @@
 
 **Status:** In Progress
 
-**Focus:** Persistent window mode, visual overlay to identify layout-related form issues, and SPAs.
+**Focus:** Side Panel mode, legacy persistent window fallback, visual overlay to identify layout-related form issues, and SPAs.
 
 ### Delivered
-- **Optional Persistent Window Mode**: Add a separate persistent window that stays open when focus shifts, complete with flexible layouts, a header badge, single-instance enforcement, and robust chrome.windows.create standalone lifecycle management.
+- **Native Side Panel Mode**: Add a modern Chrome side panel layout that remains visible alongside the active webpage, with responsive styles, gesture-activated launch helper, and badge-styled status controls.
+- **Legacy Persistent Window**: Keep the standalone pop-out window as a secondary option for cases where a side panel layout is not desired.
 
 ### Planned
 - Visual CSS Blame overlay to highlight broken elements directly in the page DOM.

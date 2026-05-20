@@ -121,10 +121,10 @@ async function runTests() {
   const panelContent = fs.readFileSync(panelPath, 'utf8');
 
   const stableStrings = [
-    'Open persistent window',
+    'Open separate window',
     'Persistent window',
     'FormTrace persistent window active',
-    'Chrome closes normal popups automatically'
+    'Separate windows can fall behind Chrome'
   ];
 
   stableStrings.forEach((str) => {
