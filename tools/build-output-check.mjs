@@ -30,7 +30,10 @@ const REQUIRED_STRINGS = [
   'Copy Jira report',
   'buildJiraReport',
   'Jira report export active',
-  'Report history storage active'
+  'Report history storage active',
+  'Open persistent window',
+  'Persistent window',
+  'FormTrace persistent window active'
 ];
 
 function getFilesRecursive(dir) {

@@ -39,16 +39,16 @@
 
 ## Build 3 — CSS Blame Overlay & Framework Demos
 
-**Focus:** Visual overlay to identify layout-related form issues and SPAs.
+**Status:** In Progress
+
+**Focus:** Persistent window mode, visual overlay to identify layout-related form issues, and SPAs.
+
+### Delivered
+- **Optional Persistent Window Mode**: Add a separate persistent window that stays open when focus shifts, complete with flexible layouts, a header badge, and single-instance enforcement.
 
 ### Planned
-- In-page overlay mode (non-invasive, opt-in)
-- Highlight hidden required fields with a subtle indicator
-- Highlight disabled buttons with explanation tooltip
-- Show field validation state visually on the page
-- Toggle overlay on/off from the popup
-- Color-coded severity indicators on form elements
-- Framework Mimic Pages: Build demo pages to verify performance against React Hook Form, Formik, Shopify, Webflow, and WordPress form structures.
+- Visual CSS Blame overlay to highlight broken elements directly in the page DOM.
+- framework-mimic-pages: Build demo pages to verify performance against React Hook Form, Formik, Shopify, Webflow, WordPress, etc.
 
 ---
 

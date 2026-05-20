@@ -160,17 +160,17 @@ Run the localhost demo server with `npm run demo` and open **`http://127.0.0.1:4
 |---|---|---|
 | **Build 1** | **Completed & Verified** | Core recorder, DOM signal checks, static network probe, report normalization, copyable Markdown. |
 | **Build 2** | **Completed & Verified** | Settings toggle, validation confidence scoring, GitHub Issue & Jira report export formats, local session history, and release prep. |
-| **Build 3** | Planned | Visual CSS Blame overlay to highlight broken elements directly in the page DOM. |
+| **Build 3** | **In Progress** | Persistent window mode & Visual CSS Blame overlay to highlight broken elements directly in the page DOM. |
 | **Build 4** | Planned | PDF export, and additional route/SPA support. |
 | **Build 5** | Planned | Optional sync/team workspace integrations. |
  
 ---
  
-## Next: Build 3
+## Build 3 Planning & Progress
  
-Detailed planning and implementation notes for the completed Build 2 development cycle can be found in the following resources:
-- [docs/build-2-plan.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-plan.md) — Scope, goals, risks, and acceptance criteria.
-- [docs/build-2-issues.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-issues.md) — Modular task breakdowns (Issues 1–6 Completed).
-- [docs/build-2-test-plan.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-test-plan.md) — QA verification steps and release checks.
-- [docs/build-2-progress.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-progress.md) — Completed implementation status details.
-- [docs/build-2-release-notes.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-release-notes.md) — Release notes and full QA checklist.
+Documentation for the current Build 3 cycle and past builds can be found here:
+- [docs/build-3-plan.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-3-plan.md) — Build 3 scope, goals, and architecture.
+- [docs/build-3-issues.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-3-issues.md) — Build 3 task list and issue tracking.
+- [docs/build-3-test-plan.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-3-test-plan.md) — QA verification steps for Build 3.
+- [docs/build-2-release-notes.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-release-notes.md) — Build 2 release notes and checklist.
+- [docs/roadmap.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/roadmap.md) — Overall project roadmap and development status.

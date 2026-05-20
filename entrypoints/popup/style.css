@@ -39,14 +39,22 @@
 }
 
 html, body {
-  width: var(--popup-width);
-  min-width: var(--popup-width);
   background: var(--bg-base);
   color: var(--text-primary);
   font-family: var(--font);
   font-size: 13px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+}
+
+html:not(.persistent-html), body:not(.persistent-mode) {
+  width: var(--popup-width);
+  min-width: var(--popup-width);
+}
+
+html.persistent-html, body.persistent-mode {
+  width: 100%;
+  min-width: 100%;
 }
 
 #root {
@@ -69,6 +77,11 @@ html, body {
   overflow-y: auto;
   padding: 14px;
   gap: 10px;
+}
+
+body.persistent-mode .popup {
+  min-height: 100vh;
+  max-height: none;
 }
 
 /* ─── Header ───────────────────────────────────────────────────────────────── */
@@ -110,6 +123,12 @@ html, body {
   border-radius: 4px;
   padding: 2px 7px;
   letter-spacing: 0.3px;
+}
+
+.persistent-badge {
+  color: var(--accent-hover);
+  background: rgba(129, 140, 248, 0.15);
+  border: 1px solid rgba(129, 140, 248, 0.3);
 }
 
 /* ─── Status pill ──────────────────────────────────────────────────────────── */
