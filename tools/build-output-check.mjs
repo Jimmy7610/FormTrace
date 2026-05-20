@@ -73,11 +73,46 @@ function runBuildCheck() {
     }
   });
 
+  const probeFile = files.find(f => path.basename(f) === 'page-network-probe.js');
+  if (!probeFile) {
+    console.error('[FAIL] page-network-probe.js is missing from the build output!');
+    allPassed = false;
+  } else {
+    console.log('[PASS] page-network-probe.js exists in the build output.');
+    const probeContent = fs.readFileSync(probeFile, 'utf8');
+    if (!probeContent.includes('FormTraceNetworkProbe')) {
+      console.error('[FAIL] page-network-probe.js does not contain "FormTraceNetworkProbe"!');
+      allPassed = false;
+    } else {
+      console.log('[PASS] page-network-probe.js contains "FormTraceNetworkProbe".');
+    }
+  }
+
+  const contentJsFile = files.find(f => f.endsWith('content.js'));
+  if (contentJsFile) {
+    const content = fs.readFileSync(contentJsFile, 'utf8');
+    if (content.includes('__FormTraceNetworkProbeInstalled__')) {
+      console.error('[FAIL] content.js contains "__FormTraceNetworkProbeInstalled__", indicating inline script was bundled!');
+      allPassed = false;
+    } else {
+      console.log('[PASS] content.js does not contain inline probe code.');
+    }
+
+    const hasTextContentAssignment = /\.textContent\s*=/.test(content);
+    const hasInnerHtmlAssignment = /\.innerHTML\s*=/.test(content);
+    if (hasTextContentAssignment || hasInnerHtmlAssignment) {
+      console.error('[FAIL] content.js seems to assign textContent or innerHTML, indicating inline injection!');
+      allPassed = false;
+    } else {
+      console.log('[PASS] content.js does not assign textContent or innerHTML.');
+    }
+  }
+
   if (!allPassed) {
-    console.error('\nBuild verification FAILED! Built extension is missing critical runtime guard code.');
+    console.error('\nBuild verification FAILED! Built extension is missing critical runtime guard code or violates CSP.');
     process.exit(1);
   } else {
-    console.log('\nBuild verification PASSED! All critical runtime guard code is present in built files.');
+    console.log('\nBuild verification PASSED! All critical runtime guard code is present in built files and complies with CSP.');
     process.exit(0);
   }
 }

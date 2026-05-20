@@ -78,3 +78,5 @@ The automated script (`tools/dom-check.mjs`) verified the structural integrity o
 *(Update 7: Manual testing showed failed fetch requests on failed-api.html were visible on the page but not detected by FormTrace because content scripts run in an isolated world. Added a page-context network probe that forwards fetch/XMLHttpRequest failures safely to the content script.)*
 
 *(Update 8: Manual testing showed the page displayed Failed to fetch but the popup still missed network-failure at runtime. Added runtime network probe markers, async stop delay, and a DOM signal fallback for visible network error messages.)*
+
+*(Update 9: Manual testing confirmed network failure detection worked, but Chrome reported a CSP warning because the page network probe was injected as inline script. The probe was moved to a static web-accessible extension asset and injected by src to comply with Chrome extension CSP.)*

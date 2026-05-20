@@ -17,6 +17,12 @@ export default defineConfig({
     permissions: ['activeTab', 'storage', 'scripting'],
 
     host_permissions: ['<all_urls>'],
+    web_accessible_resources: [
+      {
+        resources: ['page-network-probe.js'],
+        matches: ['<all_urls>']
+      }
+    ],
 
     action: {
       default_popup: 'popup/index.html',
