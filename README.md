@@ -157,3 +157,12 @@ Run the localhost demo server with `npm run demo` and open **`http://127.0.0.1:4
 | **Build 3** | Planned | Visual CSS Blame overlay to highlight broken elements directly in the page DOM. |
 | **Build 4** | Planned | Export formats (Jira, GitHub Issues, PDF). |
 | **Build 5** | Planned | Optional sync/team workspace integrations. |
+
+---
+
+## Next: Build 2
+
+Detailed planning and implementation notes for the next development cycle can be found in the following resources:
+- [docs/build-2-plan.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-plan.md) — Scope, goals, risks, and acceptance criteria.
+- [docs/build-2-issues.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-issues.md) — Modular task breakdowns.
+- [docs/build-2-test-plan.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-test-plan.md) — QA verification steps and mimic scenarios.

@@ -23,17 +23,22 @@
 
 ## Build 2 — Network Tracing & Framework Support
 
-**Focus:** Deeper network insight, better confidence scoring, optional panels, and modern web form frameworks.
+**Status:** Planned (Not Started)
 
-**Planned Features:**
-- **Enhanced Framework Testing**: Broaden compatibility and add specific test suites for React Hook Form, Formik, Shopify, Webflow, and WordPress forms.
-- **Saved Local Sessions**: Save, list, and reload previous local recording sessions.
-- **Optional DevTools Panel**: Provide a dedicated tab in Chrome Developer Tools for a full-pane debugger workspace.
-- **Better SPA Support**: Add route change detection to trace forms that perform client-side history navigation or virtual submissions.
-- **Export Formats**: Support exporting reports directly in GitHub Issue and Jira markdown formats.
-- **Debug Settings Panel**: Add a toggle in the UI to hide or show technical debug markers (e.g. `Network probe active`) in the final report.
-- **Better confidence scoring for validation-without-visible-feedback**.
-- CORs / detailed status mapping for failed fetch requests.
+**Focus:** Reporting formats, framework-mimic testing, UX settings, and local export formats.
+
+**Core Rules:**
+- **No Backend**: Remains 100% client-side in the extension sandbox.
+- **No AI**: Purely rule-based heuristic logic.
+
+### Planned (Not Started)
+- **Settings Toggle (UX)**: Toggle visibility of internal debug markers in the report.
+- **Scoring Improvements**: Refined confidence scores for validation issues.
+- **Export Formats**: Copy as GitHub Issue template and Jira rich markup syntax.
+- **Local Session History**: Queue and browse the last 5 sessions.
+- **Framework Mimic Pages (Testing)**: Build demo pages to verify performance against React Hook Form, Formik, Shopify, Webflow, and WordPress form structures.
+- **UI Readability**: Improve report aesthetics, cards, and dynamic severity highlighting.
+- **Arch Planning**: Optional DevTools panel scoping and client-side SPA routing support.
 
 ---
 
