@@ -144,7 +144,7 @@ Run the localhost demo server with `npm run demo` and open **`http://127.0.0.1:4
 
 - **Network Interception Limit**: Patches `window.fetch` and `XMLHttpRequest`. Requests sent *prior* to recording initialization or extension startup won't be captured.
 - **Ephemerality**: As a Manifest V3 extension, the background page is a Service Worker that sleeps/wakes. To handle this, session states are securely cached to `chrome.storage.local`.
-- **Diagnostic Markers**: Build 1 includes runtime diagnostic markers (e.g., `Network probe active`) in technical details. These can be customized or hidden in future builds.
+- **Diagnostic Markers**: Technical diagnostic markers (e.g., `Network probe active`) are hidden by default in report views and copied Markdown, but can be enabled via the "Show debug markers" toggle in settings.
 
 ---
 
@@ -153,7 +153,7 @@ Run the localhost demo server with `npm run demo` and open **`http://127.0.0.1:4
 | Build | Status | Focus |
 |---|---|---|
 | **Build 1** | **Completed & Verified** | Core recorder, DOM signal checks, static network probe, report normalization, copyable Markdown. |
-| **Build 2** | Planned | SPA route change support, enhanced framework testing (React, Vue, Shopify, WordPress), custom debug marker configurations. |
+| **Build 2** | **In Progress** | SPA route change support, enhanced framework testing, custom debug marker configurations, local session history. |
 | **Build 3** | Planned | Visual CSS Blame overlay to highlight broken elements directly in the page DOM. |
 | **Build 4** | Planned | Export formats (Jira, GitHub Issues, PDF). |
 | **Build 5** | Planned | Optional sync/team workspace integrations. |
@@ -164,5 +164,6 @@ Run the localhost demo server with `npm run demo` and open **`http://127.0.0.1:4
 
 Detailed planning and implementation notes for the next development cycle can be found in the following resources:
 - [docs/build-2-plan.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-plan.md) — Scope, goals, risks, and acceptance criteria.
-- [docs/build-2-issues.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-issues.md) — Modular task breakdowns.
+- [docs/build-2-issues.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-issues.md) — Modular task breakdowns (Issue 1 Completed).
 - [docs/build-2-test-plan.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-test-plan.md) — QA verification steps and mimic scenarios.
+- [docs/build-2-progress.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-progress.md) — Current implementation status, including the completed **Debug Marker Visibility Toggle** (which is hidden by default and operates entirely locally on device).

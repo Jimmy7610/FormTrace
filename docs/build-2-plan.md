@@ -62,7 +62,7 @@ While Build 1 successfully proved that common form blockages can be captured and
 ---
 
 ## Suggested Feature Implementation Order
-1. **Issue 1**: Debug marker visibility toggle (Popup UI + settings sync).
+1. **Issue 1**: Debug marker visibility toggle (Popup UI + settings sync) — **[COMPLETED]**
 2. **Issue 2**: Validation-without-visible-feedback confidence score refinement.
 3. **Issue 3 & 4**: GitHub & Jira export formats.
 4. **Issue 5**: Session history storage queue (last 5 sessions).
