@@ -159,6 +159,9 @@ export default function FormTracePanel({
   const [openedReport, setOpenedReport] = useState<AnalysisReport | null>(null);
   const [history, setHistory] = useState<SavedReport[]>([]);
   const [persistentWindowMode, setPersistentWindowMode] = useState(false);
+  const [activeTab, setActiveTab] = useState<{ title?: string; url?: string } | null>(null);
+  // INSTÄLLNING - Recording start time display uses the user's local browser time.
+  const [recordingStartTime, setRecordingStartTime] = useState<number | null>(null);
 
   // Load setting and history on mount
   const loadHistory = useCallback(async () => {
@@ -182,6 +185,33 @@ export default function FormTracePanel({
     });
     loadHistory();
   }, [loadHistory, isPersistent, isSidePanel]);
+
+  useEffect(() => {
+    const updateActiveTab = () => {
+      try {
+        chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) => {
+          if (tabs && tabs.length > 0) {
+            setActiveTab({ title: tabs[0].title, url: tabs[0].url });
+          } else {
+            chrome.tabs.query({ active: true, currentWindow: true }, (tabs2) => {
+              if (tabs2 && tabs2.length > 0) {
+                setActiveTab({ title: tabs2[0].title, url: tabs2[0].url });
+              }
+            });
+          }
+        });
+      } catch (e) {
+        // Ignore errors if context invalid
+      }
+    };
+    updateActiveTab();
+    chrome.tabs.onUpdated.addListener(updateActiveTab);
+    chrome.tabs.onActivated.addListener(updateActiveTab);
+    return () => {
+      chrome.tabs.onUpdated.removeListener(updateActiveTab);
+      chrome.tabs.onActivated.removeListener(updateActiveTab);
+    };
+  }, []);
 
   const saveHistoryHelper = async (report: AnalysisReport) => {
     const updated = await saveReportHistory(report);
@@ -256,6 +286,7 @@ export default function FormTracePanel({
   async function handleStart() {
     setOpenedReport(null);
     setLoading(true);
+    setRecordingStartTime(Date.now());
     await sendMessage('START_RECORDING');
     await fetchStatus();
     setLoading(false);
@@ -292,6 +323,7 @@ export default function FormTracePanel({
   async function handleReset() {
     setOpenedReport(null);
     setLoading(true);
+    setRecordingStartTime(null);
     await sendMessage('RESET_SESSION');
     setStatus({
       isRecording: false,
@@ -461,12 +493,34 @@ export default function FormTracePanel({
         </div>
       )}
 
+      {/* Active Page Context */}
+      <div className="active-page-context" style={{ marginBottom: 12 }}>
+        <div className="active-page-title" title={activeTab?.title}>
+          <strong>Active page:</strong> {activeTab?.title || 'Unknown'}
+        </div>
+        <div className="active-page-url" title={activeTab?.url}>
+          <strong>URL:</strong> {activeTab?.url || 'Unknown'}
+        </div>
+      </div>
+
+      {/* Side Panel Active Tab Warning */}
+      {isSidePanel && activeTab && activeTab.url && activeReport && activeReport.pageUrl && !activeTab.url.includes(activeReport.pageUrl) && (
+        <div className="tab-warning">
+          Side panel is open. Make sure the page you want to test is the active tab before starting a new recording.
+        </div>
+      )}
+
       {/* Status pill */}
       <div className="status-pill">
         <span className={`status-dot ${isRecording ? 'recording' : ''}`} />
         <span className={`status-label ${isRecording ? 'recording' : ''}`}>
           {isRecording ? 'Recording active' : 'Idle'}
         </span>
+        {isRecording && recordingStartTime && (
+          <span className="recording-time" style={{ marginLeft: 6, fontSize: 10, color: 'var(--danger)' }}>
+            (Recording since {new Date(recordingStartTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })})
+          </span>
+        )}
         {isRecording && (
           <span className="recording-helper" style={{ marginLeft: 'auto', fontSize: 10, color: 'var(--text-muted)' }}>
             Interact with the form, then stop and analyze.
@@ -558,7 +612,13 @@ export default function FormTracePanel({
 
       {/* Analysis result */}
       {activeReport ? (
-        <AnalysisCard report={activeReport} showDebugMarkers={debugMarkersVisible} />
+        <div className="analysis-result-container" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <div className="report-source-label">
+            <span>{openedReport ? 'Saved report' : 'Current session report'}</span>
+            <span className="report-source-helper">Exports use the currently opened report.</span>
+          </div>
+          <AnalysisCard report={activeReport} showDebugMarkers={debugMarkersVisible} />
+        </div>
       ) : (
         <div className="empty-state">
           <div className="empty-icon">🔍</div>

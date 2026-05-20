@@ -41,7 +41,13 @@ const REQUIRED_STRINGS = [
   'Use the side panel to keep FormTrace visible beside the page.',
   'Side panel mode keeps FormTrace visible while you work on the page.',
   'Recording active',
-  'Clears the current session, not saved history.'
+  'Clears the current session, not saved history.',
+  'Active page',
+  'Recording since',
+  'Current session report',
+  'Saved report',
+  'Exports use the currently opened report.',
+  'Make sure the page you want to test is the active tab before starting a new recording.'
 ];
 
 function getFilesRecursive(dir) {

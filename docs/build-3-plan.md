@@ -26,7 +26,17 @@ While Build 2 added rich export formatting and report history, developers and QA
 - **UX Text Helpers**: Introduced contextual helper text that clarifies the behavior of recording states and session resets.
 - **Automated String Verification**: Added `sidepanel-ux-check.ts` to ensure layout strings remain stable through minification.
 
-### 3. Framework Mimic Demo Pages (Issue 3 - Planned)
+### 3. Session State Clarity (Issue 3)
+- **Active Page Context**: UI components added to show the current active tab hostname/URL.
+- **Recording Time Tracking**: Local timestamps tracked to clarify recording length ("Recording since...").
+- **Current vs Saved Identification**: Explicitly labeling when viewing an active current session report vs an old history report.
+- **Side Panel Warnings**: Displaying warnings when the active tab shifts away from the recorded tab while using the side panel.
+
+### 4. CSS Blame Overlay (Issue 4 - Planned)
+- **Overlay Injection**: Inject styling rules and indicators directly into the tab's DOM to flag validation failures or hidden inputs.
+- **Toggle Control**: Toggle element highlighting from the FormTrace UI.
+
+### 5. Framework Mimic Demo Pages (Issue 5 - Planned)
 - Create test pages representing React Hook Form, Formik, Shopify Checkout, Webflow, and WordPress structures.
 
 ---
@@ -40,5 +50,6 @@ While Build 2 added rich export formatting and report history, developers and QA
 ## Implementation Order
 1. **Issue 1**: Native Side Panel mode & Legacy Persistent Window (Completed).
 2. **Issue 2**: Side Panel UX Polish (Completed).
-3. **Issue 3**: CSS Blame Overlay (Planned).
-4. **Issue 4**: Framework Mimic Demo Pages (Planned).
+3. **Issue 3**: Session State Clarity (Completed).
+4. **Issue 4**: CSS Blame Overlay (Planned).
+5. **Issue 5**: Framework Mimic Demo Pages (Planned).

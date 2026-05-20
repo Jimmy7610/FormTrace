@@ -101,6 +101,15 @@ Verify the following new capabilities:
 - **Expected Result**:
   - The script executes in Node, asserts that all stable layout helper strings exist in `FormTracePanel.tsx`, and exits with status code 0.
 
+### Test 3.6: Session State Content Assertions
+- **Steps**:
+  1. Run the session verification script:
+     ```bash
+     npm run session:check
+     ```
+- **Expected Result**:
+  - The script executes in Node, asserts that all active page context strings and timestamp helpers exist, and exits with status code 0.
+
 ---
 
 ## 4. Manual QA Verification (Issue 1 Side Panel Retest)

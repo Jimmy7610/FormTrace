@@ -44,7 +44,24 @@ This document breaks Build 3 down into small, isolated, and implementable tasks.
 
 ---
 
-## Issue 3: CSS Blame Overlay [PLANNED]
+## Issue 3: Session State Clarity [COMPLETED]
+- **Goal**: Make it clearer which tab/page FormTrace is recording and what the current recording/session state means, especially in Side Panel mode.
+- **Files Affected**:
+  - `src/ui/FormTracePanel.tsx` (UI labels & active tab polling)
+  - `entrypoints/popup/style.css` (Active page layout styling)
+  - `tools/session-state-check.ts` (Automated string verifier)
+  - `tools/build-output-check.mjs` (Production string verifier)
+- **Acceptance Criteria**:
+  1. UI displays active page context (title, URL) inside the panel.
+  2. Recording start time is tracked and shown locally.
+  3. Opened reports indicate whether they are "Current session report" or "Saved report".
+  4. Warnings shown if active tab changes during side panel recording.
+  5. Automated verification passes in production builds.
+- **Risk Level**: **Low**
+
+---
+
+## Issue 4: CSS Blame Overlay [PLANNED]
 - **Goal**: Inject visual highlighting overlays directly into the active tab to call out fields causing validation failures, empty required inputs, or disabled buttons.
 - **Acceptance Criteria**:
   1. A toggle setting "Enable Blame Overlay" exists.
@@ -53,7 +70,7 @@ This document breaks Build 3 down into small, isolated, and implementable tasks.
 
 ---
 
-## Issue 4: Framework Mimic Demo Pages [PLANNED]
+## Issue 5: Framework Mimic Demo Pages [PLANNED]
 - **Goal**: Create production-style SPA and form framework simulation pages (React Hook Form, Formik, Shopify checkout flow, WordPress AJAX forms).
 - **Acceptance Criteria**:
   1. Validate FormTrace recording and analysis engine rules against all complex framework form layouts.
