@@ -62,13 +62,21 @@ function buildFindings(
 
   const hiddenFields = getHiddenRequiredEmptyFieldsFromSession(session);
   if (hiddenFields.length > 0) {
+    let detailText = hiddenFields
+      .map((f) => `${f.name || f.id || f.label || 'unnamed'} (${f.type})`)
+      .join(', ');
+      
+    // Add concise visibility cause to finding if available
+    const primaryFieldWithCause = hiddenFields.find(f => f.cssVisibilityCauses && f.cssVisibilityCauses.length > 0);
+    if (primaryFieldWithCause && primaryFieldWithCause.cssVisibilityCauses) {
+      detailText += `. Likely visibility cause: ${primaryFieldWithCause.cssVisibilityCauses[0].message}`;
+    }
+
     findings.push({
       code: 'HIDDEN_REQUIRED_FIELD',
       label: `${hiddenFields.length} hidden required field(s) detected`,
       severity: 'high',
-      detail: hiddenFields
-        .map((f) => `${f.name || f.id || f.label || 'unnamed'} (${f.type})`)
-        .join(', '),
+      detail: detailText,
     });
   }
 
@@ -194,6 +202,15 @@ function buildTechnicalDetails(
         parts.push(`validation: "${field.validationMessage}"`);
       }
       details.push(parts.join(', '));
+      
+      // INSTÄLLNING - Maximum visibility causes shown per field in report output.
+      const MAX_VISIBILITY_CAUSES_IN_REPORT = 3;
+      if (field.cssVisibilityCauses && field.cssVisibilityCauses.length > 0) {
+        const causes = field.cssVisibilityCauses.slice(0, MAX_VISIBILITY_CAUSES_IN_REPORT);
+        for (const cause of causes) {
+          details.push(`CSS cause: ${cause.message}`);
+        }
+      }
     }
   }
 
@@ -248,14 +265,21 @@ export function analyzeSession(session: RecordingSession): AnalysisReport {
   // --- ABSOLUTE FIRST-PASS GUARD ---
   const hiddenRequiredFields = getHiddenRequiredEmptyFieldsFromSession(session);
   if (hiddenRequiredFields.length > 0) {
+    let detailText = hiddenRequiredFields
+      .map((f: any) => `${f.name || f.id || f.label || 'unnamed'} (${f.type})`)
+      .join(', ');
+      
+    const primaryFieldWithCause = hiddenRequiredFields.find((f: any) => f.cssVisibilityCauses && f.cssVisibilityCauses.length > 0);
+    if (primaryFieldWithCause && primaryFieldWithCause.cssVisibilityCauses) {
+      detailText += `. Likely visibility cause: ${primaryFieldWithCause.cssVisibilityCauses[0].message}`;
+    }
+
     const findings: Finding[] = [
       {
         code: 'HIDDEN_REQUIRED_FIELD',
         label: `${hiddenRequiredFields.length} hidden required field(s) detected`,
         severity: 'high',
-        detail: hiddenRequiredFields
-          .map((f: any) => `${f.name || f.id || f.label || 'unnamed'} (${f.type})`)
-          .join(', '),
+        detail: detailText,
       }
     ];
 
@@ -285,6 +309,14 @@ export function analyzeSession(session: RecordingSession): AnalysisReport {
           parts.push(`validation: "${field.validationMessage}"`);
         }
         technicalDetails.push(parts.join(', '));
+        
+        const MAX_VISIBILITY_CAUSES_IN_REPORT = 3;
+        if (field.cssVisibilityCauses && field.cssVisibilityCauses.length > 0) {
+          const causes = field.cssVisibilityCauses.slice(0, MAX_VISIBILITY_CAUSES_IN_REPORT);
+          for (const cause of causes) {
+            technicalDetails.push(`CSS cause: ${cause.message}`);
+          }
+        }
       }
     }
 

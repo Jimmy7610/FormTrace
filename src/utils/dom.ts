@@ -1,6 +1,7 @@
 import type { FormSnapshot } from '../types/formtrace';
 import { serializeField, findLabelText } from './privacy';
 import { isElementHidden, isVisibleErrorElement } from './visibility';
+import { inspectElementVisibility } from '../recorder/inspectElementVisibility';
 
 // INSTÄLLNING - CSS-selektorer för element som kan fungera som submit-knappar
 const SUBMIT_SELECTORS = [
@@ -77,9 +78,11 @@ export function hasVisibleErrorNearForm(form: HTMLFormElement): boolean {
 
 /** Builds a full FormSnapshot for a given form element. */
 export function snapshotForm(form: HTMLFormElement, index: number): FormSnapshot {
-  const fields = getFormFields(form).map((el) =>
-    serializeField(el, findLabelText(el))
-  );
+  const fields = getFormFields(form).map((el) => {
+    const field = serializeField(el, findLabelText(el));
+    field.cssVisibilityCauses = inspectElementVisibility(el);
+    return field;
+  });
 
   const submitBtn = getSubmitButton(form);
   const submitButtonExists = submitBtn !== null;

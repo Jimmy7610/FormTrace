@@ -47,7 +47,8 @@ const REQUIRED_STRINGS = [
   'Current session report',
   'Saved report',
   'Exports use the currently opened report.',
-  'Make sure the page you want to test is the active tab before starting a new recording.'
+  'Make sure the page you want to test is the active tab before starting a new recording.',
+  'CSS cause:'
 ];
 
 function getFilesRecursive(dir) {

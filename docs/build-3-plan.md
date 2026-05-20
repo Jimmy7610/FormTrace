@@ -32,9 +32,10 @@ While Build 2 added rich export formatting and report history, developers and QA
 - **Current vs Saved Identification**: Explicitly labeling when viewing an active current session report vs an old history report.
 - **Side Panel Warnings**: Displaying warnings when the active tab shifts away from the recorded tab while using the side panel.
 
-### 4. CSS Blame Overlay (Issue 4 - Planned)
-- **Overlay Injection**: Inject styling rules and indicators directly into the tab's DOM to flag validation failures or hidden inputs.
-- **Toggle Control**: Toggle element highlighting from the FormTrace UI.
+### 4. CSS Blame Overlay / Hidden Element Cause Inspector (Issue 4 - Completed)
+- **Visibility Inspection**: Implemented `inspectElementVisibility.ts` to safely evaluate computed DOM constraints without leaking sensitive variables.
+- **Root Cause Exposing**: Automatically highlights the most likely structural cause for hidden fields (e.g., `parent container has display:none`).
+- **Export Consistency**: The new structural analysis propagates automatically to copied text formats and historical records.
 
 ### 5. Framework Mimic Demo Pages (Issue 5 - Planned)
 - Create test pages representing React Hook Form, Formik, Shopify Checkout, Webflow, and WordPress structures.
@@ -51,5 +52,5 @@ While Build 2 added rich export formatting and report history, developers and QA
 1. **Issue 1**: Native Side Panel mode & Legacy Persistent Window (Completed).
 2. **Issue 2**: Side Panel UX Polish (Completed).
 3. **Issue 3**: Session State Clarity (Completed).
-4. **Issue 4**: CSS Blame Overlay (Planned).
+4. **Issue 4**: CSS Blame Overlay (Completed).
 5. **Issue 5**: Framework Mimic Demo Pages (Planned).

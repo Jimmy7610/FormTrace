@@ -61,12 +61,18 @@ This document breaks Build 3 down into small, isolated, and implementable tasks.
 
 ---
 
-## Issue 4: CSS Blame Overlay [PLANNED]
-- **Goal**: Inject visual highlighting overlays directly into the active tab to call out fields causing validation failures, empty required inputs, or disabled buttons.
-- **Acceptance Criteria**:
-  1. A toggle setting "Enable Blame Overlay" exists.
-  2. Enabling it highlights failing form elements in the page with distinct color borders (e.g., orange/indigo).
-- **Risk Level**: **Medium**
+## Issue 4: CSS Blame Overlay / Hidden Element Cause Inspector [COMPLETED]
+- **Goal**: Improve FormTrace's ability to explain WHY a required field or form element is visually unavailable using a privacy-first DOM inspector.
+- **Files Affected**:
+  - `src/types/formtrace.ts`
+  - `src/recorder/inspectElementVisibility.ts`
+  - `src/utils/dom.ts`
+  - `src/analyzer/analyzeSession.ts`
+  - `tools/css-blame-check.ts`
+- **Implementation Notes**:
+  - Exposes causes like `display:none`, `opacity:0`, `hidden` attributes, and `offscreen` positioning without leaking user input or DOM values.
+  - Automatically appends CSS cause flags to the Technical Details section and concise finding summary.
+- **Risk Level**: **Low**
 
 ---
 

@@ -110,6 +110,17 @@ Verify the following new capabilities:
 - **Expected Result**:
   - The script executes in Node, asserts that all active page context strings and timestamp helpers exist, and exits with status code 0.
 
+### Test 3.7: CSS Blame Inspection Logic Assertions
+- **Steps**:
+  1. Run the CSS blame verification script:
+     ```bash
+     npm run css:blame-check
+     ```
+- **Expected Result**:
+  - The mock DOM tests simulate `display:none`, `visibility:hidden`, `opacity:0`, hidden attributes, and zero-size elements.
+  - The script ensures that the `inspectElementVisibility` utility correctly maps to the corresponding `VisibilityCause` types.
+  - Asserts that report output strings (`CSS cause:`) are present in source files.
+
 ---
 
 ## 4. Manual QA Verification (Issue 1 Side Panel Retest)

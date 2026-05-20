@@ -4,6 +4,22 @@ export type Severity = 'low' | 'medium' | 'high';
 
 // ─── Field & Form snapshots ────────────────────────────────────────────────────
 
+export type VisibilityCause = {
+  type:
+    | "display-none"
+    | "visibility-hidden"
+    | "opacity-zero"
+    | "pointer-events-none"
+    | "hidden-attribute"
+    | "aria-hidden"
+    | "disabled"
+    | "zero-size"
+    | "offscreen"
+    | "hidden-ancestor";
+  message: string;
+  source: "element" | "ancestor";
+};
+
 /** Safe, privacy-preserving snapshot of a single form field. */
 export interface FieldSnapshot {
   tag: string;            // e.g. 'input', 'textarea', 'select'
@@ -18,6 +34,7 @@ export interface FieldSnapshot {
   validationMessage: string;
   // INSTÄLLNING - 'empty' or 'present' — never stores the actual value
   valueState: 'empty' | 'present';
+  cssVisibilityCauses?: VisibilityCause[]; // Safe CSS/DOM reasons for why the element is hidden or blocked
 }
 
 /** Snapshot of a <form> element at a moment in time. */
