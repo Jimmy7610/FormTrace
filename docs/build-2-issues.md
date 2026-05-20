@@ -75,14 +75,16 @@ This document breaks Build 2 down into small, isolated, and implementable tasks.
 
 ---
 
-## Issue 5: Saved Local Sessions & History
-- **Goal**: Maintain a historical log of the last 5 form analysis sessions in `chrome.storage.local` and allow loading them from the popup.
-- **Files Likely Affected**:
-  - `src/popup/App.tsx` (History UI selector dropdown or list)
-  - `src/popup/hooks/useStorage.ts` or storage manager (Save/fetch session history queue)
+## Issue 5: Saved Local Sessions & History [COMPLETED]
+- **Goal**: Maintain a historical log of the last 10 form analysis sessions in `chrome.storage.local` and allow loading them from the popup.
+- **Files Affected**:
+  - [App.tsx](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/entrypoints/popup/App.tsx) (History UI section, Open/Delete/Clear handlers)
+  - [style.css](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/entrypoints/popup/style.css) (CSS classes for history list)
+  - [reportHistory.ts](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/src/storage/reportHistory.ts) (Save/fetch session history local storage manager)
+  - [history-storage-check.ts](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/tools/history-storage-check.ts) (Test suite)
 - **Acceptance Criteria**:
-  1. Saving a session pushes it onto a stack. When the stack exceeds 5 entries, the oldest session is dropped.
-  2. The popup lists these saved sessions (labeled with timestamp and page title/URL).
+  1. Saving a session pushes it onto a stack. When the stack exceeds 10 entries, the oldest session is dropped.
+  2. The popup lists these saved sessions (labeled with likely issue, timestamp, page title/URL, severity, and confidence score).
   3. Clicking a historical item loads its state and replaces the current analysis display, letting the user view or re-copy the bug report.
 - **Risk Level**: **Medium** (requires careful handling of storage limits and state cleanup).
 

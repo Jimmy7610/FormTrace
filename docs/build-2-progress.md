@@ -37,6 +37,16 @@
   - Created [jira-report-check.ts](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/tools/jira-report-check.ts) to verify format rendering (headers, environmental stats, steps, findings, details, suggested fixes, privacy, etc.) and respect for the showDebugMarkers toggle.
   - Added `jira:check` script and integrated it into the verification pipeline and production build verification script.
 
+### Issue 5: Saved Local Sessions & History
+- **Completed On**: 2026-05-20
+- **What Changed**:
+  - Implemented [reportHistory.ts](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/src/storage/reportHistory.ts) to manage the local storage stack of up to 10 form analysis reports in `chrome.storage.local`.
+  - Added CSS classes in [style.css](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/entrypoints/popup/style.css) for the history section UI.
+  - Integrated the history section in [App.tsx](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/entrypoints/popup/App.tsx) displaying the last 10 reports with "Open", "Delete", and "Clear history" actions.
+  - Implemented automatic report saving on analysis stop.
+  - Created [history-storage-check.ts](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/tools/history-storage-check.ts) for unit tests of storage limits, ordering, deletion, and clear operations.
+  - Integrated `history:check` command in `package.json` and production verification checks.
+
 ---
 
 ## How to Test
@@ -84,7 +94,15 @@ This runs typechecks, building, DOM verification, rule analysis, normalization c
 4. Paste into a text editor and verify it generates clean Jira markup syntax starting with `h2. Summary`.
 5. Verify that debug markers are hidden/shown depending on the settings checkbox.
 
+#### Saved Local Sessions & History (Issue 5)
+1. Run several form interactions and click **Stop & analyze** to generate multiple reports.
+2. Observe that they automatically show up under the **Recent reports** history section.
+3. Reload or close the popup and reopen it. Note that the history persists.
+4. Click **Open** on a previous report. Note that the stats grid, likely issue card, and copy actions all switch to match that saved report.
+5. Click **Delete** on a specific item to remove it from the list.
+6. Click **Clear history** and verify the list is cleared and displays "No saved reports yet."
+
 ---
 
 ## Next Recommended Task
-- **Issue 5: Saved Local Sessions & History** ([docs/build-2-issues.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-issues.md#L67)).
+- **Issue 6: Framework Mimic Demo Pages** ([docs/build-2-issues.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-issues.md#L91)).

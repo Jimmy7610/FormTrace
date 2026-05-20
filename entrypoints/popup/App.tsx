@@ -6,6 +6,13 @@ import { buildJiraReport } from '../../src/analyzer/buildJiraReport';
 import { analyzeSession } from '../../src/analyzer/analyzeSession';
 import { normalizeReportForHiddenRequiredFields } from '../../src/analyzer/normalizeReport';
 import { filterTechnicalDetailsForDebugMarkers } from '../../src/analyzer/filterDebugMarkers';
+import {
+  getReportHistory,
+  saveReportHistory,
+  deleteSavedReport,
+  clearReportHistory,
+  type SavedReport
+} from '../../src/storage/reportHistory';
 
 // INSTÄLLNING - Hur ofta popup:en pollar status från content script (ms)
 const POLL_INTERVAL_MS = 1500;
@@ -141,15 +148,28 @@ export default function App() {
   const [showToast, setShowToast] = useState(false);
   const [toastText, setToastText] = useState('Copied!');
   const [debugMarkersVisible, setDebugMarkersVisible] = useState(false);
+  const [openedReport, setOpenedReport] = useState<AnalysisReport | null>(null);
+  const [history, setHistory] = useState<SavedReport[]>([]);
 
-  // Load setting on mount
+  // Load setting and history on mount
+  const loadHistory = useCallback(async () => {
+    const data = await getReportHistory();
+    setHistory(data);
+  }, []);
+
   useEffect(() => {
     chrome.storage.local.get(['debugMarkersVisible'], (result) => {
       if (result.debugMarkersVisible !== undefined) {
         setDebugMarkersVisible(result.debugMarkersVisible);
       }
     });
-  }, []);
+    loadHistory();
+  }, [loadHistory]);
+
+  const saveHistoryHelper = async (report: AnalysisReport) => {
+    const updated = await saveReportHistory(report);
+    setHistory(updated);
+  };
 
   const handleToggleDebug = (e: React.ChangeEvent<HTMLInputElement>) => {
     const nextVal = e.target.checked;
@@ -178,6 +198,10 @@ export default function App() {
       ? normalizeReportForHiddenRequiredFields(res.lastReport, session)
       : null;
 
+    if (res.isRecording) {
+      setOpenedReport((prev) => (prev !== null ? null : prev));
+    }
+
     setStatus({
       isRecording: res.isRecording ?? false,
       formCount: res.formCount ?? 0,
@@ -204,6 +228,7 @@ export default function App() {
   // ─── Handlers ───────────────────────────────────────────────────────────────
 
   async function handleStart() {
+    setOpenedReport(null);
     setLoading(true);
     await sendMessage('START_RECORDING');
     await fetchStatus();
@@ -211,6 +236,7 @@ export default function App() {
   }
 
   async function handleStop() {
+    setOpenedReport(null);
     setLoading(true);
     // INSTÄLLNING - Wait briefly so async network-failure events can arrive before analysis.
     await new Promise((resolve) => setTimeout(resolve, 350));
@@ -225,9 +251,11 @@ export default function App() {
       const freshReport = analyzeSession(res.session);
       const normalized = normalizeReportForHiddenRequiredFields(freshReport, res.session);
       setStatus((prev) => ({ ...prev, isRecording: false, lastReport: normalized }));
+      await saveHistoryHelper(normalized);
     } else if (res?.report) {
       const normalized = normalizeReportForHiddenRequiredFields(res.report, null);
       setStatus((prev) => ({ ...prev, isRecording: false, lastReport: normalized }));
+      await saveHistoryHelper(normalized);
     } else {
       setStatus((prev) => ({ ...prev, isRecording: false }));
     }
@@ -236,6 +264,7 @@ export default function App() {
   }
 
   async function handleReset() {
+    setOpenedReport(null);
     setLoading(true);
     await sendMessage('RESET_SESSION');
     setStatus({
@@ -249,8 +278,30 @@ export default function App() {
     toast('Session reset');
   }
 
+  function handleOpenHistoryItem(item: SavedReport) {
+    setOpenedReport(item.report);
+    toast('Report loaded');
+  }
+
+  async function handleDeleteHistoryItem(id: string) {
+    const reportToDelete = history.find(item => item.id === id);
+    const updated = await deleteSavedReport(id);
+    setHistory(updated);
+    if (openedReport && reportToDelete && openedReport.sessionId === reportToDelete.report.sessionId) {
+      setOpenedReport(null);
+    }
+    toast('Report deleted');
+  }
+
+  async function handleClearHistory() {
+    await clearReportHistory();
+    setHistory([]);
+    setOpenedReport(null);
+    toast('History cleared');
+  }
+
   async function handleCopyReport() {
-    const report = status.lastReport;
+    const report = activeReport;
     if (!report) return;
 
     const markdown = buildMarkdownReport(report, { showDebugMarkers: debugMarkersVisible });
@@ -270,7 +321,7 @@ export default function App() {
   }
 
   async function handleCopyGitHubIssue() {
-    const report = status.lastReport;
+    const report = activeReport;
     if (!report) return;
 
     const markdown = buildGitHubIssueReport(report, { showDebugMarkers: debugMarkersVisible });
@@ -290,7 +341,7 @@ export default function App() {
   }
 
   async function handleCopyJiraReport() {
-    const report = status.lastReport;
+    const report = activeReport;
     if (!report) return;
 
     const jiraReport = buildJiraReport(report, { showDebugMarkers: debugMarkersVisible });
@@ -312,6 +363,11 @@ export default function App() {
   // ─── Render ─────────────────────────────────────────────────────────────────
 
   const { isRecording, formCount, eventCount, submitAttemptCount, lastReport } = status;
+
+  const activeReport = openedReport || lastReport;
+  const displayFormCount = activeReport ? activeReport.formCount : formCount;
+  const displayEventCount = activeReport ? activeReport.eventCount : eventCount;
+  const displaySubmitAttemptCount = activeReport ? activeReport.submitAttemptCount : submitAttemptCount;
 
   return (
     <div className="popup">
@@ -336,15 +392,15 @@ export default function App() {
       {/* Stats */}
       <div className="stats-grid">
         <div className="stat-card">
-          <span className="stat-value">{formCount}</span>
+          <span className="stat-value">{displayFormCount}</span>
           <span className="stat-label">Forms</span>
         </div>
         <div className="stat-card">
-          <span className="stat-value">{eventCount}</span>
+          <span className="stat-value">{displayEventCount}</span>
           <span className="stat-label">Events</span>
         </div>
         <div className="stat-card">
-          <span className="stat-value">{submitAttemptCount}</span>
+          <span className="stat-value">{displaySubmitAttemptCount}</span>
           <span className="stat-label">Submits</span>
         </div>
       </div>
@@ -385,7 +441,7 @@ export default function App() {
           id="btn-copy"
           className="btn btn-success"
           onClick={handleCopyReport}
-          disabled={!lastReport || loading}
+          disabled={!activeReport || loading}
           type="button"
         >
           ⎘ Copy report
@@ -395,7 +451,7 @@ export default function App() {
           id="btn-copy-github"
           className="btn btn-success"
           onClick={handleCopyGitHubIssue}
-          disabled={!lastReport || loading}
+          disabled={!activeReport || loading}
           type="button"
         >
           ⎘ Copy GitHub issue
@@ -405,7 +461,7 @@ export default function App() {
           id="btn-copy-jira"
           className="btn btn-success btn-full"
           onClick={handleCopyJiraReport}
-          disabled={!lastReport || loading}
+          disabled={!activeReport || loading}
           type="button"
         >
           ⎘ Copy Jira report
@@ -415,8 +471,8 @@ export default function App() {
       <div className="divider" />
 
       {/* Analysis result */}
-      {lastReport ? (
-        <AnalysisCard report={lastReport} showDebugMarkers={debugMarkersVisible} />
+      {activeReport ? (
+        <AnalysisCard report={activeReport} showDebugMarkers={debugMarkersVisible} />
       ) : (
         <div className="empty-state">
           <div className="empty-icon">🔍</div>
@@ -426,6 +482,67 @@ export default function App() {
           </p>
         </div>
       )}
+
+      <div className="divider" />
+
+      {/* Recent reports history */}
+      <div className="history-section">
+        <div className="history-header">
+          <h3>Recent reports</h3>
+          {history.length > 0 && (
+            <button
+              onClick={handleClearHistory}
+              className="btn-clear-history"
+              type="button"
+              id="btn-clear-history"
+            >
+              Clear history
+            </button>
+          )}
+        </div>
+
+        {history.length === 0 ? (
+          <div className="history-empty">No saved reports yet.</div>
+        ) : (
+          <div className="history-list">
+            {history.map((item) => (
+              <div key={item.id} className="history-item">
+                <div className="history-item-header">
+                  <span className="history-item-title">{item.likelyIssue}</span>
+                  <SeverityBadge severity={item.severity as any} />
+                </div>
+                <div className="history-meta">
+                  <span>{item.pageTitle}</span>
+                  <span>•</span>
+                  <span>{new Date(item.savedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                  <span>•</span>
+                  <span>{item.confidenceScore}%</span>
+                </div>
+                <div className="history-actions">
+                  <button
+                    onClick={() => handleOpenHistoryItem(item)}
+                    className="btn-history btn-history-open"
+                    type="button"
+                  >
+                    Open
+                  </button>
+                  <button
+                    onClick={() => handleDeleteHistoryItem(item.id)}
+                    className="btn-history btn-history-delete"
+                    type="button"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div className="history-note">
+          History is stored locally in this browser only.
+        </div>
+      </div>
 
       {/* Settings Panel */}
       <div className="settings-area">

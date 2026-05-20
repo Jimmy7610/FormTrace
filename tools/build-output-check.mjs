@@ -29,7 +29,8 @@ const REQUIRED_STRINGS = [
   'GitHub issue export active',
   'Copy Jira report',
   'buildJiraReport',
-  'Jira report export active'
+  'Jira report export active',
+  'Report history storage active'
 ];
 
 function getFilesRecursive(dir) {

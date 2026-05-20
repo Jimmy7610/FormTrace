@@ -23,7 +23,7 @@
 
 ## Build 2 — Network Tracing & Framework Support
 
-**Status:** In Progress (Issue 1 & 2 Completed)
+**Status:** In Progress (Issues 1-5 Completed)
 
 **Focus:** Reporting formats, framework-mimic testing, UX settings, and local export formats.
 
@@ -36,9 +36,9 @@
 - **Scoring Improvements**: Refined confidence scores for validation issues (Issue 2).
 - **GitHub Issue Export**: Formatted Markdown bug report generation (Issue 3).
 - **Jira Export Format**: Copy as Jira rich markup syntax (Issue 4).
+- **Local Session History**: Queue and browse the last 10 sessions (Issue 5).
 
 ### Planned (In Progress)
-- **Local Session History**: Queue and browse the last 5 sessions.
 - **Framework Mimic Pages (Testing)**: Build demo pages to verify performance against React Hook Form, Formik, Shopify, Webflow, and WordPress form structures.
 - **UI Readability**: Improve report aesthetics, cards, and dynamic severity highlighting.
 - **Arch Planning**: Optional DevTools panel scoping and client-side SPA routing support.
@@ -64,8 +64,6 @@
 **Focus:** Turn FormTrace reports into actionable developer tickets.
 
 ### Planned
-- Export report as GitHub Issue (Markdown with template)
-- Export report as Jira ticket description
 - Export as PDF
 - Custom report templates
 - Shareable report link (local file or encoded URL)

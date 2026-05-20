@@ -115,7 +115,7 @@ Run the localhost demo server with `npm run demo` and open **`http://127.0.0.1:4
   2. Leave the "Username" field blank and click **Submit**.
   3. Wait 1 second, then click **Stop & analyze** in the popup.
 - **Expected Result**:
-  - Likely issue: `Validation failed without visible feedback` (Severity: `medium`, Confidence: `35%` or higher)
+  - Likely issue: `Validation failed without visible feedback` (Severity: `medium`, Confidence: `80%`)
   - Technical Details include: `Forms detected: 1`, `Submit attempts: 1`
 
 ### 4. Failed Network Request Test
@@ -164,6 +164,6 @@ Run the localhost demo server with `npm run demo` and open **`http://127.0.0.1:4
 
 Detailed planning and implementation notes for the next development cycle can be found in the following resources:
 - [docs/build-2-plan.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-plan.md) — Scope, goals, risks, and acceptance criteria.
-- [docs/build-2-issues.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-issues.md) — Modular task breakdowns (Issues 1, 2, 3 & 4 Completed).
+- [docs/build-2-issues.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-issues.md) — Modular task breakdowns (Issues 1, 2, 3, 4 & 5 Completed).
 - [docs/build-2-test-plan.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-test-plan.md) — QA verification steps and mimic scenarios.
-- [docs/build-2-progress.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-progress.md) — Current implementation status, including the completed **Debug Marker Visibility Toggle**, **Validation Confidence Scoring Improvements**, **GitHub Issue Export Format**, and the **Jira-Style Export Format** (all operating entirely locally on device).
+- [docs/build-2-progress.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-progress.md) — Current implementation status, including the completed **Debug Marker Visibility Toggle**, **Validation Confidence Scoring Improvements**, **GitHub Issue Export Format**, **Jira-Style Export Format**, and **Local Session History/History Storage** (all operating entirely locally on device).

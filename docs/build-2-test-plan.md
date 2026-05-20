@@ -112,11 +112,13 @@ Verify the following new capabilities:
 
 ### Test 2.4: Session History List
 - **Steps**:
-  1. Perform 6 recordings on different demo pages.
-  2. Open the popup and expand the History section.
-  3. **History Size**: Verify that exactly the last 5 sessions are visible in the history list (the oldest session should be pruned).
-  4. **Restore Session**: Click on a historical entry and confirm that the analysis panel successfully reloads the state and displays the correct findings.
-- **Expected Result**: History saves state locally and reloads cleanly.
+  1. Perform 11 recordings on different demo pages or forms.
+  2. Open the popup and view the History section.
+  3. **History Size**: Verify that exactly the last 10 sessions are visible in the history list (the oldest session should be pruned).
+  4. **Restore Session**: Click **Open** on a historical entry and confirm that the stats grid, analysis card, and copy/export actions reload the state and display/copy the correct findings.
+  5. **Delete Session**: Click **Delete** on a specific item and verify it is removed from the list.
+  6. **Clear History**: Click **Clear history** and verify that all entries are removed and the UI displays "No saved reports yet."
+- **Expected Result**: History saves state locally, supports up to 10 entries with pruning, and reloads/manages cleanly.
 
 ### Test 2.5: Framework-Mimic Verification
 - **Steps**:
