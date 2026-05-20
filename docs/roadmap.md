@@ -44,7 +44,7 @@
 **Focus:** Persistent window mode, visual overlay to identify layout-related form issues, and SPAs.
 
 ### Delivered
-- **Optional Persistent Window Mode**: Add a separate persistent window that stays open when focus shifts, complete with flexible layouts, a header badge, and single-instance enforcement.
+- **Optional Persistent Window Mode**: Add a separate persistent window that stays open when focus shifts, complete with flexible layouts, a header badge, single-instance enforcement, and robust chrome.windows.create standalone lifecycle management.
 
 ### Planned
 - Visual CSS Blame overlay to highlight broken elements directly in the page DOM.

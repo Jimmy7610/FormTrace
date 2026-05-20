@@ -86,3 +86,38 @@ Verify the following new capabilities:
   - The script executes in Node, mocking Chrome Extension APIs, and prints:
     `Persistent Window Verification PASSED!`
     exiting with status code 0.
+
+---
+
+## 4. Manual QA Verification (Issue 1 Bugfix Retest)
+
+> [!NOTE]
+> The initial implementation of the persistent window mode failed manual testing because the window did not stay visible when focus shifted. The fix implements a true `chrome.windows.create` standalone window with `type: 'popup'` and explicit focus settings to ensure it stays visible.
+
+### Test 4.1: Manual Verification Steps
+1. Run:
+   ```bash
+   npm run build
+   ```
+2. Reload FormTrace in `chrome://extensions` page.
+3. Run the demo server:
+   ```bash
+   npm run demo
+   ```
+4. Open the demo page: **`http://127.0.0.1:4173/hidden-required-field.html`**
+5. Open the normal FormTrace extension popup.
+6. Click **"Open persistent window"**.
+7. Confirm a separate Chrome window opens.
+8. Confirm the window contains the **"Persistent window"** badge in the header.
+9. Click on the webpage outside FormTrace.
+10. Confirm the persistent FormTrace window **stays open** (does not auto-close like the normal action popup).
+11. Start recording from the persistent window.
+12. Trigger the hidden required form issue (fill fields, click submit).
+13. Stop and analyze.
+14. Confirm the report appears inside the persistent window.
+15. Confirm **Copy report** works.
+16. Confirm **Copy GitHub issue** works.
+17. Confirm **Copy Jira report** works.
+18. Confirm **Recent reports** history works.
+19. Click **"Open persistent window"** again from the normal popup.
+20. Confirm it focuses the existing persistent window instead of opening duplicate windows.

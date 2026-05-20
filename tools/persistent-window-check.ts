@@ -6,6 +6,8 @@ let mockStorage: Record<string, any> = {};
 let windowsList: Array<{ id: number; url: string; type: string; width: number; height: number; focused?: boolean }> = [];
 let nextWindowId = 1000;
 let getThrowsForId: number | null = null;
+let lastCreateOptions: any = null;
+let lastUpdateCalls: Array<{ id: number; updateInfo: any }> = [];
 
 (global as any).chrome = {
   storage: {
@@ -38,6 +40,15 @@ let getThrowsForId: number | null = null;
           return;
         }
         return Promise.resolve();
+      },
+      remove: (keys: string[] | string, callback?: () => void) => {
+        const actualKeys = typeof keys === 'string' ? [keys] : keys;
+        actualKeys.forEach((k) => delete mockStorage[k]);
+        if (callback) {
+          setTimeout(callback, 0);
+          return;
+        }
+        return Promise.resolve();
       }
     }
   },
@@ -52,19 +63,21 @@ let getThrowsForId: number | null = null;
       }
       return win;
     },
-    create: async (options: { url: string; type: string; width: number; height: number }) => {
+    create: async (options: { url: string; type: string; width: number; height: number; focused?: boolean }) => {
+      lastCreateOptions = options;
       const newWin = {
         id: nextWindowId++,
         url: options.url,
         type: options.type,
         width: options.width,
         height: options.height,
-        focused: true
+        focused: options.focused ?? true
       };
       windowsList.push(newWin);
       return newWin;
     },
     update: async (id: number, updateInfo: { focused: boolean }) => {
+      lastUpdateCalls.push({ id, updateInfo });
       const win = windowsList.find(w => w.id === id);
       if (!win) {
         throw new Error('Window not found');
@@ -109,9 +122,9 @@ async function runTests() {
 
   const stableStrings = [
     'Open persistent window',
-    'Use persistent window mode',
     'Persistent window',
-    'FormTrace persistent window active'
+    'FormTrace persistent window active',
+    'Chrome closes normal popups automatically'
   ];
 
   stableStrings.forEach((str) => {
@@ -127,6 +140,7 @@ async function runTests() {
   windowsList = [];
   nextWindowId = 1000;
   getThrowsForId = null;
+  lastCreateOptions = null;
 
   await openPersistentWindow();
   
@@ -134,16 +148,36 @@ async function runTests() {
     console.error(`[FAIL] Expected 1 window to be created, got ${windowsList.length}`);
     process.exit(1);
   }
+  if (!lastCreateOptions) {
+    console.error(`[FAIL] Expected chrome.windows.create options to be recorded`);
+    process.exit(1);
+  }
+  if (lastCreateOptions.type !== 'popup') {
+    console.error(`[FAIL] Expected window type 'popup', got ${lastCreateOptions.type}`);
+    process.exit(1);
+  }
+  if (!lastCreateOptions.url.includes('persistent.html')) {
+    console.error(`[FAIL] Expected url to use 'persistent.html', got ${lastCreateOptions.url}`);
+    process.exit(1);
+  }
+  if (lastCreateOptions.width !== 420) {
+    console.error(`[FAIL] Expected width 420, got ${lastCreateOptions.width}`);
+    process.exit(1);
+  }
+  if (lastCreateOptions.height !== 720) {
+    console.error(`[FAIL] Expected height 720, got ${lastCreateOptions.height}`);
+    process.exit(1);
+  }
   const firstWinId = windowsList[0].id;
   if (mockStorage[PERSISTENT_WINDOW_STORAGE_KEY] !== firstWinId) {
     console.error(`[FAIL] Stored window ID ${mockStorage[PERSISTENT_WINDOW_STORAGE_KEY]} does not match created window ID ${firstWinId}`);
     process.exit(1);
   }
-  console.log('[PASS] Test 3: Correctly opens window when none exists.');
+  console.log('[PASS] Test 3: Correctly opens window when none exists with correct configuration.');
 
   // Test 4: Focus existing window instead of duplicate opening
-  // Reset focus state
   windowsList[0].focused = false;
+  lastUpdateCalls = [];
   await openPersistentWindow();
 
   if (windowsList.length !== 1) {
@@ -152,6 +186,18 @@ async function runTests() {
   }
   if (!windowsList[0].focused) {
     console.error('[FAIL] Existing window was not focused');
+    process.exit(1);
+  }
+  if (lastUpdateCalls.length !== 1) {
+    console.error(`[FAIL] Expected 1 call to chrome.windows.update, got ${lastUpdateCalls.length}`);
+    process.exit(1);
+  }
+  if (lastUpdateCalls[0].id !== firstWinId) {
+    console.error(`[FAIL] Expected chrome.windows.update to target ID ${firstWinId}, got ${lastUpdateCalls[0].id}`);
+    process.exit(1);
+  }
+  if (lastUpdateCalls[0].updateInfo.focused !== true) {
+    console.error(`[FAIL] Expected chrome.windows.update to request focus: true, got ${JSON.stringify(lastUpdateCalls[0].updateInfo)}`);
     process.exit(1);
   }
   console.log('[PASS] Test 4: Correctly focuses existing window.');

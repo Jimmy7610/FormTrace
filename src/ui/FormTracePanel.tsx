@@ -412,6 +412,9 @@ export default function FormTracePanel({ isPersistent = false }: { isPersistent?
               <span>FormTrace persistent window active</span>
             </div>
           )}
+          <div className="persistent-helper-text" style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 8, lineHeight: 1.4 }}>
+            Chrome closes normal popups automatically. Use this separate window to keep FormTrace visible.
+          </div>
           <button
             id="btn-open-persistent"
             className="btn btn-ghost btn-full"

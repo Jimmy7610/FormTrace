@@ -18,6 +18,7 @@ While Build 2 added rich export formatting and report history, developers and QA
 ### 1. Optional Persistent Window Mode (Issue 1)
 - **Shared UI Core**: Refactored the popup layout into a shared `<FormTracePanel>` component so that both the extension action popup and the persistent window share the exact same logic.
 - **Window Controller**: Standard helper `persistentWindow.ts` managing window lifecycle, window dimensions (420x720), and focusing/opening.
+  - *Note on Bugfix*: Initial implementation failed manual testing because the window did not stay visible. Fixed by adding `"windows"` permission in `wxt.config.ts` and configuring `chrome.windows.create` with `type: "popup"`, `focused: true` to guarantee separate window lifecycle.
 - **Single-Instance Restriction**: Checks `chrome.storage.local` to prevent opening duplicate windows, updating focus on the existing instance if clicked again.
 - **Responsive Layout**: Replaced rigid width boundaries with responsive rules when rendered in persistent window mode.
 

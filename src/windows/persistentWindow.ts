@@ -29,19 +29,25 @@ export async function openPersistentWindow(): Promise<void> {
         return;
       }
     } catch (e) {
-      // Stale window ID - ignore and open a new one
+      // Stale window ID - clear the stored id
+      await chrome.storage.local.remove([PERSISTENT_WINDOW_STORAGE_KEY]);
     }
   }
 
   // Open a new window
-  const newWindow = await chrome.windows.create({
-    url,
-    type: 'popup',
-    width,
-    height,
-  });
+  try {
+    const newWindow = await chrome.windows.create({
+      url,
+      type: 'popup',
+      width,
+      height,
+      focused: true
+    });
 
-  if (newWindow && newWindow.id !== undefined) {
-    await chrome.storage.local.set({ [PERSISTENT_WINDOW_STORAGE_KEY]: newWindow.id });
+    if (newWindow && newWindow.id !== undefined) {
+      await chrome.storage.local.set({ [PERSISTENT_WINDOW_STORAGE_KEY]: newWindow.id });
+    }
+  } catch (error) {
+    console.warn('[FormTrace] Failed to create persistent window:', error);
   }
 }

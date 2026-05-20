@@ -33,7 +33,8 @@ const REQUIRED_STRINGS = [
   'Report history storage active',
   'Open persistent window',
   'Persistent window',
-  'FormTrace persistent window active'
+  'FormTrace persistent window active',
+  'Chrome closes normal popups automatically'
 ];
 
 function getFilesRecursive(dir) {

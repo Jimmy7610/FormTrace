@@ -9,6 +9,7 @@ import {
 import { analyzeSession } from '../src/analyzer/analyzeSession';
 import { normalizeReportForHiddenRequiredFields } from '../src/analyzer/normalizeReport';
 import { defineBackground } from 'wxt/sandbox';
+import { PERSISTENT_WINDOW_STORAGE_KEY } from '../src/windows/persistentWindow';
 
 // INSTÄLLNING - Sätt true för att aktivera debug-loggar i bakgrundstjänsten
 const DEBUG = false;
@@ -134,6 +135,15 @@ export default defineBackground(() => {
       return true;
     }
   );
+
+  chrome.windows.onRemoved.addListener((windowId) => {
+    chrome.storage.local.get([PERSISTENT_WINDOW_STORAGE_KEY], (storage) => {
+      const storedId = storage[PERSISTENT_WINDOW_STORAGE_KEY];
+      if (storedId === windowId) {
+        chrome.storage.local.remove([PERSISTENT_WINDOW_STORAGE_KEY]);
+      }
+    });
+  });
 
   if (DEBUG) console.debug('[FormTrace] Background service worker started');
 });

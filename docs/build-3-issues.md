@@ -28,6 +28,10 @@ This document breaks Build 3 down into small, isolated, and implementable tasks.
      - Default width (420) and height (720) constants
      - Presence of stable string markers (`Open persistent window`, etc.)
      - Mocked lifecycle behavior (create, focus existing, recreate stale)
+- **Manual QA Retest Required**:
+  - The first implementation failed manual testing because the persistent window behaved like the normal action popup and did not stay visible when the user clicked outside.
+  - The fix resolved this by declaring `"windows"` permission and ensuring `chrome.windows.create` uses `type: "popup"`, `focused: true`, and correct URL retrieval.
+  - Retest manually using the exact test instructions in the test plan before accepting this issue.
 - **Risk Level**: **Low**
 
 ---

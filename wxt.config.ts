@@ -14,7 +14,7 @@ export default defineConfig({
     version: '1.1.0',
 
     // INSTÄLLNING - Lägg till fler permissions om nätverksinspelning kräver det
-    permissions: ['activeTab', 'storage', 'scripting'],
+    permissions: ['activeTab', 'storage', 'scripting', 'windows'],
 
     host_permissions: ['<all_urls>'],
     web_accessible_resources: [

@@ -15,9 +15,9 @@ FormTrace is a privacy-first Chrome extension that records form interactions, de
 
 ---
 
-## Current Status: Build 2 Stable Release (Complete & Verified)
+## Current Status: Build 3 Development (In Progress)
  
-FormTrace Build 2 has been completed and verified across all manual test configurations and automated test suites.
+FormTrace Build 3 is in progress. Optional persistent window mode has been completed, verified via automated integration tests, and is ready for manual QA verification.
  
 ### What FormTrace Can Detect:
 1. **Hidden Required Fields**: Detects fields styled with `display: none` or `visibility: hidden` (or inside hidden containers) that are marked `required` but remain empty.
