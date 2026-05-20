@@ -64,9 +64,18 @@ Verify the following new capabilities:
 
 ### Test 2.2: Confidence Optimization
 - **Steps**:
-  1. Record on `/invisible-error.html`.
-  2. Click **Stop & analyze**.
-- **Expected Result**: Confidence score for `Validation failed without visible feedback` reports exactly `70%`.
+  1. Run local demo server with `npm run demo`.
+  2. Open `http://127.0.0.1:4173/invisible-error.html`.
+  3. Click **Reset** on the page.
+  4. Enter an invalid email address (e.g., `jimmy`) and enter any first name.
+  5. Click **Start recording** in the FormTrace popup.
+  6. Click the form's **Subscribe** submit button.
+  7. Click **Stop & analyze** in the popup.
+- **Expected Result**:
+  - `likelyIssue` is `"Validation failed without visible feedback"`.
+  - `severity` is `"medium"`.
+  - `confidenceScore` is exactly `80%` (must be at or above `75%`).
+  - Findings list includes submit attempts, invalid validation, and no visible error messages.
 
 ### Test 2.3: GitHub and Jira Format Copies
 - **Steps**:

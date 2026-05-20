@@ -13,11 +13,19 @@ export const SCORE_HIDDEN_REQUIRED_FIELD = 90;
 /** A visible required field was empty. */
 export const SCORE_REQUIRED_EMPTY = 20;
 
-/** An invalid field was detected (Constraint Validation API). */
-export const SCORE_INVALID_FIELD = 20;
+// INSTÄLLNING - Confidence contribution for invalid field validation.
+export const SCORE_INVALID_FIELD = 30;
 
-/** No visible error shown after a failed submit attempt. */
-export const SCORE_NO_VISIBLE_ERROR = 15;
+// INSTÄLLNING - Confidence contribution when no visible error feedback is found.
+export const SCORE_NO_VISIBLE_ERROR = 35;
+
+// INSTÄLLNING - Bonus when submit attempt, invalid field and missing visible feedback occur together.
+// Validation confidence combo bonus
+export const SCORE_VALIDATION_COMBO_BONUS = 15;
+
+if (typeof window !== 'undefined') {
+  (window as any)['Validation confidence combo bonus'] = SCORE_VALIDATION_COMBO_BONUS;
+}
 
 /** Submit button was clicked but no form-submit event followed. */
 export const SCORE_CLICK_WITHOUT_SUBMIT = 20;
@@ -62,7 +70,7 @@ export function computeScore(session: RecordingSession): ScoreBreakdown {
 
   const invalidField = events.some(
     (e) =>
-      (e.type === 'form-invalid' || e.type === 'page-snapshot') &&
+      (e.type === 'form-invalid' || e.type === 'page-snapshot' || e.type === 'form-submit' || e.type === 'submit-click') &&
       (e.snapshot?.fields.some((f) => !f.valid) ?? false)
   );
 
@@ -97,6 +105,11 @@ export function computeScore(session: RecordingSession): ScoreBreakdown {
   if (clickWithoutSubmit) total += SCORE_CLICK_WITHOUT_SUBMIT;
   if (networkFailure) total += SCORE_NETWORK_FAILURE;
   if (consoleError) total += SCORE_CONSOLE_ERROR;
+
+  // Apply combo bonus if there's a submit attempt + invalid field + no visible error feedback
+  if (hasSubmitAttempt && invalidField && noVisibleError) {
+    total += SCORE_VALIDATION_COMBO_BONUS;
+  }
 
   // INSTÄLLNING - Maxpoäng är 100
   total = Math.min(100, total);

@@ -21,7 +21,8 @@ const REQUIRED_STRINGS = [
   'network-failure-dom-signal',
   'Network DOM signal detected',
   'Show debug markers',
-  'filterTechnicalDetailsForDebugMarkers'
+  'filterTechnicalDetailsForDebugMarkers',
+  'Validation confidence combo bonus'
 ];
 
 function getFilesRecursive(dir) {

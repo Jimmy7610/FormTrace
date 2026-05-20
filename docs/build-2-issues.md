@@ -18,13 +18,13 @@ This document breaks Build 2 down into small, isolated, and implementable tasks.
 
 ---
 
-## Issue 2: Refine Validation Confidence Scoring
+## Issue 2: Refine Validation Confidence Scoring [COMPLETED]
 - **Goal**: Improve scoring rules for `Validation failed without visible feedback` to prevent collision with other rules and optimize false-positive rates.
 - **Files Likely Affected**:
-  - `src/analyzer/analyzeSession.ts`
+  - `src/analyzer/scoring.ts`
   - `tools/analyzer-check.ts` (Test case assertions)
 - **Acceptance Criteria**:
-  1. Ensure that the combination of invalid field state and lack of error messages outputs a `Validation failed without visible feedback` finding with a confidence score of exactly `70%`.
+  1. Ensure that the combination of invalid field state and lack of error messages outputs a `Validation failed without visible feedback` finding with a confidence score of exactly `80%` (combining invalid field (+30), no visible error (+35), and combo bonus (+15)).
   2. Ensure that it does not override high-priority findings like `Submit button was disabled` (`95%`) or `Hidden required field blocked submission` (`100%`).
 - **Risk Level**: **Medium** (requires re-running the automated analyzer test checks to verify existing tests still pass).
 

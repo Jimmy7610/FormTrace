@@ -23,7 +23,7 @@
 
 ## Build 2 — Network Tracing & Framework Support
 
-**Status:** In Progress (Issue 1 Completed)
+**Status:** In Progress (Issue 1 & 2 Completed)
 
 **Focus:** Reporting formats, framework-mimic testing, UX settings, and local export formats.
 
@@ -33,9 +33,9 @@
 
 ### Completed
 - **Settings Toggle (UX)**: Toggle visibility of internal debug markers in the report (Issue 1).
+- **Scoring Improvements**: Refined confidence scores for validation issues (Issue 2).
 
 ### Planned (In Progress)
-- **Scoring Improvements**: Refined confidence scores for validation issues.
 - **Export Formats**: Copy as GitHub Issue template and Jira rich markup syntax.
 - **Local Session History**: Queue and browse the last 5 sessions.
 - **Framework Mimic Pages (Testing)**: Build demo pages to verify performance against React Hook Form, Formik, Shopify, Webflow, and WordPress form structures.

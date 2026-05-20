@@ -164,6 +164,6 @@ Run the localhost demo server with `npm run demo` and open **`http://127.0.0.1:4
 
 Detailed planning and implementation notes for the next development cycle can be found in the following resources:
 - [docs/build-2-plan.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-plan.md) — Scope, goals, risks, and acceptance criteria.
-- [docs/build-2-issues.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-issues.md) — Modular task breakdowns (Issue 1 Completed).
+- [docs/build-2-issues.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-issues.md) — Modular task breakdowns (Issues 1 & 2 Completed).
 - [docs/build-2-test-plan.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-test-plan.md) — QA verification steps and mimic scenarios.
-- [docs/build-2-progress.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-progress.md) — Current implementation status, including the completed **Debug Marker Visibility Toggle** (which is hidden by default and operates entirely locally on device).
+- [docs/build-2-progress.md](file:///C:/Users/Jimmy/Documents/GitHub/FormTrace/docs/build-2-progress.md) — Current implementation status, including the completed **Debug Marker Visibility Toggle** and **Validation Confidence Scoring Improvements** (both operate entirely locally on device).

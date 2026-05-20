@@ -366,6 +366,133 @@ function runAnalyzerCheck() {
     console.log('[PASS] Test 5: findings includes NETWORK_FAILURE with "Network request failed after submit"');
   }
 
+  // Test 6: Validation failed without visible feedback.
+  const validationNoFeedbackSession: RecordingSession = {
+    id: 'test-session-6',
+    startedAt: Date.now(),
+    stoppedAt: Date.now() + 5000,
+    pageUrl: 'http://localhost/invisible-error',
+    pageTitle: 'Invisible Error Test',
+    formCount: 1,
+    submitAttemptCount: 1,
+    clickWithoutSubmitCount: 0,
+    events: [
+      {
+        type: 'form-submit',
+        timestamp: Date.now(),
+        snapshot: {
+          index: 0,
+          id: 'test-form',
+          action: '',
+          method: 'post',
+          hasVisibleError: false,
+          submitButtonDisabled: false,
+          submitButtonExists: true,
+          fields: [
+            {
+              tag: 'input',
+              id: 'email-input',
+              name: 'email',
+              label: 'Email',
+              type: 'email',
+              valueState: 'present',
+              required: true,
+              valid: false,
+              hidden: false,
+              disabled: false,
+              validationMessage: 'Constraint validation failure message',
+            }
+          ]
+        }
+      }
+    ]
+  };
+
+  const validationNoFeedbackReport = analyzeSession(validationNoFeedbackSession);
+
+  if (validationNoFeedbackReport.likelyIssue !== 'Validation failed without visible feedback') {
+    console.error(`[FAIL] Test 6: Expected "Validation failed without visible feedback", got: "${validationNoFeedbackReport.likelyIssue}"`);
+    passed = false;
+  } else {
+    console.log('[PASS] Test 6: likelyIssue is correctly prioritized as "Validation failed without visible feedback"');
+  }
+
+  if (validationNoFeedbackReport.severity !== 'medium' && validationNoFeedbackReport.severity !== 'high') {
+    console.error(`[FAIL] Test 6: Expected severity "medium" or "high", got: "${validationNoFeedbackReport.severity}"`);
+    passed = false;
+  } else {
+    console.log(`[PASS] Test 6: severity is "${validationNoFeedbackReport.severity}"`);
+  }
+
+  if (validationNoFeedbackReport.confidenceScore < 75) {
+    console.error(`[FAIL] Test 6: Expected confidenceScore >= 75, got: ${validationNoFeedbackReport.confidenceScore}`);
+    passed = false;
+  } else {
+    console.log(`[PASS] Test 6: confidenceScore is high enough (${validationNoFeedbackReport.confidenceScore})`);
+  }
+
+  const hasSubmitAttemptFinding = validationNoFeedbackReport.findings.some(f => f.code === 'SUBMIT_ATTEMPT' && f.label === 'Submit attempt detected');
+  const hasInvalidFieldFinding = validationNoFeedbackReport.findings.some(f => f.code === 'INVALID_FIELD' && f.label.includes('failed validation'));
+  const hasNoVisibleErrorFinding = validationNoFeedbackReport.findings.some(f => f.code === 'NO_VISIBLE_ERROR' && f.label === 'No visible error message was found after submit');
+
+  if (!hasSubmitAttemptFinding || !hasInvalidFieldFinding || !hasNoVisibleErrorFinding) {
+    console.error(`[FAIL] Test 6: Findings are missing some expected items. Submit attempt: ${hasSubmitAttemptFinding}, Invalid field: ${hasInvalidFieldFinding}, No visible error: ${hasNoVisibleErrorFinding}`);
+    passed = false;
+  } else {
+    console.log('[PASS] Test 6: findings include all expected indicators');
+  }
+
+  // Test 7: Success / No clear failure detected.
+  const successSession: RecordingSession = {
+    id: 'test-session-7',
+    startedAt: Date.now(),
+    stoppedAt: Date.now() + 5000,
+    pageUrl: 'http://localhost/success-form',
+    pageTitle: 'Success Form Test',
+    formCount: 1,
+    submitAttemptCount: 1,
+    clickWithoutSubmitCount: 0,
+    events: [
+      {
+        type: 'form-submit',
+        timestamp: Date.now(),
+        snapshot: {
+          index: 0,
+          id: 'test-form',
+          action: '',
+          method: 'post',
+          hasVisibleError: false,
+          submitButtonDisabled: false,
+          submitButtonExists: true,
+          fields: [
+            {
+              tag: 'input',
+              id: 'email-input',
+              name: 'email',
+              label: 'Email',
+              type: 'email',
+              valueState: 'present',
+              required: true,
+              valid: true,
+              hidden: false,
+              disabled: false,
+              validationMessage: '',
+            }
+          ]
+        }
+      }
+    ]
+  };
+
+  const successReport = analyzeSession(successSession);
+
+  if (successReport.likelyIssue !== 'No clear failure detected') {
+    console.error(`[FAIL] Test 7: Expected "No clear failure detected", got: "${successReport.likelyIssue}"`);
+    passed = false;
+  } else {
+    console.log('[PASS] Test 7: likelyIssue is correctly prioritized as "No clear failure detected"');
+  }
+
   if (!passed) {
     console.error('\nAnalyzer Verification FAILED!');
     process.exit(1);
