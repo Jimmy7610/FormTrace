@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demo: Vue-like Conditional Form — FormTrace</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #0e0f14;
+      color: #f1f5f9;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .card {
+      background: #16181f;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 32px;
+      width: 100%;
+      max-width: 440px;
+    }
+    .badge {
+      font-size: 11px;
+      font-weight: 600;
+      color: #42b883;
+      background: rgba(66,184,131,0.1);
+      border: 1px solid rgba(66,184,131,0.2);
+      border-radius: 4px;
+      padding: 3px 8px;
+      display: inline-block;
+      margin-bottom: 16px;
+    }
+    h1 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+    .desc { font-size: 13px; color: #64748b; margin-bottom: 24px; line-height: 1.6; }
+    .field { margin-bottom: 16px; }
+    label { display: block; font-size: 12px; font-weight: 600; color: #94a3b8; margin-bottom: 6px; }
+    input[type="text"], select {
+      width: 100%;
+      background: #0e0f14;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: #f1f5f9;
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input[type="text"]:focus, select:focus {
+      border-color: rgba(99,102,241,0.5);
+    }
+    /* Mimic v-show="false" */
+    .v-show-hidden {
+      display: none !important;
+    }
+    /* Mimic v-if="false" by completely clearing innerHTML */
+    button[type="submit"] {
+      width: 100%;
+      background: #6366f1;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 11px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.2s;
+    }
+    button[type="submit"]:hover { background: #818cf8; }
+    .why {
+      margin-top: 20px;
+      font-size: 11px;
+      color: #475569;
+      background: rgba(255,255,255,0.03);
+      border: 1px dashed rgba(255,255,255,0.06);
+      border-radius: 8px;
+      padding: 10px 12px;
+      line-height: 1.6;
+    }
+    a { color: #818cf8; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="badge">🟩 Vue-like Conditional Form</div>
+    <h1>Account Setup</h1>
+    <p class="desc">
+      Test instructions: Leave User Role as "Guest". Click Complete Setup. The form contains a required invite code hidden by a "v-show" toggle.
+    </p>
+
+    <form id="vue-form">
+      <div class="field">
+        <label for="role">User Role *</label>
+        <select id="role" name="role" required>
+          <option value="guest">Guest</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+
+      <!-- Mimics an element controlled by v-show="role === 'admin'" -->
+      <div id="adminSection" class="v-show-hidden">
+        <div class="field">
+          <label for="inviteCode">Admin Invite Code *</label>
+          <input type="text" id="inviteCode" required />
+        </div>
+      </div>
+
+      <button type="submit">Complete Setup</button>
+    </form>
+
+    <div class="why">
+      <strong>What FormTrace should detect:</strong><br />
+      The admin section is hidden because the role is "Guest". However, the invite code is still required in the DOM.
+      Expected result: <em>"Hidden required field blocked submission"</em> with CSS cause: ancestor has display:none.
+      <br /><br />
+      <a href="index.html">← Back to all demos</a>
+    </div>
+  </div>
+
+  <script>
+    const roleSelect = document.getElementById('role');
+    const adminSection = document.getElementById('adminSection');
+
+    // Simulate Vue reactivity
+    roleSelect.addEventListener('change', (e) => {
+      if (e.target.value === 'admin') {
+        adminSection.classList.remove('v-show-hidden');
+      } else {
+        adminSection.classList.add('v-show-hidden');
+      }
+    });
+  </script>
+</body>
+</html>

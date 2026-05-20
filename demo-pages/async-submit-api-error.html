@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demo: Async API Error — FormTrace</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #0e0f14;
+      color: #f1f5f9;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .card {
+      background: #16181f;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 32px;
+      width: 100%;
+      max-width: 440px;
+    }
+    .badge {
+      font-size: 11px;
+      font-weight: 600;
+      color: #f43f5e;
+      background: rgba(244,63,94,0.1);
+      border: 1px solid rgba(244,63,94,0.2);
+      border-radius: 4px;
+      padding: 3px 8px;
+      display: inline-block;
+      margin-bottom: 16px;
+    }
+    h1 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+    .desc { font-size: 13px; color: #64748b; margin-bottom: 24px; line-height: 1.6; }
+    .field { margin-bottom: 16px; }
+    label { display: block; font-size: 12px; font-weight: 600; color: #94a3b8; margin-bottom: 6px; }
+    input[type="text"] {
+      width: 100%;
+      background: #0e0f14;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: #f1f5f9;
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input[type="text"]:focus {
+      border-color: rgba(99,102,241,0.5);
+    }
+    button[type="submit"] {
+      width: 100%;
+      background: #6366f1;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 11px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.2s;
+    }
+    button[type="submit"]:hover { background: #818cf8; }
+    button[type="submit"]:disabled {
+      background: #475569;
+      cursor: wait;
+    }
+    .error-msg {
+      margin-top: 16px;
+      color: #f43f5e;
+      font-size: 13px;
+      font-weight: 500;
+      display: none;
+      padding: 12px;
+      background: rgba(244,63,94,0.1);
+      border-radius: 8px;
+      border: 1px solid rgba(244,63,94,0.2);
+    }
+    .why {
+      margin-top: 20px;
+      font-size: 11px;
+      color: #475569;
+      background: rgba(255,255,255,0.03);
+      border: 1px dashed rgba(255,255,255,0.06);
+      border-radius: 8px;
+      padding: 10px 12px;
+      line-height: 1.6;
+    }
+    a { color: #818cf8; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="badge">🌐 Async API Error</div>
+    <h1>Subscribe to Newsletter</h1>
+    <p class="desc">
+      Test instructions: Enter a name and click Subscribe. The page will attempt to fetch a missing endpoint, resulting in a network failure.
+    </p>
+
+    <form id="async-form">
+      <div class="field">
+        <label for="subscriberName">Name</label>
+        <input type="text" id="subscriberName" required />
+      </div>
+
+      <button type="submit" id="submitBtn">Subscribe</button>
+    </form>
+    
+    <div id="errorBanner" class="error-msg" role="alert">
+      We couldn't connect to the server. Please try again.
+    </div>
+
+    <div class="why">
+      <strong>What FormTrace should detect:</strong><br />
+      The form intercepts submit and triggers an async <code>fetch()</code> request to a missing URL (404/Network Error). 
+      FormTrace's injected network probe should capture the failure immediately after the submit attempt.
+      Expected result: <em>"Network request failed after submit"</em>.
+      <br /><br />
+      <a href="index.html">← Back to all demos</a>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('async-form');
+    const btn = document.getElementById('submitBtn');
+    const errorBanner = document.getElementById('errorBanner');
+    
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      if (!form.checkValidity()) return;
+      
+      btn.disabled = true;
+      btn.textContent = 'Subscribing...';
+      errorBanner.style.display = 'none';
+
+      try {
+        // Intentionally failing request
+        const res = await fetch('/api/non-existent-endpoint-12345', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: document.getElementById('subscriberName').value })
+        });
+        
+        if (!res.ok) {
+          throw new Error('Server returned ' + res.status);
+        }
+        
+        alert('Subscribed successfully!');
+      } catch (err) {
+        // Render visible feedback so users know it failed
+        errorBanner.style.display = 'block';
+        console.error('API Error:', err);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Subscribe';
+      }
+    });
+  </script>
+</body>
+</html>

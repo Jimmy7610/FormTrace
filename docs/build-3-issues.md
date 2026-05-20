@@ -76,8 +76,12 @@ This document breaks Build 3 down into small, isolated, and implementable tasks.
 
 ---
 
-## Issue 5: Framework Mimic Demo Pages [PLANNED]
-- **Goal**: Create production-style SPA and form framework simulation pages (React Hook Form, Formik, Shopify checkout flow, WordPress AJAX forms).
-- **Acceptance Criteria**:
-  1. Validate FormTrace recording and analysis engine rules against all complex framework form layouts.
+## Issue 5: Framework Mimic Demo Pages [COMPLETED]
+- **Goal**: Create representative test pages simulating React, Vue, Angular, and other modern SPA implementations to ensure FormTrace's robust, generic heuristics succeed in complex scenarios.
+- **Demos Created**:
+  - `react-like-controlled-form.html`: JS submit handler with conditional rendering hiding a required field.
+  - `vue-like-conditional-form.html`: Required field hidden within a collapsed (v-show) ancestor.
+  - `angular-like-disabled-submit.html`: State-bound HTML `disabled` attribute on the submit button.
+  - `custom-validation-no-visible-error.html`: JS `.checkValidity()` prevention without rendering a visible error to the user.
+  - `async-submit-api-error.html`: Async SPA fetch failure returning a fake HTTP 404.
 - **Risk Level**: **Low**

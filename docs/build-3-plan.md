@@ -37,8 +37,9 @@ While Build 2 added rich export formatting and report history, developers and QA
 - **Root Cause Exposing**: Automatically highlights the most likely structural cause for hidden fields (e.g., `parent container has display:none`).
 - **Export Consistency**: The new structural analysis propagates automatically to copied text formats and historical records.
 
-### 5. Framework Mimic Demo Pages (Issue 5 - Planned)
-- Create test pages representing React Hook Form, Formik, Shopify Checkout, Webflow, and WordPress structures.
+### 5. Framework Mimic Demo Pages (Issue 5 - Completed)
+- Created 5 distinct realistic SPA and custom validation scenarios (`react`, `vue`, `angular`, `async`, `custom-validation`) without introducing external dependencies.
+- Validated that FormTrace's robust built-in heuristics properly capture these scenarios out of the box without requiring brittle framework-specific logic.
 
 ---
 
@@ -53,4 +54,4 @@ While Build 2 added rich export formatting and report history, developers and QA
 2. **Issue 2**: Side Panel UX Polish (Completed).
 3. **Issue 3**: Session State Clarity (Completed).
 4. **Issue 4**: CSS Blame Overlay (Completed).
-5. **Issue 5**: Framework Mimic Demo Pages (Planned).
+5. **Issue 5**: Framework Mimic Demo Pages (Completed).

@@ -121,6 +121,16 @@ Verify the following new capabilities:
   - The script ensures that the `inspectElementVisibility` utility correctly maps to the corresponding `VisibilityCause` types.
   - Asserts that report output strings (`CSS cause:`) are present in source files.
 
+### Test 3.8: Framework Mimic Demo Pages
+- **Steps**:
+  1. Run the framework demo script:
+     ```bash
+     npm run framework:check
+     ```
+- **Expected Result**:
+  - Validates that all new framework demo pages (`react`, `vue`, `angular`, `async`, `custom-validation`) exist and contain correct simulation code without introducing external dependencies.
+  - Ensures the demo index page properly links to all of them.
+
 ---
 
 ## 4. Manual QA Verification (Issue 1 Side Panel Retest)

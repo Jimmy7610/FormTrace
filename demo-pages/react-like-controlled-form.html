@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demo: React-like Controlled Form — FormTrace</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #0e0f14;
+      color: #f1f5f9;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .card {
+      background: #16181f;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 32px;
+      width: 100%;
+      max-width: 440px;
+    }
+    .badge {
+      font-size: 11px;
+      font-weight: 600;
+      color: #61dafb;
+      background: rgba(97,218,251,0.1);
+      border: 1px solid rgba(97,218,251,0.2);
+      border-radius: 4px;
+      padding: 3px 8px;
+      display: inline-block;
+      margin-bottom: 16px;
+    }
+    h1 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+    .desc { font-size: 13px; color: #64748b; margin-bottom: 24px; line-height: 1.6; }
+    .field { margin-bottom: 16px; }
+    label { display: block; font-size: 12px; font-weight: 600; color: #94a3b8; margin-bottom: 6px; }
+    input[type="text"] {
+      width: 100%;
+      background: #0e0f14;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: #f1f5f9;
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input[type="text"]:focus {
+      border-color: rgba(99,102,241,0.5);
+    }
+    .checkbox-field {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .checkbox-field input { cursor: pointer; }
+    .checkbox-field label { margin-bottom: 0; cursor: pointer; }
+    button[type="submit"] {
+      width: 100%;
+      background: #6366f1;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 11px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.2s;
+    }
+    button[type="submit"]:hover { background: #818cf8; }
+    .why {
+      margin-top: 20px;
+      font-size: 11px;
+      color: #475569;
+      background: rgba(255,255,255,0.03);
+      border: 1px dashed rgba(255,255,255,0.06);
+      border-radius: 8px;
+      padding: 10px 12px;
+      line-height: 1.6;
+    }
+    a { color: #818cf8; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="badge">⚛️ React-like Controlled Form</div>
+    <h1>Shipping Details</h1>
+    <p class="desc">
+      Test instructions: Leave "Has separate billing" unchecked. Fill in Address, then click Continue. The form intercepts submit via JS.
+    </p>
+
+    <form id="react-form">
+      <div class="field">
+        <label for="address">Shipping Address *</label>
+        <input type="text" id="address" required />
+      </div>
+
+      <div class="checkbox-field">
+        <input type="checkbox" id="hasBilling" />
+        <label for="hasBilling">I have a separate billing address</label>
+      </div>
+
+      <!-- React conditionally renders this, or toggles display:none -->
+      <div id="billingSection" style="display: none;">
+        <div class="field">
+          <label for="billingAddress">Billing Address *</label>
+          <input type="text" id="billingAddress" required />
+        </div>
+      </div>
+
+      <button type="submit">Continue</button>
+    </form>
+
+    <div class="why">
+      <strong>What FormTrace should detect:</strong><br />
+      The billing address is required but hidden by the conditional section state. 
+      The custom JS submit handler prevents submission because standard HTML5 validation fails.
+      Expected result: <em>"Hidden required field blocked submission"</em> with a CSS cause of <code>display:none</code> on an ancestor.
+      <br /><br />
+      <a href="index.html">← Back to all demos</a>
+    </div>
+  </div>
+
+  <script>
+    // Simulate React controlled state
+    const state = {
+      address: '',
+      hasBilling: false,
+      billingAddress: ''
+    };
+
+    const form = document.getElementById('react-form');
+    const addressInput = document.getElementById('address');
+    const hasBillingCheck = document.getElementById('hasBilling');
+    const billingSection = document.getElementById('billingSection');
+    const billingAddressInput = document.getElementById('billingAddress');
+
+    // Simulate React onChange handlers updating state
+    addressInput.addEventListener('input', (e) => state.address = e.target.value);
+    billingAddressInput.addEventListener('input', (e) => state.billingAddress = e.target.value);
+    
+    hasBillingCheck.addEventListener('change', (e) => {
+      state.hasBilling = e.target.checked;
+      // Simulate React conditional rendering by toggling display
+      billingSection.style.display = state.hasBilling ? 'block' : 'none';
+    });
+
+    form.addEventListener('submit', (e) => {
+      // Common SPA pattern: prevent default always, then validate JS state
+      e.preventDefault();
+      
+      // But if the form itself fails HTML5 validation (like a hidden required field),
+      // the browser wouldn't even fire the submit event.
+      // However, if standard HTML validation happens or is invoked manually:
+      if (!form.checkValidity()) {
+        // Validation failed, do not proceed with API call
+        return;
+      }
+
+      alert('API Call Success: ' + JSON.stringify(state));
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demo: Custom Validation, No Error — FormTrace</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #0e0f14;
+      color: #f1f5f9;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .card {
+      background: #16181f;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 32px;
+      width: 100%;
+      max-width: 440px;
+    }
+    .badge {
+      font-size: 11px;
+      font-weight: 600;
+      color: #fbbf24;
+      background: rgba(251,191,36,0.1);
+      border: 1px solid rgba(251,191,36,0.2);
+      border-radius: 4px;
+      padding: 3px 8px;
+      display: inline-block;
+      margin-bottom: 16px;
+    }
+    h1 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+    .desc { font-size: 13px; color: #64748b; margin-bottom: 24px; line-height: 1.6; }
+    .field { margin-bottom: 16px; }
+    label { display: block; font-size: 12px; font-weight: 600; color: #94a3b8; margin-bottom: 6px; }
+    input[type="text"] {
+      width: 100%;
+      background: #0e0f14;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: #f1f5f9;
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input[type="text"]:focus {
+      border-color: rgba(99,102,241,0.5);
+    }
+    /* Note: intentionally NO visual red border for invalid state to mimic bad UX */
+    button[type="submit"] {
+      width: 100%;
+      background: #6366f1;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 11px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.2s;
+    }
+    button[type="submit"]:hover { background: #818cf8; }
+    .why {
+      margin-top: 20px;
+      font-size: 11px;
+      color: #475569;
+      background: rgba(255,255,255,0.03);
+      border: 1px dashed rgba(255,255,255,0.06);
+      border-radius: 8px;
+      padding: 10px 12px;
+      line-height: 1.6;
+    }
+    a { color: #818cf8; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="badge">⚠️ Custom Validation</div>
+    <h1>Coupon Code</h1>
+    <p class="desc">
+      Test instructions: Enter an invalid code like "ABC" (must be exactly 10 chars). Click Apply. Nothing happens visually.
+    </p>
+
+    <!-- novalidate disables native browser tooltip errors -->
+    <form id="custom-val-form" novalidate>
+      <div class="field">
+        <label for="coupon">Code (10 chars required)</label>
+        <input type="text" id="coupon" required minlength="10" maxlength="10" />
+      </div>
+
+      <button type="submit">Apply</button>
+    </form>
+
+    <div class="why">
+      <strong>What FormTrace should detect:</strong><br />
+      The form uses <code>novalidate</code> and JS prevents submission if the field is invalid. No visible error message is injected into the DOM.
+      Expected result: <em>"Validation failed without visible feedback"</em>.
+      <br /><br />
+      <a href="index.html">← Back to all demos</a>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('custom-val-form');
+    
+    form.addEventListener('submit', (e) => {
+      e.preventDefault(); // Stop native submission completely
+      
+      // Check HTML5 validity manually
+      if (!form.checkValidity()) {
+        // Bad UX: Dev stopped submission but forgot to show an error!
+        console.log("Validation failed in JS, stopping submit.");
+        return;
+      }
+      
+      alert('Coupon Applied!');
+    });
+  </script>
+</body>
+</html>
